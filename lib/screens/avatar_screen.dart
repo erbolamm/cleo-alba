@@ -5,7 +5,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:record/record.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
@@ -65,7 +66,9 @@ class AvatarScreenState extends State<AvatarScreen> {
   Future<void> clearHistory() => _clearHistory();
 
   // Plugins
-  final AudioRecorder _recorder = AudioRecorder();
+  final SpeechToText _speech = SpeechToText();
+  bool _speechAvailable = false;
+  String _recognizedText = '';
   final AudioPlayer _player = AudioPlayer();
   Timer? _statusTimer;
 
@@ -74,17 +77,18 @@ class AvatarScreenState extends State<AvatarScreen> {
     super.initState();
     _initSettings();
     _startPolling();
+    _speech.initialize().then((ok) => setState(() => _speechAvailable = ok));
   }
 
   @override
   void dispose() {
     _statusTimer?.cancel();
-    _recorder.dispose();
+    _speech.stop();
     _player.dispose();
     super.dispose();
   }
 
-  // TODO: Migrar almacenamiento de claves a flutter_secure_storage
+  // Migrar almacenamiento de claves a flutter_secure_storage
   // para proteger credenciales en reposo. SharedPreferences almacena
   // datos en texto plano en el dispositivo.
   Future<void> _initSettings() async {
@@ -165,21 +169,29 @@ class AvatarScreenState extends State<AvatarScreen> {
   }
 
   Future<void> _startListening() async {
-    if (await Permission.microphone.request().isGranted) {
-      final dir = await getTemporaryDirectory();
-      final path = '${dir.path}/recording.m4a';
-
-      setState(() {
-        _isRecording = true;
-        _isProcessing = true;
-        _state = 'listening';
-        _botText = '¡Te escucho! Toca para parar. 🎙️';
-      });
-
-      await _recorder.start(const RecordConfig(), path: path);
-    } else {
-      _handleError('Permiso de micro denegado');
+    if (!_speechAvailable) {
+      _speechAvailable = await _speech.initialize();
     }
+    if (!_speechAvailable) {
+      _handleError('Permiso de micro denegado o STT no disponible');
+      return;
+    }
+    _recognizedText = '';
+    setState(() {
+      _isRecording = true;
+      _isProcessing = true;
+      _state = 'listening';
+      _botText = '¡Te escucho! Toca para parar. 🎤';
+    });
+    await _speech.listen(
+      onResult: (SpeechRecognitionResult result) {
+        setState(() => _recognizedText = result.recognizedWords);
+        if (result.finalResult && _isRecording) {
+          _stopAndProcess();
+        }
+      },
+      localeId: 'es-ES',
+    );
   }
 
   Future<void> _stopAndProcess() async {
@@ -190,12 +202,8 @@ class AvatarScreenState extends State<AvatarScreen> {
     });
 
     try {
-      final path = await _recorder.stop();
-      if (path == null) throw Exception('No recording');
-
-      // 1. STT (Whisper)
-      _addDiag('Iniciando STT (Whisper)...');
-      final transcript = await _callWhisper(path);
+      await _speech.stop();
+      final transcript = _recognizedText;
       if (transcript.isEmpty) throw Exception('No se detectó voz');
       _addDiag('STT completado: "$transcript"');
 

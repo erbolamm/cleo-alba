@@ -74,3 +74,15 @@ app.*.map.json
 
 # Web related
 **/lib/generated_plugin_registrant.dart
+
+# Logs and generated files
+openclaw_gateway.log
+*.resolved
+
+# Samsung A3 build artifacts
+termux_scripts/samsung_a3/app/build/
+termux_scripts/samsung_a3/app/.gradle/
+
+# Python cache
+__pycache__/
+*.pyc

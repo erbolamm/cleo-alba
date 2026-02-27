@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:record/record.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 // Paleta local (referencia)
 const _kGold = Color(0xFFD4AF37);
@@ -25,12 +25,14 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isTyping = false;
   bool _isRecording = false;
   String _apiBase = 'http://localhost:8080';
-  final AudioRecorder _recorder = AudioRecorder();
+  final SpeechToText _speech = SpeechToText();
+  bool _speechAvailable = false;
 
   @override
   void initState() {
     super.initState();
     _loadSettings();
+    _speech.initialize().then((ok) => setState(() => _speechAvailable = ok));
   }
 
   Future<void> _loadSettings() async {
@@ -42,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    _recorder.dispose();
+    _speech.stop();
     _focusNode.dispose();
     super.dispose();
   }
@@ -61,19 +63,48 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _toggleRecording() async {
     if (_isRecording) {
-      final path = await _recorder.stop();
+      await _speech.stop();
       setState(() => _isRecording = false);
-      if (path != null) {
-        _uploadFile(path, 'audio_message.m4a', isVoice: true);
-      }
     } else {
-      if (await _recorder.hasPermission()) {
-        final dir = await getTemporaryDirectory();
-        final path =
-            '${dir.path}/chat_voice_${DateTime.now().millisecondsSinceEpoch}.m4a';
-        await _recorder.start(const RecordConfig(), path: path);
-        setState(() => _isRecording = true);
+      if (!_speechAvailable) {
+        _speechAvailable = await _speech.initialize();
       }
+      if (_speechAvailable) {
+        setState(() => _isRecording = true);
+        await _speech.listen(
+          onResult: (SpeechRecognitionResult result) {
+            if (result.finalResult && result.recognizedWords.isNotEmpty) {
+              setState(() => _isRecording = false);
+              _sendVoiceMessage(result.recognizedWords);
+            }
+          },
+          localeId: 'es-ES',
+        );
+      }
+    }
+  }
+
+  Future<void> _sendVoiceMessage(String text) async {
+    _addLocalMessage('user', '\u{1F3A4} $text');
+    setState(() => _isTyping = true);
+    try {
+      final response = await http
+          .post(
+            Uri.parse('\$_apiBase/api/chat'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'text': text, 'speak': false}),
+          )
+          .timeout(const Duration(seconds: 60));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+        _addLocalMessage('assistant', data['response'] ?? 'Sin respuesta');
+      } else {
+        _addLocalMessage('assistant', 'Error: \${response.statusCode}');
+      }
+    } catch (e) {
+      _addLocalMessage('assistant', 'Error de conexión: \$e');
+    } finally {
+      setState(() => _isTyping = false);
     }
   }
 

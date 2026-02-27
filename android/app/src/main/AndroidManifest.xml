@@ -1,9 +1,13 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- override libs que declaran minSdk=24 para poder instalar en Android 6 (API 23) -->
+    <uses-sdk tools:overrideLibrary="io.flutter.plugins.sharedpreferences,io.flutter.plugins.webviewflutter,io.flutter.plugins.urllauncher,com.ryanheise.audio_session,dev.fluttercommunity.plus.androidintent,io.flutter.plugins.audioplayers,com.crazecoder.opensettings"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="com.termux.permission.RUN_COMMAND"/>
 
     <application
         android:label="ApliBot"

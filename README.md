@@ -12,10 +12,10 @@ Este proyecto funciona como un **self-service**: tú descargas el proyecto (el b
 
 | Carpeta | Qué es | ¿Se modifica? |
 |---|---|---|
-| `scripts/` | Scripts de instalación por pasos | ❌ No |
+| `scripts/` | Scripts de instalación, evaluación y promoción | ❌ No |
 | `termux_scripts/` | Scripts que se suben al Android | ❌ No |
 | `config/` | Plantilla de configuración | ❌ No (copiar y personalizar) |
-| `empezar.html` | Generador de prompts de despliegue | ❌ No |
+| `empezar.html` | Asistente web (prompt + perfil local) | ❌ No |
 | **`Mis_configuraciones_locales/`** | **Tu bandeja personal** | ✅ Sí, solo esta |
 
 > **Regla de oro**: si necesitas guardar una clave, un log, una nota, o cualquier cosa específica de tu setup → va dentro de `Mis_configuraciones_locales/`. El resto del proyecto se queda intacto.
@@ -42,9 +42,69 @@ Esta carpeta ya está en `.gitignore` — nada de lo que pongas ahí se sube al 
 ### 3. Conecta tu Android y despliega
 1. Habilita **Depuración USB** en tu teléfono.
 2. Conéctalo por cable al Mac/PC.
-3. Abre **`empezar.html`** en tu navegador.
-4. Genera el prompt y pégalo en tu IDE con IA (Cursor, Windsurf, Gemini, etc.).
-5. Tu asistente IA ejecutará los scripts automáticamente.
+3. Abre **`index.html`** (entrada simplificada) y desde ahí entra a **`empezar.html`**.
+4. Usa el **Asistente de Configuración Local** para generar:
+   - `config_profile.json`
+   - Prompt de despliegue
+   - Comando para crear tu carpeta local.
+5. Pega el prompt en tu IDE con IA (Cursor, Windsurf, Gemini, etc.).
+6. Tu asistente IA ejecutará los scripts automáticamente.
+
+## 🧭 Raíz simplificada para usuarios
+
+Si vas a usar ClawMobil sin perfil técnico, en la raíz del proyecto céntrate solo en:
+
+- `index.html` → flujo guiado para abrir VS Code y lanzar el asistente.
+- `LEEME.md` → guía breve de operación modular.
+
+El resto de carpetas/archivos existen para el funcionamiento interno del framework.
+
+---
+
+## 🧩 Modo Framework Local (fork/clon)
+
+ClawMobil incluye un flujo modular para que cada fork o dispositivo trabaje con
+su configuración local y, si descubre mejoras, pueda proponerlas a la plantilla:
+
+```bash
+# 1) Detectar configuración activa
+bash scripts/local_config_select.sh
+
+# 2) Evaluar completitud de perfiles locales
+bash scripts/local_config_evaluate.sh
+
+# 3) Detectar candidatos reutilizables vs _plantilla
+bash scripts/local_config_discovery.sh
+
+# 3.1) Detector automático de cambios locales
+bash scripts/local_config_watch.sh
+
+# 4) Promover una mejora de forma trazable
+bash scripts/local_config_promote.sh <dispositivo> <ruta_relativa>
+
+# 5) Crear snapshot/revertir pruebas
+bash scripts/local_config_lab.sh snapshot <dispositivo>
+bash scripts/local_config_lab.sh restore <dispositivo> <snapshot.tar.gz>
+
+# 6) Prueba integral del flujo modular
+bash scripts/local_config_selftest.sh
+
+# 7) Smoke test del wizard (empezar.html)
+bash scripts/wizard_local_smoketest.sh
+
+# 8) Checklist pre-directo completo
+bash scripts/prelive_direct_check.sh
+```
+
+Guía completa: [`docs/LOCAL_CONFIG_FRAMEWORK.md`](docs/LOCAL_CONFIG_FRAMEWORK.md)
+Auditoría upstream: [`docs/AUDITORIA_OPENCLAW_ORIGINAL_2026-02-27.md`](docs/AUDITORIA_OPENCLAW_ORIGINAL_2026-02-27.md)
+Guion directo: [`docs/GUION_DIRECTO_CLAWMOBIL_2026-02-27.md`](docs/GUION_DIRECTO_CLAWMOBIL_2026-02-27.md)
+
+## 🔒 Dependencia OpenClaw prioritaria
+
+Para estabilidad del framework, la referencia de motor se fija en el fork:
+
+- <https://github.com/erbolamm/openclaw>
 
 ---
 
@@ -70,15 +130,17 @@ Esta carpeta ya está en `.gitignore` — nada de lo que pongas ahí se sube al 
 ClawMobil/
 ├── empezar.html              ← Generador de prompt de despliegue
 ├── index.html                ← Web pública del proyecto
-├── scripts/                  ← Scripts de instalación (01.sh → 16.sh)
+├── scripts/                  ← Scripts de despliegue + framework local
 ├── termux_scripts/           ← Scripts que se suben al dispositivo
 ├── config/                   ← Plantilla de configuración
+├── docs/                     ← Guías del framework (fork, local config)
 ├── lib/                      ← App Flutter (cliente)
 ├── Mis_configuraciones_locales/  ← 🔒 TU carpeta (gitignored)
 │   ├── claves_globales.env
 │   └── dispositivos/
 │       ├── _plantilla/       ← Copia esto para cada nuevo dispositivo
 │       └── tu_dispositivo/
+│           ├── config_profile.json ← Perfil generado por wizard
 │           ├── claves.env    ← Tus API keys
 │           ├── notas.md      ← Estado y documentación
 │           └── ...

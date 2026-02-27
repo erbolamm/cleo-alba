@@ -67,7 +67,7 @@ if [ -n "$OC_BIN" ]; then
     echo "[$(date)] OpenClaw lanzado (PID: $OC_PID)" >> "$LOG"
 else
     echo "[$(date)] ❌ ERROR: No se encontró el binario 'openclaw' en Debian." >> "$LOG"
-    echo "Intenta instalarlo con: proot-distro login debian -- npm install -g openclaw" >> "$LOG"
+    echo "Intenta instalarlo con: proot-distro login debian -- npm install -g github:erbolamm/openclaw" >> "$LOG"
 fi
 
 # ─── 4. Verificar que arrancaron ─────────────────────────────────────────

@@ -3,9 +3,10 @@
 ¡Felicidades! Tienes en tus manos un nodo funcional de **ClawMobil**. Este manual te enseñará a dominarlo por completo.
 
 ## 🚀 Inicio Rápido
-1. Abre la App **ClawMobil** en tu dispositivo.
-2. Asegúrate de que el icono de red esté en verde (indica conexión con Groq/ElevenLabs).
-3. Di "Hola Bot" para empezar.
+1. En tu ordenador, abre `index.html` para seguir el flujo guiado sin programar.
+2. Desde `index.html`, abre `empezar.html` y genera tu `config_profile.json`.
+3. Ejecuta los comandos sugeridos del wizard para activar tu dispositivo local.
+4. En la app ClawMobil, verifica que el icono de red esté en verde y di "Hola Bot".
 
 ## 🎙️ Modos de Escucha
 - **Modo Manual (Pulse & Speak)**: Pulsa el icono del micro, habla, y pulsa de nuevo. Ideal para entornos ruidosos.
@@ -32,6 +33,18 @@ Hemos diseñado este bot para que aprenda de su propia creación.
 - Ve a **Ajustes > 🐞 Reportar Hito/Error**.
 - El bot generará un archivo Markdown con logs y contexto.
 - **Copia y envía a info@apliarte.com**. ¡Esto ayuda a construir la Factory!
+
+## 🧩 Modo Modular por Dispositivo
+Para crear un clon/fork con límites propios por dispositivo:
+1. Abre `index.html` y entra a `empezar.html`.
+2. Genera `config_profile.json` para tu dispositivo.
+3. Guarda el dispositivo activo en `Mis_configuraciones_locales/dispositivos/.active_device`.
+4. Ejecuta:
+   - `bash scripts/local_config_select.sh --json`
+   - `bash scripts/local_config_evaluate.sh`
+   - `bash scripts/local_config_discovery.sh`
+5. Si una mejora local sirve para todos, promuévela con:
+   - `bash scripts/local_config_promote.sh <dispositivo> <ruta_relativa>`
 
 ## 🔧 Solución de Problemas
 - **El bot no me oye**: Verifica los permisos de micrófono en Android.

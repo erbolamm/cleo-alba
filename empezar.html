@@ -726,10 +726,16 @@
             <h1>ClawMobil: Panel de Despliegue Local</h1>
             <p style="margin-bottom: 20px;">Has entrado en la sala de máquinas. Desde aquí prepararemos tu terminal y
                 generaremos el prompt maestro para que tu IA despliegue el ecosistema en este dispositivo.</p>
-            <a href="#consejos" class="btn-deploy"
-                style="margin-top: 10px; background: rgba(255,255,255,0.05); color: var(--gold); border: 1px solid var(--gold); font-size: 0.9rem; padding: 12px 28px;">
-                💡 Ver Consejos Maestros
-            </a>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                <a href="#local-wizard" class="btn-deploy"
+                    style="margin-top: 10px; background: rgba(212,175,55,0.12); color: var(--gold); border: 1px solid var(--gold); font-size: 0.9rem; padding: 12px 28px;">
+                    🧩 Asistente de Configuración Local
+                </a>
+                <a href="#consejos" class="btn-deploy"
+                    style="margin-top: 10px; background: rgba(255,255,255,0.05); color: var(--gold); border: 1px solid var(--gold); font-size: 0.9rem; padding: 12px 28px;">
+                    💡 Ver Consejos Maestros
+                </a>
+            </div>
         </div>
     </section>
 
@@ -908,6 +914,161 @@ Por favor, dime: "¡Recibido! Verificando dispositivo conectado..." y tira un co
                     setTimeout(() => btn.innerText = "Copiar Prompt", 2000);
                 }
             </script>
+        </div>
+    </section>
+
+    <!-- SECTION 4.5: ASISTENTE MODULAR LOCAL -->
+    <section class="section modes-section" id="local-wizard">
+        <div class="section-inner">
+            <div class="section-label">Framework Modular</div>
+            <h2 class="section-title">Asistente de Configuración Local</h2>
+            <p style="color: var(--text-dim); margin-bottom: 24px; font-size: 15px; line-height: 1.7;">
+                Crea un perfil por dispositivo para que cada fork de ClawMobil sea independiente y reutilizable.
+                El asistente genera JSON, prompt y comandos para escribir en
+                <code>Mis_configuraciones_locales/dispositivos/</code>.
+            </p>
+            <p style="color: rgba(255,255,255,0.72); margin-bottom: 16px; font-size: 13px; line-height: 1.6;">
+                Referencia de motor prioritaria:
+                <a href="https://github.com/erbolamm/openclaw" target="_blank"
+                    style="color: var(--cyan); text-decoration: underline;">github.com/erbolamm/openclaw</a>.
+            </p>
+
+            <div class="form-container"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; text-align: left;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
+                    <label
+                        style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim);">
+                        Alias del dispositivo
+                        <input id="lw-device-name" type="text" value="mi_dispositivo"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0D1117; color: #fff;">
+                    </label>
+                    <label
+                        style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim);">
+                        Serial ADB (opcional)
+                        <input id="lw-device-serial" type="text" placeholder="<DEVICE_SERIAL>"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0D1117; color: #fff;">
+                    </label>
+                    <label
+                        style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim);">
+                        Perfil
+                        <select id="lw-profile"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0D1117; color: #fff;">
+                            <option value="a3_basico">A3 básico</option>
+                            <option value="huawei_avanzado">Huawei avanzado</option>
+                            <option value="custom">Custom / Experimental</option>
+                        </select>
+                    </label>
+                    <label
+                        style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim);">
+                        Entorno
+                        <select id="lw-environment"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0D1117; color: #fff;">
+                            <option value="hybrid">Híbrido (local + cloud)</option>
+                            <option value="local_only">Solo local/offline</option>
+                            <option value="cloud_assisted">Cloud asistido</option>
+                        </select>
+                    </label>
+                    <label
+                        style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim);">
+                        Idioma principal
+                        <select id="lw-language"
+                            style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #0D1117; color: #fff;">
+                            <option value="es">Español</option>
+                            <option value="en">English</option>
+                            <option value="pt">Português</option>
+                            <option value="fr">Français</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px;">
+                    <div style="padding: 14px; border: 1px solid var(--border); border-radius: 12px;">
+                        <div
+                            style="font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">
+                            Funcionalidades</div>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-feature-messaging"
+                                type="checkbox" checked> Mensajería</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-feature-stt" type="checkbox"
+                                checked> STT (voz a texto)</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-feature-tts" type="checkbox"
+                                checked> TTS (texto a voz)</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-feature-camera" type="checkbox">
+                            Cámara / visión</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-feature-automation"
+                                type="checkbox" checked> Automatización</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-feature-offline"
+                                type="checkbox"> IA offline</label>
+                    </div>
+                    <div style="padding: 14px; border: 1px solid var(--border); border-radius: 12px;">
+                        <div
+                            style="font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">
+                            Permisos y límites</div>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-perm-microphone" type="checkbox"
+                                checked> Permitir micrófono</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-perm-camera" type="checkbox">
+                            Permitir cámara</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-perm-storage" type="checkbox"
+                                checked> Permitir almacenamiento</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-perm-termux" type="checkbox"
+                                checked> Permitir Termux RUN_COMMAND</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-limit-child" type="checkbox">
+                            Modo infantil</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-limit-no-root" type="checkbox"
+                                checked> No root / no acciones destructivas</label>
+                        <label style="display:block; margin-bottom: 8px;"><input id="lw-limit-no-cloud-write"
+                                type="checkbox" checked> Sin escritura automática en cuentas cloud</label>
+                    </div>
+                </div>
+
+                <button onclick="generateLocalProfile()"
+                    style="margin-top: 18px; width: 100%; padding: 14px; background: linear-gradient(135deg, var(--cyan), #0EA5B7); color: #001317; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; font-size: 16px;">
+                    ⚙️ Generar Perfil Local + Prompt Modular
+                </button>
+
+                <div id="local-validation-output"
+                    style="display:none; margin-top: 12px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); font-size: 13px; line-height: 1.5;">
+                </div>
+            </div>
+
+            <div id="local-result" style="display: none; margin-top: 20px;">
+                <div style="margin-bottom: 8px; font-weight: 700; color: var(--gold);">1) config_profile.json generado
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <button id="btn-copy-local-json"
+                        onclick="copyLocalTextarea('local-json-output', 'btn-copy-local-json', 'Copiar JSON')"
+                        style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copiar
+                        JSON</button>
+                    <button id="btn-download-local-json" onclick="downloadLocalProfile()"
+                        style="background: rgba(34,211,238,0.12); border: 1px solid rgba(34,211,238,0.35); color: var(--cyan); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Descargar
+                        JSON</button>
+                </div>
+                <textarea id="local-json-output" readonly
+                    style="width: 100%; height: 180px; background: #0D1117; color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.5; padding: 12px; border: 1px solid var(--border); border-radius: 10px; resize: vertical;"></textarea>
+
+                <div style="margin-top: 14px; margin-bottom: 8px; font-weight: 700; color: var(--gold);">2) Comando para
+                    crear carpeta local</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <button id="btn-copy-local-command"
+                        onclick="copyLocalTextarea('local-command-output', 'btn-copy-local-command', 'Copiar comando')"
+                        style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copiar
+                        comando</button>
+                    <button id="btn-download-local-command" onclick="downloadLocalCommand()"
+                        style="background: rgba(253,230,138,0.14); border: 1px solid rgba(253,230,138,0.35); color: #FDE68A; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Descargar
+                        .sh</button>
+                </div>
+                <textarea id="local-command-output" readonly
+                    style="width: 100%; height: 160px; background: #0D1117; color: #FDE68A; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.5; padding: 12px; border: 1px solid var(--border); border-radius: 10px; resize: vertical;"></textarea>
+
+                <div style="margin-top: 14px; margin-bottom: 8px; font-weight: 700; color: var(--gold);">3) Prompt
+                    modular para tu agente local</div>
+                <button id="btn-copy-local-prompt"
+                    onclick="copyLocalTextarea('local-prompt-output', 'btn-copy-local-prompt', 'Copiar prompt')"
+                    style="margin-bottom: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">Copiar
+                    prompt</button>
+                <textarea id="local-prompt-output" readonly
+                    style="width: 100%; height: 220px; background: #0D1117; color: #A7F3D0; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.5; padding: 12px; border: 1px solid var(--border); border-radius: 10px; resize: vertical;"></textarea>
+            </div>
         </div>
     </section>
 
@@ -1168,7 +1329,205 @@ nohup openclaw gateway run --allow-unconfigured --force > /tmp/openclaw-gateway.
     </footer>
 
     <script>
+        let localWizardState = null;
 
+        function normalizeDeviceAlias(raw) {
+            return (raw || 'mi_dispositivo')
+                .toLowerCase()
+                .replace(/[^a-z0-9_-]/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/^_+|_+$/g, '') || 'mi_dispositivo';
+        }
+
+        function isChecked(id) {
+            const el = document.getElementById(id);
+            return el ? !!el.checked : false;
+        }
+
+        function collectLocalWizardConfig(alias, serialInput) {
+            return {
+                schemaVersion: '1.0',
+                profileId: `${document.getElementById('lw-profile').value}_${alias}`,
+                deviceAlias: alias,
+                deviceSerial: (serialInput.value || '').trim() || null,
+                profile: document.getElementById('lw-profile').value,
+                environment: document.getElementById('lw-environment').value,
+                language: document.getElementById('lw-language').value,
+                features: {
+                    messaging: isChecked('lw-feature-messaging'),
+                    stt: isChecked('lw-feature-stt'),
+                    tts: isChecked('lw-feature-tts'),
+                    camera: isChecked('lw-feature-camera'),
+                    automation: isChecked('lw-feature-automation'),
+                    offlineAi: isChecked('lw-feature-offline')
+                },
+                permissions: {
+                    microphone: isChecked('lw-perm-microphone'),
+                    camera: isChecked('lw-perm-camera'),
+                    storage: isChecked('lw-perm-storage'),
+                    termuxRunCommand: isChecked('lw-perm-termux')
+                },
+                limitations: {
+                    childMode: isChecked('lw-limit-child'),
+                    noRoot: isChecked('lw-limit-no-root'),
+                    noCloudWrite: isChecked('lw-limit-no-cloud-write')
+                },
+                generatedAt: new Date().toISOString(),
+                source: 'empezar.html#local-wizard'
+            };
+        }
+
+        function validateLocalWizardConfig(config) {
+            const errors = [];
+            const warnings = [];
+            const enabledFeatures = Object.values(config.features).filter(Boolean).length;
+
+            if (!config.deviceAlias || config.deviceAlias.length < 3) {
+                errors.push('El alias del dispositivo debe tener al menos 3 caracteres.');
+            }
+
+            if (enabledFeatures === 0) {
+                errors.push('Debes activar al menos una funcionalidad.');
+            }
+
+            if (config.features.stt && !config.permissions.microphone) {
+                errors.push('STT requiere permiso de micrófono.');
+            }
+
+            if (config.features.camera && !config.permissions.camera) {
+                errors.push('La función de cámara requiere permiso de cámara.');
+            }
+
+            if (config.features.offlineAi && !config.permissions.storage) {
+                errors.push('IA offline requiere permiso de almacenamiento.');
+            }
+
+            if (config.features.automation && !config.permissions.termuxRunCommand) {
+                warnings.push('Automatización sin permiso Termux RUN_COMMAND puede limitar tareas.');
+            }
+
+            if (!config.limitations.noRoot) {
+                warnings.push('Se recomienda mantener activado \"No root / no acciones destructivas\" para el directo.');
+            }
+
+            return { errors, warnings };
+        }
+
+        function renderLocalWizardValidation(result) {
+            const box = document.getElementById('local-validation-output');
+            if (!box) return;
+
+            if (result.errors.length === 0 && result.warnings.length === 0) {
+                box.style.display = 'none';
+                box.innerHTML = '';
+                return;
+            }
+
+            const color = result.errors.length > 0 ? 'rgba(255,59,59,0.18)' : 'rgba(245,158,11,0.15)';
+            const borderColor = result.errors.length > 0 ? 'rgba(255,59,59,0.45)' : 'rgba(245,158,11,0.4)';
+            const title = result.errors.length > 0 ? 'Corrige antes de generar:' : 'Recomendaciones para el directo:';
+            const lines = []
+                .concat(result.errors.map((v) => `• ${v}`))
+                .concat(result.warnings.map((v) => `• ${v}`));
+
+            box.style.display = 'block';
+            box.style.background = color;
+            box.style.borderColor = borderColor;
+            box.innerHTML = `<strong>${title}</strong><br>${lines.join('<br>')}`;
+        }
+
+        function generateLocalProfile() {
+            const aliasInput = document.getElementById('lw-device-name');
+            const serialInput = document.getElementById('lw-device-serial');
+            const alias = normalizeDeviceAlias(aliasInput.value);
+            aliasInput.value = alias;
+
+            const config = collectLocalWizardConfig(alias, serialInput);
+            const validation = validateLocalWizardConfig(config);
+            renderLocalWizardValidation(validation);
+            if (validation.errors.length > 0) {
+                return;
+            }
+
+            const jsonPretty = JSON.stringify(config, null, 2);
+            const profilePath = `Mis_configuraciones_locales/dispositivos/${alias}/config_profile.json`;
+
+            const commandText = `mkdir -p Mis_configuraciones_locales/dispositivos/${alias}
+cat > ${profilePath} <<'EOF'
+${jsonPretty}
+EOF
+echo "${alias}" > Mis_configuraciones_locales/dispositivos/.active_device
+bash scripts/local_config_select.sh --json
+bash scripts/local_config_evaluate.sh`;
+
+            const promptText = `Contexto:
+Estoy preparando un fork de ClawMobil con configuración local modular por dispositivo.
+
+Misión:
+Aplica exactamente este perfil en mi workspace y usa solo la carpeta local del dispositivo.
+
+Pasos de ejecución:
+1. Crea/actualiza \`${profilePath}\` con el JSON siguiente.
+2. Guarda el dispositivo activo en \`Mis_configuraciones_locales/dispositivos/.active_device\`.
+3. Ajusta despliegue y permisos respetando \`features\`, \`permissions\` y \`limitations\`.
+4. Ejecuta validación con:
+   - \`bash scripts/local_config_select.sh --json\`
+   - \`bash scripts/local_config_evaluate.sh\`
+5. Si detectas mejoras reutilizables, genera reporte con:
+   - \`bash scripts/local_config_discovery.sh\`
+
+JSON del perfil:
+\`\`\`json
+${jsonPretty}
+\`\`\``;
+
+            localWizardState = { alias, jsonPretty, commandText };
+            document.getElementById('local-json-output').value = jsonPretty;
+            document.getElementById('local-command-output').value = commandText;
+            document.getElementById('local-prompt-output').value = promptText;
+            document.getElementById('local-result').style.display = 'block';
+        }
+
+        function copyLocalTextarea(textareaId, btnId, defaultLabel) {
+            const area = document.getElementById(textareaId);
+            const btn = document.getElementById(btnId);
+            if (!area || !btn) return;
+
+            area.select();
+            document.execCommand('copy');
+            btn.innerText = '¡Copiado!';
+            setTimeout(() => {
+                btn.innerText = defaultLabel;
+            }, 2000);
+        }
+
+        function downloadLocalProfile() {
+            if (!localWizardState) return;
+            const fileName = `config_profile.${localWizardState.alias}.json`;
+            const blob = new Blob([localWizardState.jsonPretty], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadLocalCommand() {
+            if (!localWizardState) return;
+            const fileName = `setup_local_${localWizardState.alias}.sh`;
+            const blob = new Blob([`${localWizardState.commandText}\n`], { type: 'text/x-shellscript;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        }
     </script>
 
 </body>
