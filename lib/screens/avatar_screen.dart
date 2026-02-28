@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:path_provider/path_provider.dart';
 
 // Paleta local (referencia desde main original)
@@ -52,7 +52,7 @@ class AvatarScreenState extends State<AvatarScreen> {
 
   // API & Keys
   String _apiBase = 'http://localhost:8080';
-  String _groqApiKey = '';
+
   String _elevenLabsKey = '';
   String _voiceId = 'pNInz6obpg8ndclKuzWf';
 
@@ -95,7 +95,7 @@ class AvatarScreenState extends State<AvatarScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _apiBase = prefs.getString('api_base') ?? 'http://localhost:8080';
-      _groqApiKey = prefs.getString('groq_api_key') ?? '';
+
       _elevenLabsKey = prefs.getString('elevenlabs_api_key') ?? '';
       _voiceId = prefs.getString('voice_id') ?? 'pNInz6obpg8ndclKuzWf';
     });
@@ -238,60 +238,6 @@ class AvatarScreenState extends State<AvatarScreen> {
     } finally {
       if (!autoListen) setState(() => _isProcessing = false);
     }
-  }
-
-  Future<String> _callWhisper(String path) async {
-    // Intento 1: Groq Cloud STT (rápido, mejor calidad, requiere internet)
-    if (_groqApiKey.isNotEmpty) {
-      try {
-        var request = http.MultipartRequest(
-          'POST',
-          Uri.parse('https://api.groq.com/openai/v1/audio/transcriptions'),
-        );
-        request.headers['Authorization'] = 'Bearer $_groqApiKey';
-        request.fields['model'] = 'whisper-large-v3';
-        request.files.add(await http.MultipartFile.fromPath('file', path));
-
-        var response = await request.send().timeout(
-              const Duration(seconds: 15),
-            );
-        var responseData = await response.stream.bytesToString();
-        var data = jsonDecode(responseData);
-        String text = data['text'] ?? '';
-        if (text.isNotEmpty) {
-          _addDiag('STT via: Groq (online)');
-          return text;
-        }
-      } catch (e) {
-        _addDiag('Groq STT falló ($e), probando whisper.cpp local...');
-      }
-    }
-
-    // Intento 2: whisper.cpp local via server.py /api/transcribe (bytes reales)
-    try {
-      _addDiag('STT offline: enviando audio a whisper.cpp...');
-      final audioBytes = await File(path).readAsBytes();
-      final response = await http
-          .post(
-            Uri.parse('$_apiBase/api/transcribe?lang=es'),
-            headers: {'Content-Type': 'audio/m4a'},
-            body: audioBytes,
-          )
-          .timeout(const Duration(seconds: 120));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(utf8.decode(response.bodyBytes));
-        String text = data['text'] ?? '';
-        if (text.isNotEmpty) {
-          _addDiag('STT via: whisper.cpp (offline)');
-          return text;
-        }
-      }
-    } catch (e) {
-      _addDiag('whisper.cpp local falló: $e');
-    }
-
-    return '';
   }
 
   // SEGURIDAD: _syncConfigWithServer eliminada.

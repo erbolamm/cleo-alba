@@ -326,7 +326,7 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A2E),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: iconColor.withOpacity(0.2)),
+        border: Border.all(color: iconColor.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -351,7 +351,7 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
     required VoidCallback? onTap,
   }) {
     return Material(
-      color: onTap == null ? Colors.white12 : color.withOpacity(0.15),
+      color: onTap == null ? Colors.white12 : color.withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -361,7 +361,8 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: onTap == null ? Colors.white12 : color.withOpacity(0.4),
+              color:
+                  onTap == null ? Colors.white12 : color.withValues(alpha: 0.4),
             ),
           ),
           child: Row(

@@ -1,1 +1,5 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - termux_scripts/samsung_a3/app/**

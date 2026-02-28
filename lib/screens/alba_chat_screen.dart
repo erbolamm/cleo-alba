@@ -207,8 +207,10 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
       listenFor: const Duration(seconds: 10),
       pauseFor: const Duration(seconds: 3),
       localeId: 'es_ES',
-      cancelOnError: true,
-      partialResults: true,
+      listenOptions: SpeechListenOptions(
+        cancelOnError: true,
+        partialResults: true,
+      ),
     );
 
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -463,9 +465,9 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
           ),
         ),
         const SizedBox(height: 2),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(Icons.fiber_manual_record, color: Colors.redAccent, size: 12),
             SizedBox(width: 6),
             Text(
@@ -565,7 +567,7 @@ class _BubbleWidget extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
+                    color: Colors.black.withValues(alpha: 0.25),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),

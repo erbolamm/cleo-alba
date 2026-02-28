@@ -2,352 +2,915 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ClawMobil | Inicio rápido local</title>
-    <meta name="description" content="Entrada rápida de ClawMobil para usuarios no técnicos. Abre el asistente, genera configuración local y crea tu clon modular." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClawMobil — Convierte tu móvil antiguo en un servidor de IA</title>
+    <meta name="description"
+        content="Framework open source para reciclar móviles Android antiguos como servidores de inteligencia artificial. Proyecto de ApliArte.com.">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
+        /* ═══════════════════════════════════════════
+           APLIARTE — Brand Kit
+           ═══════════════════════════════════════════ */
         :root {
-            --bg: #0b1220;
-            --panel: #101a2e;
-            --panel-soft: #18243d;
-            --text: #f4f7fb;
-            --muted: #b8c1d1;
-            --accent: #22c55e;
-            --accent-soft: rgba(34, 197, 94, 0.18);
-            --line: rgba(184, 193, 209, 0.26);
-            --warn: #f59e0b;
-            --mono: "JetBrains Mono", "SFMono-Regular", Menlo, monospace;
-            --sans: "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+            --brand-primary: #005fa9;
+            --brand-primary-dark: #00467b;
+            --brand-secondary: #5ecef5;
+            --brand-accent: #e8955e;
+            --brand-accent-dark: #b46734;
+            --brand-light-blue: #8fd5fa;
+            --bg: #fdfdfd;
+            --bg-soft: #f4f5f7;
+            --bg-dark: #303030;
+            --text: #303030;
+            --text-muted: #6b7280;
+            --text-light: #bebbb9;
+            --border: #d9d9d9;
+            --white: #ffffff;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.1);
+            --font: 'Inter', -apple-system, 'Segoe UI', sans-serif;
         }
 
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            margin: 0;
-            font-family: var(--sans);
+            font-family: var(--font);
+            background: var(--bg);
             color: var(--text);
-            background:
-                radial-gradient(circle at 80% -20%, rgba(34, 197, 94, 0.14), transparent 36%),
-                radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.22), transparent 35%),
-                var(--bg);
-            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
         }
 
-        .container {
-            max-width: 980px;
+        /* ═══ Header ═══ */
+        .site-header {
+            background: var(--brand-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 16px rgba(0, 95, 169, 0.25);
+        }
+
+        .site-header-inner {
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 28px 20px 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            height: 56px;
+            gap: 20px;
         }
 
-        h1,
-        h2 {
-            margin: 0;
-            line-height: 1.2;
+        .site-logo {
+            font-weight: 900;
+            font-size: 1.05rem;
+            color: var(--white);
+            letter-spacing: 2.5px;
+            text-decoration: none;
+            white-space: nowrap;
         }
 
-        p {
-            margin: 0;
+        .site-nav {
+            display: flex;
+            gap: 2px;
+            margin-left: auto;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
 
+        .site-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .site-nav a {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.72);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .site-nav a:hover,
+        .site-nav a.active {
+            background: rgba(255, 255, 255, 0.14);
+            color: var(--white);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: auto;
+            padding: 4px 8px;
+        }
+
+        /* ═══ Hero ═══ */
         .hero {
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            background: rgba(16, 26, 46, 0.88);
-            padding: 26px;
-            margin-bottom: 18px;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+            color: white;
+            padding: 72px 24px 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .badge {
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: rgba(143, 213, 250, 0.12);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(232, 149, 94, 0.08);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
             display: inline-block;
+            padding: 5px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
             font-size: 12px;
-            font-weight: 700;
-            color: var(--accent);
-            background: var(--accent-soft);
-            border: 1px solid rgba(34, 197, 94, 0.4);
-            border-radius: 999px;
-            padding: 5px 10px;
-            margin-bottom: 12px;
-            letter-spacing: 0.4px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .hero h1 {
-            font-size: clamp(1.9rem, 4.4vw, 2.7rem);
-            margin-bottom: 10px;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 18px;
         }
 
         .hero p {
-            color: var(--muted);
-            font-size: 1.02rem;
-            max-width: 760px;
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 540px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
         }
 
-        .actions {
+        .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 16px;
+            gap: 12px;
+            justify-content: center;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            text-decoration: none;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
             font-weight: 700;
-            border-radius: 10px;
-            border: 1px solid transparent;
-            padding: 11px 14px;
             font-size: 0.95rem;
-            transition: 120ms ease;
+            text-decoration: none;
             cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.25s ease;
         }
 
-        .btn-primary {
-            color: #06240f;
-            background: var(--accent);
+        .btn-accent {
+            background: var(--brand-accent);
+            color: var(--white);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.28);
+        .btn-accent:hover {
+            background: var(--brand-accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 149, 94, 0.35);
         }
 
-        .btn-ghost {
-            color: var(--text);
+        .btn-outline-white {
             background: transparent;
-            border-color: var(--line);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: var(--white);
         }
 
-        .btn-ghost:hover {
-            border-color: rgba(184, 193, 209, 0.58);
-            background: rgba(255, 255, 255, 0.03);
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.7);
         }
 
-        .grid {
+        /* ═══ Section common ═══ */
+        .section-wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 64px 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--brand-primary);
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 12px;
+            line-height: 1.25;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin-bottom: 36px;
+            line-height: 1.7;
+        }
+
+        /* ═══ Features grid ═══ */
+        .features-section {
+            background: var(--bg-soft);
+        }
+
+        .feature-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 14px;
-            margin-top: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
         }
 
-        .card {
-            grid-column: span 12;
-            border: 1px solid var(--line);
-            background: rgba(24, 36, 61, 0.75);
-            border-radius: 14px;
-            padding: 18px;
+        .feature-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            transition: all 0.3s ease;
         }
 
-        @media (min-width: 900px) {
-            .card-steps {
-                grid-column: span 8;
-            }
-
-            .card-files {
-                grid-column: span 4;
-            }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--brand-light-blue);
         }
 
-        .card h2 {
-            font-size: 1.14rem;
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--brand-primary-dark);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ═══ Getting started ═══ */
+        .start-section {
+            background: var(--bg);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .step-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: var(--brand-secondary);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--brand-primary);
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            margin-bottom: 14px;
+        }
+
+        .step-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .step-card p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ═══ Local-only banner ═══ */
+        .local-only-banner {
+            background: linear-gradient(135deg, rgba(0, 95, 169, 0.06), rgba(143, 213, 250, 0.1));
+            border: 2px dashed var(--brand-primary);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            text-align: center;
+            display: none;
+        }
+
+        .local-only-banner.visible {
+            display: block;
+        }
+
+        .local-only-banner h3 {
+            font-size: 1.1rem;
+            color: var(--brand-primary);
             margin-bottom: 10px;
         }
 
-        .muted {
-            color: var(--muted);
+        .local-only-banner p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
-        .steps {
-            display: grid;
-            gap: 10px;
-            margin-top: 12px;
+        .local-only-banner .btn {
+            font-size: 0.88rem;
         }
 
-        .step {
-            border: 1px dashed rgba(184, 193, 209, 0.35);
-            border-radius: 10px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.18);
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
         }
 
-        .step strong {
+        .btn-primary:hover {
+            background: var(--brand-primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 95, 169, 0.3);
+        }
+
+        .btn-github {
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        .btn-github:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-brand {
+            background: transparent;
+            border: 2px solid var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .btn-outline-brand:hover {
+            background: var(--brand-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ═══ Local content (hidden when remote) ═══ */
+        .local-content {
             display: block;
-            margin-bottom: 4px;
+        }
+
+        .local-content.hidden {
+            display: none;
+        }
+
+        /* ═══ FAQ ═══ */
+        .faq-section {
+            background: var(--bg-soft);
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-width: 740px;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 24px;
+        }
+
+        .faq-item h3 {
             font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--brand-primary-dark);
         }
 
-        .step p {
-            color: var(--muted);
-            font-size: 0.93rem;
-            line-height: 1.42;
+        .faq-item p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.65;
         }
 
-        .code {
-            font-family: var(--mono);
-            background: rgba(0, 0, 0, 0.28);
-            border: 1px solid rgba(184, 193, 209, 0.23);
-            border-radius: 10px;
-            padding: 12px;
-            white-space: pre-wrap;
-            word-break: break-word;
-            line-height: 1.5;
-            font-size: 12px;
-            margin-top: 10px;
+        /* ═══ Social / Share ═══ */
+        .share-section {
+            background: var(--brand-primary);
+            color: white;
+            text-align: center;
         }
 
-        .code-row {
+        .share-section .section-label {
+            color: var(--brand-light-blue);
+        }
+
+        .share-section .section-title {
+            color: white;
+        }
+
+        .share-section .section-desc {
+            color: rgba(255, 255, 255, 0.75);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .social-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 24px;
         }
 
-        .btn-mini {
-            background: rgba(184, 193, 209, 0.14);
-            color: var(--text);
-            border: 1px solid rgba(184, 193, 209, 0.34);
-            border-radius: 8px;
-            font-size: 12px;
-            padding: 7px 10px;
-            cursor: pointer;
-        }
-
-        .btn-mini:hover {
-            background: rgba(184, 193, 209, 0.2);
-        }
-
-        .list {
-            display: grid;
-            gap: 9px;
-            margin-top: 10px;
-        }
-
-        .list-item {
-            border: 1px solid var(--line);
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
             border-radius: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.16);
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        .list-item code {
-            font-family: var(--mono);
-            font-size: 12px;
-            color: #93c5fd;
-            display: block;
-            margin-top: 4px;
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
         }
 
-        .warning {
-            margin-top: 14px;
-            border-left: 3px solid var(--warn);
-            background: rgba(245, 158, 11, 0.11);
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: #f8e2be;
-            font-size: 0.9rem;
+        .star-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: var(--brand-accent);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
         }
 
-        footer {
-            margin-top: 20px;
-            color: var(--muted);
-            font-size: 0.86rem;
+        .star-cta:hover {
+            background: var(--brand-accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(232, 149, 94, 0.4);
+        }
+
+        /* ═══ Footer ═══ */
+        .site-footer {
+            background: var(--bg-dark);
+            color: rgba(255, 255, 255, 0.55);
+            padding: 28px 24px;
             text-align: center;
+            font-size: 0.82rem;
+        }
+
+        .site-footer a {
+            color: var(--brand-light-blue);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ═══ Responsive ═══ */
+        @media (max-width: 768px) {
+            .site-nav {
+                display: none;
+                position: absolute;
+                top: 56px;
+                left: 0;
+                right: 0;
+                background: var(--brand-primary-dark);
+                flex-direction: column;
+                padding: 12px 16px;
+                gap: 4px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            }
+
+            .site-nav.open {
+                display: flex;
+            }
+
+            .site-nav a {
+                padding: 10px 14px;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 52px 20px 48px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-wrap {
+                padding: 44px 20px;
+            }
+
+            .feature-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <section class="hero">
-            <span class="badge">Entrada mínima recomendada</span>
-            <h1>ClawMobil listo para clonar y personalizar</h1>
-            <p>Si no tienes perfil técnico, empieza aquí. Este `index.html` y `LEEME.md` son los dos puntos de entrada del framework. El asistente genera tu configuración local en `Mis_configuraciones_locales` sin romper la plantilla base.</p>
-            <div class="actions">
-                <a class="btn btn-primary" href="empezar.html">Abrir asistente (`empezar.html`)</a>
-                <a class="btn btn-ghost" href="LEEME.md">Abrir `LEEME.md`</a>
-                <a class="btn btn-ghost" href="docs/LOCAL_CONFIG_FRAMEWORK.md">Ver flujo modular</a>
-            </div>
-        </section>
 
-        <div class="grid">
-            <section class="card card-steps">
-                <h2>Flujo guiado (desde cero)</h2>
-                <p class="muted">Tarda 5-10 minutos para dejar un clon funcional de ClawMobil en tu equipo.</p>
-
-                <div class="steps">
-                    <article class="step">
-                        <strong>1. Abre la carpeta en VS Code</strong>
-                        <p>Menú `Archivo > Abrir carpeta...` y selecciona el repositorio `ClawMobil`.</p>
-                    </article>
-                    <article class="step">
-                        <strong>2. Lanza esta guía local</strong>
-                        <p>Puedes abrir `index.html` con doble clic o desde VS Code (extensión Live Server opcional).</p>
-                    </article>
-                    <article class="step">
-                        <strong>3. Entra al asistente</strong>
-                        <p>Haz clic en <em>Abrir asistente</em>, elige dispositivo, funciones, idioma y permisos.</p>
-                    </article>
-                    <article class="step">
-                        <strong>4. Genera y aplica tu perfil</strong>
-                        <p>El asistente te entrega `config_profile.json`, prompt modular y comando shell para activar tu instancia.</p>
-                    </article>
-                    <article class="step">
-                        <strong>5. Valida y comparte mejoras</strong>
-                        <p>Ejecuta scripts de evaluación/discovery y promueve solo cambios reutilizables.</p>
-                    </article>
-                </div>
-
-                <div class="code" id="quick-commands">bash scripts/local_config_select.sh --json
-bash scripts/local_config_evaluate.sh
-bash scripts/local_config_discovery.sh</div>
-                <div class="code-row">
-                    <button class="btn-mini" id="btn-copy-cmds" onclick="copyText('quick-commands', 'btn-copy-cmds', 'Copiar comandos')">Copiar comandos</button>
-                </div>
-            </section>
-
-            <aside class="card card-files">
-                <h2>Rutas que sí debes tocar</h2>
-                <div class="list">
-                    <div class="list-item">
-                        `Mis_configuraciones_locales/dispositivos/&lt;tu_dispositivo&gt;/`
-                        <code>Tu zona local de pruebas y personalización</code>
-                    </div>
-                    <div class="list-item">
-                        `empezar.html`
-                        <code>Wizard para generar perfil + prompt + comando</code>
-                    </div>
-                    <div class="list-item">
-                        `docs/LOCAL_CONFIG_FRAMEWORK.md`
-                        <code>Cómo evaluar, promover y revertir cambios</code>
-                    </div>
-                </div>
-                <div class="warning">
-                    Mantén secretos y experimentos en `Mis_configuraciones_locales`. Así cada fork es independiente y reversible.
-                </div>
-            </aside>
+    <!-- ═══ HEADER ═══ -->
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-logo">APLIARTE</a>
+            <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')"
+                aria-label="Menú">☰</button>
+            <nav class="site-nav" id="mainNav">
+                <a href="#hero" class="active">Inicio</a>
+                <a href="#empezar">Empezar</a>
+                <a href="#features">Características</a>
+                <a href="#faq">FAQ</a>
+                <a href="#compartir">Compartir</a>
+                <a href="https://github.com/erbolamm/ClawMobil" target="_blank">⭐ GitHub</a>
+            </nav>
         </div>
+    </header>
 
-        <footer>ClawMobil · framework modular para reciclar Android antiguos</footer>
-    </div>
+    <!-- ═══ HERO ═══ -->
+    <section class="hero" id="hero">
+        <div class="hero-inner">
+            <span class="hero-badge">Open Source · Gratuito</span>
+            <h1>Convierte tu móvil antiguo en un servidor de IA</h1>
+            <p>ClawMobil te guía paso a paso para reciclar cualquier Android viejo y convertirlo en un asistente
+                inteligente autónomo. Sin experiencia técnica necesaria.</p>
+            <div class="hero-actions">
+                <a class="btn btn-accent" href="#empezar">🚀 Empezar Ahora</a>
+                <a class="btn btn-outline-white" href="https://github.com/erbolamm/ClawMobil" target="_blank">⭐ Ver en
+                    GitHub</a>
+            </div>
+        </div>
+    </section>
 
+    <!-- ═══ EMPEZAR ═══ -->
+    <section class="start-section" id="empezar">
+        <div class="section-wrap">
+            <div class="section-label">Primeros Pasos</div>
+            <h2 class="section-title">Tu servidor IA en 5 pasos</h2>
+            <p class="section-desc">No necesitas ser programador. Sigue estos pasos y en 15 minutos tendrás tu móvil
+                reciclado funcionando como servidor.</p>
+
+            <!-- Se muestra cuando el usuario tiene el repo descargado -->
+            <div class="local-content" id="localSteps">
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <h3>Abre la carpeta del proyecto</h3>
+                        <p>Abre la carpeta <code>ClawMobil</code> en VS Code, Cursor, o tu editor con IA favorito.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <h3>Lanza el asistente de configuración</h3>
+                        <p>En la raíz del proyecto encontrarás el archivo
+                            <strong style="color:var(--brand-primary);">empezar.html</strong>.
+                            Ábrelo en tu navegador (doble clic o arrástralo). Este wizard te guía para crear tu
+                            primer dispositivo.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <h3>Conecta tu teléfono viejo</h3>
+                        <p>Conecta el dispositivo por USB, activa Depuración USB, y verifica con
+                            <code>adb devices</code>.
+                        </p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">4</div>
+                        <h3>Pega el prompt en tu asistente IA</h3>
+                        <p>Copia el prompt generado por el wizard y pégalo en el chat de tu asistente IDE. Él hace el
+                            resto.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">5</div>
+                        <h3>¡Listo! Tu servidor IA funciona</h3>
+                        <p>Tu móvil antiguo ahora ejecuta OpenClaw como servidor de inteligencia artificial autónomo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Se muestra cuando se ve desde GitHub Pages / remoto -->
+            <div class="local-only-banner" id="remoteBanner">
+                <h3>📥 Para empezar, descarga el repositorio</h3>
+                <p>El asistente de configuración (<strong>empezar.html</strong>) funciona abriendo el archivo
+                    directamente
+                    desde la carpeta del proyecto en tu ordenador. Descarga o clona el repositorio y abre
+                    <code>empezar.html</code> desde la raíz del proyecto.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                    <a class="btn btn-github" href="https://github.com/erbolamm/ClawMobil" target="_blank">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                        </svg>
+                        Descargar de GitHub
+                    </a>
+                    <a class="btn btn-primary" href="https://apliarte.com" target="_blank">🌐 ApliArte.com</a>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+                    ¡No te olvides de darle una ⭐ al repo! Si quieres apoyar el proyecto:</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                    <a class="btn btn-accent" href="https://www.paypal.com/paypalme/erbolamm" target="_blank">💛
+                        PayPal</a>
+                    <a class="btn btn-accent" href="https://ko-fi.com/C0C11TWR1K" target="_blank">☕ Ko-fi</a>
+                    <a class="btn btn-outline-brand" href="https://twitter.com/erbolamm" target="_blank">𝕏
+                        @erbolamm</a>
+                    <a class="btn btn-outline-brand" href="https://github.com/erbolamm" target="_blank">👤
+                        GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CARACTERÍSTICAS ═══ -->
+    <section class="features-section" id="features">
+        <div class="section-wrap">
+            <div class="section-label">Características</div>
+            <h2 class="section-title">¿Qué es lo que consigues?</h2>
+            <p class="section-desc">Un ecosistema completo para dar nueva vida a dispositivos Android que ya no usas.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3>Servidor IA Autónomo</h3>
+                    <p>Tu móvil ejecuta un gateway OpenClaw que responde preguntas, genera texto y procesa comandos de
+                        forma inteligente.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📡</span>
+                    <h3>Sin WiFi Necesario</h3>
+                    <p>Con modelos locales (Ollama, llama.cpp), el dispositivo funciona como servidor de IA
+                        completamente offline.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💬</span>
+                    <h3>Bot de Telegram Integrado</h3>
+                    <p>Recibe y responde mensajes de Telegram automáticamente. Tu asistente personal siempre disponible.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔧</span>
+                    <h3>Configurador Visual</h3>
+                    <p>Un wizard HTML interactivo genera el prompt para que tu asistente IDE configure todo
+                        automáticamente.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>App Flutter Incluida</h3>
+                    <p>Interfaz nativa opcional para controlar y supervisar los servicios del dispositivo desde la
+                        pantalla del teléfono.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">♻️</span>
+                    <h3>Reciclaje Tecnológico</h3>
+                    <p>Dale nueva vida a un móvil que iba al cajón. Ecológico, gratuito y con una comunidad detrás.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FAQ ═══ -->
+    <section class="faq-section" id="faq">
+        <div class="section-wrap">
+            <div class="section-label">Preguntas Frecuentes</div>
+            <h2 class="section-title">¿Tienes dudas?</h2>
+            <p class="section-desc">Las preguntas más comunes sobre ClawMobil.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>¿Qué teléfonos son compatibles?</h3>
+                    <p>Cualquier Android con al menos 3 GB de RAM y Android 7+. Probado en Samsung Galaxy A3 2017,
+                        Huawei P10 y Yestel Note Pro. Cuanto más nuevo, mejor rendimiento.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Necesito saber programar?</h3>
+                    <p>No. El wizard de <code>empezar.html</code> genera un prompt que puedes pegar en cualquier
+                        asistente con IA (VS Code con Copilot, Cursor, Gemini CLI…). El asistente hace el trabajo
+                        técnico por ti.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Es seguro usar mi teléfono personal?</h3>
+                    <p><strong>NO.</strong> Usa un teléfono viejo que ya no necesites. Haz restablecimiento de fábrica y
+                        no inicies sesión con tu cuenta personal de Google.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Necesito conexión a internet?</h3>
+                    <p>Solo para la instalación inicial. Una vez configurado, puedes operar en modo offline con modelos
+                        locales de IA.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>¿Es gratis?</h3>
+                    <p>Sí, 100% Open Source. Sin costes ocultos, sin suscripciones. Solo tu móvil viejo y un cable USB.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ COMPARTIR ═══ -->
+    <section class="share-section" id="compartir">
+        <div class="section-wrap" style="max-width: 700px;">
+            <div class="section-label">Comunidad</div>
+            <h2 class="section-title">Ayúdame a que esto crezca</h2>
+            <p class="section-desc">Este proyecto lleva innumerables horas de desarrollo gratuito. Comparte, da una
+                estrella y únete a la comunidad.</p>
+
+            <div class="social-buttons">
+                <a class="social-btn"
+                    href="https://twitter.com/intent/tweet?text=%F0%9F%A6%9E%20Acabo%20de%20convertir%20un%20m%C3%B3vil%20antiguo%20en%20un%20servidor%20de%20IA%20con%20%23ClawMobil%20de%20ApliArte.com%20%40erbolamm%20%F0%9F%94%A5%0A%0Ahttps%3A%2F%2Fapliarte.com"
+                    target="_blank">𝕏 Twitter</a>
+                <a class="social-btn"
+                    href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fapliarte.com"
+                    target="_blank">💼 LinkedIn</a>
+                <a class="social-btn"
+                    href="https://www.reddit.com/submit?url=https%3A%2F%2Fapliarte.com&title=%F0%9F%A6%9E%20ClawMobil%20-%20Convierte%20m%C3%B3viles%20antiguos%20en%20servidores%20IA%20offline"
+                    target="_blank">🟠 Reddit</a>
+                <a class="social-btn"
+                    href="https://wa.me/?text=%F0%9F%A6%9E%20Mira%20esto%3A%20ClawMobil%20convierte%20m%C3%B3viles%20antiguos%20en%20servidores%20de%20IA.%20%23ClawMobil%20de%20ApliArte.com%20%F0%9F%94%A5%20https%3A%2F%2Fapliarte.com"
+                    target="_blank">💬 WhatsApp</a>
+                <a class="social-btn"
+                    href="https://t.me/share/url?url=https%3A%2F%2Fapliarte.com&text=%F0%9F%A6%9E%20ClawMobil%20-%20Convierte%20m%C3%B3viles%20antiguos%20en%20servidores%20IA%20%23ClawMobil"
+                    target="_blank">✈️ Telegram</a>
+            </div>
+
+            <a class="star-cta" href="https://github.com/erbolamm/ClawMobil" target="_blank">⭐ Dale una estrella en
+                GitHub</a>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="site-footer">
+        <p>ClawMobil — <a href="https://apliarte.com" target="_blank">ApliArte.com</a> · Software Libre · 2026</p>
+    </footer>
+
+    <!-- ═══ SCRIPT: Detección local vs remoto ═══ -->
     <script>
-        function copyText(elementId, buttonId, defaultLabel) {
-            const source = document.getElementById(elementId);
-            const button = document.getElementById(buttonId);
-            if (!source || !button) return;
+        // Detecta si estamos viendo el archivo con el repo descargado (file:// o localhost)
+        // o si estamos en GitHub Pages / web remota
+        (function () {
+            const isLocal = window.location.protocol === 'file:'
+                || window.location.hostname === 'localhost'
+                || window.location.hostname === '127.0.0.1';
 
-            const value = source.textContent || source.innerText || '';
-            navigator.clipboard.writeText(value).then(() => {
-                button.textContent = 'Copiado';
-                setTimeout(() => {
-                    button.textContent = defaultLabel;
-                }, 1500);
+            if (isLocal) {
+                // Verificar que empezar.html existe (por si acaso)
+                fetch('empezar.html', { method: 'HEAD' })
+                    .then(function (r) {
+                        if (!r.ok) showRemoteBanner();
+                    })
+                    .catch(function () {
+                        // En file:// protocol, fetch puede fallar por CORS.
+                        // Si estamos en file://, asumimos que el archivo está ahí.
+                    });
+            } else {
+                showRemoteBanner();
+            }
+
+            function showRemoteBanner() {
+                var local = document.getElementById('localSteps');
+                var banner = document.getElementById('remoteBanner');
+                if (local) local.classList.add('hidden');
+                if (banner) banner.classList.add('visible');
+            }
+        })();
+
+        // Smooth scroll para nav
+        document.querySelectorAll('.site-nav a[href^="#"]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    // Cerrar menú mobile
+                    document.querySelector('.site-nav').classList.remove('open');
+                }
             });
-        }
+        });
+
+        // Active nav en scroll
+        var sections = document.querySelectorAll('section[id]');
+        var navLinks = document.querySelectorAll('.site-nav a[href^="#"]');
+
+        window.addEventListener('scroll', function () {
+            var current = '';
+            sections.forEach(function (section) {
+                var top = section.offsetTop - 80;
+                if (window.scrollY >= top) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(function (link) {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
     </script>
+
 </body>
 
 </html>
