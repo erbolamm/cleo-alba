@@ -1,0 +1,88 @@
+<!--
+  🖥️ SmartDisplay Widget para Blogger
+  Pega este código en un gadget HTML/JavaScript de Blogger.
+  Cambia DISPLAY_API_URL por tu URL real (ej: https://display.apliarte.com)
+-->
+<style>
+    #smart-display-widget {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: linear-gradient(135deg, #0a0f1a 0%, #1a1a2e 100%);
+        color: #e0e0e0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    #smart-display-widget .sd-dot {
+        width: 6px;
+        height: 6px;
+        background: #4ade80;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        animation: sd-pulse 2s infinite;
+    }
+
+    #smart-display-widget .sd-text {
+        font-size: 16px;
+        line-height: 1.5;
+        white-space: pre-line;
+        max-width: 100%;
+    }
+
+    #smart-display-widget .sd-idle {
+        color: #666;
+        font-size: 13px;
+        font-style: italic;
+    }
+
+    @keyframes sd-pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+    }
+</style>
+<div id="smart-display-widget">
+    <span class="sd-dot"></span>
+    <div class="sd-text sd-idle">apliarte.com</div>
+</div>
+<script>
+    (function () {
+        // ⚠️ CAMBIA ESTA URL por la tuya
+        var DISPLAY_API_URL = 'https://display.apliarte.com/api/display';
+
+        function updateDisplay() {
+            fetch(DISPLAY_API_URL)
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    var el = document.querySelector('#smart-display-widget .sd-text');
+                    if (!el) return;
+                    if (d.state === 'idle' || !d.state) {
+                        el.className = 'sd-text sd-idle';
+                        el.textContent = 'apliarte.com';
+                    } else {
+                        el.className = 'sd-text';
+                        var text = d.state.replace('tts:', '');
+                        el.textContent = text;
+                    }
+                })
+                .catch(function () { });
+        }
+
+        updateDisplay();
+        setInterval(updateDisplay, 3000);
+    })();
+</script>
