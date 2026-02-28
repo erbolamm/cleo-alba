@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -20,9 +20,11 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
   // Service status
   bool _bridgeOnline = false;
   bool _openclawOnline = false;
+  bool _fileServerOnline = false;
   bool _isChecking = true;
   bool _autoStartSent = false;
   String _lastLog = '';
+  String _wifiIp = '...';
   Timer? _pollTimer;
 
   // Commands users can copy-paste into Termux
@@ -64,11 +66,37 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
       'cmd': 'bash /sdcard/clawmobil/start.sh',
       'desc': 'Arranca TODOS los servicios de un tirón',
     },
+    {
+      'title': '📂 Servidor de Archivos WiFi',
+      'cmd': 'cd /sdcard && python3 -m http.server 8888 &',
+      'desc': 'Accede a los archivos desde http://IP:8888 en el navegador',
+    },
+    {
+      'title': '📁 Ver archivos via USB (ADB)',
+      'cmd': 'adb shell ls /sdcard/',
+      'desc': 'Lista archivos desde el Mac conectado por cable',
+    },
+    {
+      'title': '📥 Copiar archivo por USB',
+      'cmd': 'adb pull /sdcard/ARCHIVO_AQUÍ .',
+      'desc': 'Descarga un archivo del móvil al Mac',
+    },
+    {
+      'title': '📤 Enviar archivo por USB',
+      'cmd': 'adb push ARCHIVO_LOCAL /sdcard/',
+      'desc': 'Sube un archivo del Mac al móvil',
+    },
+    {
+      'title': '📂 Copiar vía SCP (WiFi)',
+      'cmd': 'scp -P 8022 192.168.1.18:~/ARCHIVO .',
+      'desc': 'Descarga un archivo por SSH desde la red local',
+    },
   ];
 
   @override
   void initState() {
     super.initState();
+    _detectWifiIp();
     _autoStart();
     _checkServices();
     // Poll every 15 seconds
@@ -115,6 +143,24 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
 
   // ──────────── SERVICE CHECKS ────────────
 
+  Future<void> _detectWifiIp() async {
+    try {
+      final interfaces = await NetworkInterface.list(
+        type: InternetAddressType.IPv4,
+        includeLoopback: false,
+      );
+      for (final iface in interfaces) {
+        for (final addr in iface.addresses) {
+          if (!addr.isLoopback) {
+            if (mounted) setState(() => _wifiIp = addr.address);
+            return;
+          }
+        }
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _wifiIp = 'Sin WiFi');
+  }
+
   Future<void> _checkServices() async {
     if (!mounted) return;
     setState(() => _isChecking = true);
@@ -137,10 +183,20 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
       openclaw = resp.statusCode == 200 || resp.statusCode == 401;
     } catch (_) {}
 
+    // Check file server (port 8888)
+    bool fileServer = false;
+    try {
+      final resp = await http
+          .get(Uri.parse('http://localhost:8888/'))
+          .timeout(const Duration(seconds: 2));
+      fileServer = resp.statusCode == 200;
+    } catch (_) {}
+
     if (mounted) {
       setState(() {
         _bridgeOnline = bridge;
         _openclawOnline = openclaw;
+        _fileServerOnline = fileServer;
         _isChecking = false;
       });
     }
@@ -251,6 +307,11 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
             ),
             const SizedBox(height: 12),
             ..._commands.map((c) => _buildCommandCard(c)),
+
+            const SizedBox(height: 24),
+
+            // ── WiFi Access Info ──
+            _buildWifiSection(),
           ],
         ),
       ),
@@ -294,13 +355,22 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
                   port: '8080',
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Expanded(
                 child: _buildStatusIndicator(
                   icon: Icons.hub,
                   label: 'OpenClaw',
                   online: _openclawOnline,
                   port: '18789',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildStatusIndicator(
+                  icon: Icons.folder_open,
+                  label: 'Archivos',
+                  online: _fileServerOnline,
+                  port: '8888',
                 ),
               ),
             ],
@@ -380,6 +450,89 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
           borderRadius: BorderRadius.circular(14),
         ),
         elevation: 4,
+      ),
+    );
+  }
+
+  Widget _buildWifiSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF0C2D48),
+            const Color(0xFF145DA0).withValues(alpha: 0.3),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border:
+            Border.all(color: const Color(0xFF2196F3).withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.wifi, color: Colors.lightBlueAccent, size: 20),
+              SizedBox(width: 8),
+              Text(
+                'ACCESO REMOTO',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildWifiRow('📡 IP del dispositivo', _wifiIp),
+          if (_fileServerOnline)
+            _buildWifiRow('📂 Archivos WiFi', 'http://$_wifiIp:8888'),
+          _buildWifiRow('🔑 SSH', 'ssh -p 8022 $_wifiIp'),
+          _buildWifiRow('🦞 OpenClaw', 'http://$_wifiIp:18789'),
+          const SizedBox(height: 8),
+          const Text(
+            '💡 Abre estas URLs en el navegador de otro dispositivo en la misma red WiFi',
+            style: TextStyle(color: Colors.white30, fontSize: 10),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWifiRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: InkWell(
+        onTap: () => _copyCommand(value),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(color: Colors.white60, fontSize: 12),
+              ),
+            ),
+            Flexible(
+              child: Text(
+                value,
+                style: const TextStyle(
+                  color: Colors.lightBlueAccent,
+                  fontSize: 12,
+                  fontFamily: 'monospace',
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.copy, color: Colors.white24, size: 14),
+          ],
+        ),
       ),
     );
   }

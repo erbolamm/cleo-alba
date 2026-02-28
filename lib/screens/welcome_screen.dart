@@ -111,6 +111,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> _triggerAutoStart() async {
+    // 1. Intentar arrancar mediante intent a Termux (funciona sin servidor)
+    try {
+      const platform = MethodChannel('com.aplibot/termux');
+      await platform.invokeMethod('runCommand', {
+        'path': '/data/data/com.termux/files/usr/bin/bash',
+        'args': ['/sdcard/clawmobil/start.sh'],
+        'background': true,
+      });
+      debugPrint('🚀 Intent de Termux enviado para arrancar servicios');
+    } catch (e) {
+      debugPrint('⚠️ Termux intent falló: $e — probando HTTP');
+    }
+
+    // 2. Fallback: intentar por HTTP si el bridge ya estaba corriendo
     try {
       final prefs = await SharedPreferences.getInstance();
       final String apiBase =
@@ -120,7 +134,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 5));
     } catch (_) {
-      // Ignorar errores aquí, el chequeo principal dirá si funcionó
+      // Ignorar — el chequeo principal dirá si funcionó
     }
   }
 
