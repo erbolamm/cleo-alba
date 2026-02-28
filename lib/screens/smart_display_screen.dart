@@ -20,6 +20,10 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
   late final WebViewController _controller;
   bool _isLoaded = false;
 
+  Uri _displayUrl() => Uri.parse(
+        'http://localhost:8080/smart_display.html?t=${DateTime.now().millisecondsSinceEpoch}',
+      );
+
   @override
   void initState() {
     super.initState();
@@ -38,8 +42,8 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
           },
         ),
       )
-      // Cargar directamente desde el bridge server
-      ..loadRequest(Uri.parse('http://localhost:8080/smart_display.html'));
+      // Cargar directamente desde el bridge server (con cache-busting)
+      ..loadRequest(_displayUrl());
   }
 
   @override
@@ -84,9 +88,7 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
             icon: const Icon(Icons.refresh, color: Colors.white38),
             onPressed: () {
               setState(() => _isLoaded = false);
-              _controller.loadRequest(
-                Uri.parse('http://localhost:8080/smart_display.html'),
-              );
+              _controller.loadRequest(_displayUrl());
             },
             tooltip: 'Recargar',
           ),
