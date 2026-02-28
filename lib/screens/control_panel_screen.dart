@@ -37,7 +37,7 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
     },
     {
       'title': '🐍 Arrancar Bridge Server',
-      'cmd': 'python3 /sdcard/server.py &',
+      'cmd': 'python3 ~/server.py &',
       'desc': 'Lanza el servidor bridge HTTP en segundo plano',
     },
     {
@@ -63,7 +63,7 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
     },
     {
       'title': '🚀 TODO (un solo comando)',
-      'cmd': 'bash /sdcard/clawmobil/start.sh',
+      'cmd': 'bash ~/start.sh',
       'desc': 'Arranca TODOS los servicios de un tirón',
     },
     {
@@ -90,6 +90,11 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
       'title': '📂 Copiar vía SCP (WiFi)',
       'cmd': 'scp -P 8022 192.168.1.18:~/ARCHIVO .',
       'desc': 'Descarga un archivo por SSH desde la red local',
+    },
+    {
+      'title': '🔋 Estado del sistema',
+      'cmd': 'uptime && free -m && df -h /sdcard',
+      'desc': 'Muestra tiempo activo, RAM y disco disponible',
     },
   ];
 
