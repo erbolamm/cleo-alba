@@ -1,9 +1,0 @@
-services:
-  smart-display:
-    build: .
-    container_name: smart-display
-    restart: always
-    ports:
-      - "8086:3000"
-    environment:
-      - NODE_ENV=production
