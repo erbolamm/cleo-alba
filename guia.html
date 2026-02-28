@@ -25,23 +25,23 @@
         }
 
         :root {
-            --bg: #1a1a1a;
-            --bg-warm: #1e1c19;
-            --bg-card: #252320;
-            --bg-card-hover: #2e2b27;
-            --border: rgba(180, 160, 120, 0.15);
-            --border-active: rgba(212, 175, 55, 0.5);
-            --text: #d4cfc7;
-            --text-dim: rgba(200, 190, 170, 0.55);
-            --text-bright: #f0ebe0;
-            --gold: #D4AF37;
-            --gold-dim: rgba(212, 175, 55, 0.3);
-            --green: #6b9e6b;
-            --green-bg: rgba(107, 158, 107, 0.12);
-            --red: #c45c5c;
-            --red-bg: rgba(196, 92, 92, 0.12);
-            --amber: #c4a24e;
-            --amber-bg: rgba(196, 162, 78, 0.12);
+            --bg: #fdfdfd;
+            --bg-warm: #f4f5f7;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f9fafb;
+            --border: rgba(0, 95, 169, 0.15);
+            --border-active: rgba(0, 95, 169, 0.5);
+            --text: #303030;
+            --text-dim: #6b7280;
+            --text-bright: #1a1a2e;
+            --gold: #005fa9;
+            --gold-dim: rgba(0, 95, 169, 0.3);
+            --green: #22c55e;
+            --green-bg: rgba(34, 197, 94, 0.08);
+            --red: #ef4444;
+            --red-bg: rgba(239, 68, 68, 0.08);
+            --amber: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.08);
             --mono: 'IBM Plex Mono', 'Courier New', monospace;
         }
 
@@ -54,7 +54,7 @@
         }
 
         body {
-            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
+            background: var(--bg);
             min-height: 100vh;
         }
 
@@ -100,7 +100,7 @@
         }
 
         .header h1 span {
-            color: var(--gold);
+            color: #5ecef5;
         }
 
         .header p {
@@ -548,7 +548,7 @@
         .cmd-body code {
             font-family: var(--mono);
             font-size: 13px;
-            color: var(--green);
+            color: #22c55e;
             line-height: 1.8;
             display: block;
             white-space: pre-wrap;
