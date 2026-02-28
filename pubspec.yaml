@@ -20,6 +20,7 @@ dependencies:
   url_launcher: ^6.2.5
   file_picker: ^8.0.0
   android_intent_plus: ^5.0.0
+  wakelock_plus: ^1.4.0
 
 dev_dependencies:
   flutter_test:

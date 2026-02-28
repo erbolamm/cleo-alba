@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 // ─────────────────────────────────────────────────────────────────
 //  SmartDisplay — Pantalla interactiva del agente OpenClaw
@@ -22,6 +23,7 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
   @override
   void initState() {
     super.initState();
+    WakelockPlus.enable(); // Mantener pantalla encendida
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.black)
@@ -33,6 +35,12 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
         ),
       );
     _loadHtml();
+  }
+
+  @override
+  void dispose() {
+    WakelockPlus.disable(); // Restaurar comportamiento normal
+    super.dispose();
   }
 
   Future<void> _loadHtml() async {
