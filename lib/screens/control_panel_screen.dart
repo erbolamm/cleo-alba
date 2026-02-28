@@ -129,7 +129,7 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
       const platform = MethodChannel('com.aplibot/termux');
       await platform.invokeMethod('runCommand', {
         'path': '/data/data/com.termux/files/usr/bin/bash',
-        'args': ['/sdcard/clawmobil/start.sh'],
+        'args': ['start.sh'],
         'background': true,
       });
       setState(() {
@@ -458,22 +458,46 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
 
   Widget _buildRestartButton() {
     final allOnline = _bridgeOnline && _openclawOnline;
-    return ElevatedButton.icon(
-      onPressed: _restartAll,
-      icon: const Icon(Icons.restart_alt, size: 22),
-      label: Text(
-        allOnline ? '🟢 TODO FUNCIONANDO · Reiniciar' : '🔴 ARRANCAR SERVICIOS',
-        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            allOnline ? const Color(0xFF065F46) : const Color(0xFF991B1B),
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+    return Container(
+      decoration: allOnline
+          ? null
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF991B1B).withValues(alpha: 0.4),
+                  blurRadius: 12,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+      child: ElevatedButton.icon(
+        onPressed: _restartAll,
+        icon: Icon(
+          allOnline ? Icons.check_circle : Icons.rocket_launch,
+          size: 24,
         ),
-        elevation: 4,
+        label: Text(
+          allOnline
+              ? '🟢 TODO FUNCIONANDO · Reiniciar'
+              : '🤖 ARRANCAR ApliArteBot',
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: allOnline ? 14 : 16,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+              allOnline ? const Color(0xFF065F46) : const Color(0xFFB91C1C),
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(
+            vertical: allOnline ? 16 : 20,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          elevation: allOnline ? 4 : 8,
+        ),
       ),
     );
   }
