@@ -171,7 +171,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   void _showError() {
     setState(() {
-      _messages.add(_Msg(
+      _messages.add(const _Msg(
         role: 'assistant',
         content: '😕 Ups, no puedo conectarme ahora.\nDile a papá o mamá 📱',
       ));
