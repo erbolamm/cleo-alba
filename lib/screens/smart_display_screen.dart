@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
 // ─────────────────────────────────────────────────────────────────
 //  SmartDisplay — Pantalla interactiva del agente OpenClaw
-//  Muestra el estado visual: hablando, escuchando, foto, etc.
-//  Carga smart_display.html que se conecta al bridge en :8080
+//  Carga directamente desde el Bridge Server (localhost:8080)
+//  para evitar problemas de CORS/seguridad del WebView
 // ─────────────────────────────────────────────────────────────────
 
 class SmartDisplayScreen extends StatefulWidget {
@@ -34,9 +33,13 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
           onPageFinished: (url) {
             setState(() => _isLoaded = true);
           },
+          onWebResourceError: (error) {
+            debugPrint('WebView error: ${error.description}');
+          },
         ),
-      );
-    _loadHtml();
+      )
+      // Cargar directamente desde el bridge server
+      ..loadRequest(Uri.parse('http://localhost:8080/smart_display.html'));
   }
 
   @override
@@ -56,11 +59,6 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
     try {
       await ScreenBrightness.instance.resetApplicationScreenBrightness();
     } catch (_) {}
-  }
-
-  Future<void> _loadHtml() async {
-    final html = await rootBundle.loadString('assets/web/smart_display.html');
-    _controller.loadHtmlString(html, baseUrl: 'http://localhost:8080');
   }
 
   @override
@@ -86,7 +84,9 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
             icon: const Icon(Icons.refresh, color: Colors.white38),
             onPressed: () {
               setState(() => _isLoaded = false);
-              _loadHtml();
+              _controller.loadRequest(
+                Uri.parse('http://localhost:8080/smart_display.html'),
+              );
             },
             tooltip: 'Recargar',
           ),
@@ -104,7 +104,7 @@ class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
                   CircularProgressIndicator(color: Colors.cyanAccent),
                   SizedBox(height: 16),
                   Text(
-                    'Cargando Smart Display...',
+                    'Conectando con el servidor...',
                     style: TextStyle(color: Colors.white38),
                   ),
                 ],
