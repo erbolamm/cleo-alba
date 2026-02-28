@@ -16,7 +16,7 @@ dependencies:
   speech_to_text: ^7.3.0
   permission_handler: ^11.3.0
   path_provider: ^2.1.2
-  webview_flutter: ^4.5.0
+  webview_flutter: ^4.13.1
   url_launcher: ^6.2.5
   file_picker: ^8.0.0
   android_intent_plus: ^5.0.0
@@ -33,6 +33,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
+    - assets/web/smart_display.html
 
 flutter_launcher_icons:
   android: true

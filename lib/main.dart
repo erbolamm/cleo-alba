@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/control_panel_screen.dart';
 import 'screens/alba_chat_screen.dart';
+import 'screens/smart_display_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class ClawMobilApp extends StatelessWidget {
       routes: {
         '/': (context) => const ControlPanelScreen(),
         '/alba': (context) => const AlbaChatScreen(),
+        '/display': (context) => const SmartDisplayScreen(),
       },
     );
   }

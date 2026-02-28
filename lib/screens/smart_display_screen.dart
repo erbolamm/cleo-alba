@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:webview_flutter/webview_flutter.dart';
+
+// ─────────────────────────────────────────────────────────────────
+//  SmartDisplay — Pantalla interactiva del agente OpenClaw
+//  Muestra el estado visual: hablando, escuchando, foto, etc.
+//  Carga smart_display.html que se conecta al bridge en :8080
+// ─────────────────────────────────────────────────────────────────
 
 class SmartDisplayScreen extends StatefulWidget {
   const SmartDisplayScreen({super.key});
@@ -10,53 +16,79 @@ class SmartDisplayScreen extends StatefulWidget {
 }
 
 class _SmartDisplayScreenState extends State<SmartDisplayScreen> {
-  late final WebViewController _webController;
-  String _apiBase = 'http://localhost:8080';
+  late final WebViewController _controller;
+  bool _isLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadSettings();
-    _webController = WebViewController()
+    _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.black)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('WebView Error: ${error.description}');
+          onPageFinished: (url) {
+            setState(() => _isLoaded = true);
           },
         ),
-      )
-      ..loadRequest(Uri.parse('$_apiBase/display'));
+      );
+    _loadHtml();
   }
 
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _apiBase = prefs.getString('api_base') ?? 'http://localhost:8080';
-    });
-    _webController.loadRequest(Uri.parse('$_apiBase/display'));
+  Future<void> _loadHtml() async {
+    final html = await rootBundle.loadString('assets/web/smart_display.html');
+    _controller.loadHtmlString(html, baseUrl: 'http://localhost:8080');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: const Text(
           'Smart Display',
-          style: TextStyle(color: Colors.cyanAccent, fontSize: 16),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white70,
+          ),
         ),
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.cyanAccent),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white54),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => _webController.reload(),
+            icon: const Icon(Icons.refresh, color: Colors.white38),
+            onPressed: () {
+              setState(() => _isLoaded = false);
+              _loadHtml();
+            },
+            tooltip: 'Recargar',
           ),
         ],
+        elevation: 0,
       ),
-      backgroundColor: Colors.black,
-      body: WebViewWidget(controller: _webController),
+      body: Stack(
+        children: [
+          WebViewWidget(controller: _controller),
+          if (!_isLoaded)
+            const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(color: Colors.cyanAccent),
+                  SizedBox(height: 16),
+                  Text(
+                    'Cargando Smart Display...',
+                    style: TextStyle(color: Colors.white38),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

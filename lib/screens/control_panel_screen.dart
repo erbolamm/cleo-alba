@@ -268,6 +268,25 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
 
             // ── Restart Button ──
             _buildRestartButton(),
+            const SizedBox(height: 10),
+
+            // ── SmartDisplay Button ──
+            OutlinedButton.icon(
+              onPressed: () => Navigator.pushNamed(context, '/display'),
+              icon: const Icon(Icons.monitor, size: 20),
+              label: const Text(
+                '📺 Smart Display — Pantalla del Agente',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.cyanAccent,
+                side: const BorderSide(color: Colors.cyanAccent, width: 1),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
             const SizedBox(height: 12),
 
             // ── Log ──
