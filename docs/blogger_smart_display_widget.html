@@ -46,6 +46,23 @@
         font-style: italic;
     }
 
+    #smart-display-widget a.sd-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 20px;
+        background: #5ecef5;
+        color: #00467b;
+        font-weight: 700;
+        font-size: 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+
+    #smart-display-widget a.sd-link:hover {
+        background: #ffffff;
+    }
+
     @keyframes sd-pulse {
 
         0%,
@@ -74,10 +91,14 @@
                     if (!el) return;
                     if (!d.text || d.state === 'idle') {
                         el.className = 'sd-text sd-idle';
-                        el.textContent = 'apliarte.com';
+                        el.innerHTML = 'apliarte.com';
                     } else {
                         el.className = 'sd-text';
-                        el.textContent = d.text;
+                        var html = d.text.replace(/</g, '&lt;');
+                        if (d.link) {
+                            html += '<br><a class="sd-link" href="' + d.link + '" target="_blank">Pulsa aquí 👆</a>';
+                        }
+                        el.innerHTML = html;
                     }
                 })
                 .catch(function () { });
