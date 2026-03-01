@@ -709,8 +709,44 @@
                         <em>Depuración USB</em> activada. Revisa siempre el prompt antes de pegarlo.
                     </p>
 
+                    <!-- APIS form -->
+                    <div class="api-keys-container"
+                        style="background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-top: 20px; margin-bottom: 20px;">
+                        <h3
+                            style="font-size: 0.95rem; font-weight: 700; color: var(--brand-primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span>🔑</span> Configuración de APIs (claves.env)
+                        </h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
+                            Opcional: Las claves que introduzcas aquí se guardarán en tu navegador e irán integradas en
+                            el prompt. La IA las usará para crear el archivo <code>claves.env</code> del dispositivo
+                            automáticamente. Muy útil para preparar demostraciones o directos.
+                        </p>
+                        <div class="feature-grid">
+                            <div class="form-group">
+                                <label>Bot de Telegram (Token)</label>
+                                <input type="password" id="inputTelegramKey" placeholder="ej: 123456:ABC-DEF..."
+                                    onchange="saveApiKeysLocally()">
+                            </div>
+                            <div class="form-group">
+                                <label>Groq API Key (Modelos instant)</label>
+                                <input type="password" id="inputGroqKey" placeholder="gsk_..."
+                                    onchange="saveApiKeysLocally()">
+                            </div>
+                            <div class="form-group">
+                                <label>Brave Search (Búsqueda Web)</label>
+                                <input type="password" id="inputBraveKey" placeholder="BSA..."
+                                    onchange="saveApiKeysLocally()">
+                            </div>
+                            <div class="form-group">
+                                <label>GitHub Copilot Token</label>
+                                <input type="password" id="inputCopilotKey" placeholder="ghu_..."
+                                    onchange="saveApiKeysLocally()">
+                            </div>
+                        </div>
+                    </div>
+
                     <button class="btn btn-accent" onclick="generatePrompt(1)">📋 Generar prompt de
-                        reconocimiento</button>
+                        reconocimiento y claves</button>
 
                     <div class="prompt-output" id="prompt1Output" style="display:none;">
                         <button class="copy-btn" onclick="copyPrompt(1)">Copiar</button>
@@ -885,6 +921,30 @@
                 selectedFeatures: []
             };
 
+            // ── Persistencia API Keys ──
+            window.loadApiKeys = function () {
+                var keys = {};
+                try { keys = JSON.parse(localStorage.getItem('clawmobil_apikeys')) || {}; } catch (e) { }
+                var elTel = document.getElementById('inputTelegramKey');
+                if (elTel) elTel.value = keys.telegram || '';
+                var elGroq = document.getElementById('inputGroqKey');
+                if (elGroq) elGroq.value = keys.groq || '';
+                var elCopilot = document.getElementById('inputCopilotKey');
+                if (elCopilot) elCopilot.value = keys.copilot || '';
+                var elBrave = document.getElementById('inputBraveKey');
+                if (elBrave) elBrave.value = keys.brave || '';
+            };
+
+            window.saveApiKeysLocally = function () {
+                var keys = {
+                    telegram: document.getElementById('inputTelegramKey').value.trim(),
+                    groq: document.getElementById('inputGroqKey').value.trim(),
+                    copilot: document.getElementById('inputCopilotKey').value.trim(),
+                    brave: document.getElementById('inputBraveKey').value.trim()
+                };
+                localStorage.setItem('clawmobil_apikeys', JSON.stringify(keys));
+            };
+
             // ── Persistencia ──
             function loadDevices() {
                 try {
@@ -899,6 +959,7 @@
 
             // ── Init ──
             renderDeviceList();
+            if (typeof loadApiKeys === 'function') setTimeout(loadApiKeys, 0);
 
             // ── Render lista de dispositivos ──
             function renderDeviceList() {
@@ -1088,6 +1149,36 @@
             // ═══════════════════════════════════════
 
             function generatePhase1Prompt(name, path) {
+                var keys = {};
+                try { keys = JSON.parse(localStorage.getItem('clawmobil_apikeys')) || {}; } catch (e) { }
+
+                var envContent = [];
+                if (keys.telegram) envContent.push('TELEGRAM_BOT_TOKEN=' + keys.telegram);
+                if (keys.groq) envContent.push('GROQ_API_KEY=' + keys.groq);
+                if (keys.copilot) envContent.push('GITHUB_COPILOT_TOKEN=' + keys.copilot);
+                if (keys.brave) envContent.push('BRAVE_SEARCH_API_KEY=' + keys.brave);
+
+                var envTask = '';
+                if (envContent.length > 0) {
+                    envTask = [
+                        '### 3.1 Generar archivo de claves (claves.env)',
+                        'Crea el archivo `' + path + '/claves.env` con las credenciales que ha introducido el usuario:',
+                        '```env',
+                        envContent.join('\\n'),
+                        '```',
+                        ''
+                    ].join('\n');
+                } else {
+                    envTask = [
+                        '### 3.1 Generar archivo de claves (claves.env) vacío',
+                        'Crea el archivo `' + path + '/claves.env` (vacío, para que el usuario añada sus claves luego):',
+                        '```bash',
+                        'touch "' + path + '/claves.env"',
+                        '```',
+                        ''
+                    ].join('\n');
+                }
+
                 return [
                     '# ClawMobil — Fase 1: Reconocimiento del dispositivo "' + name + '"',
                     '',
@@ -1146,6 +1237,7 @@
                     'cp -r Mis_configuraciones_locales/dispositivos/_plantilla/* "' + path + '/"',
                     '```',
                     '',
+                    envTask,
                     '### 4. Generar device_info.json',
                     'Crea `' + path + '/device_info.json` con toda la información recopilada:',
                     '```json',
