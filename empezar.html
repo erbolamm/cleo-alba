@@ -1450,44 +1450,49 @@
 
                 if (feats.indexOf('ollama') >= 0) {
                     sections.push('### 🤖 IA Local (Ollama)');
-                    sections.push('1. Instala Ollama dentro de proot-distro Debian');
-                    sections.push('2. Descarga un modelo ligero: `tinyllama` (< 4GB RAM) o `phi-3-mini` (≥ 4GB RAM)');
-                    sections.push('3. Configura OpenClaw para usar Ollama como backend local');
-                    sections.push('4. Prueba: `ollama run tinyllama "¿Quién eres?"`');
+                    sections.push('⚠️ Verifica la memoria RAM dispobible en device_info.json.');
+                    sections.push('Si es menor a 4GB omite este paso y avisa al usuario.');
+                    sections.push('Si tiene RAM suficiente:');
+                    sections.push('1. Instala Ollama nativo en termux o dentro de proot-distro.');
+                    sections.push('2. Descarga un modelo ligero como `tinyllama` o `phi-3-mini` según la memoria.');
+                    sections.push('3. Configura el fichero de modelos en la carpeta del dispositivo para permitir ese LLM.');
                     sections.push('');
                 }
                 if (feats.indexOf('telegram') >= 0) {
                     sections.push('### 💬 Bot Telegram');
-                    sections.push('1. Configura OpenClaw Gateway con el token del bot');
-                    sections.push('2. Instala el bridge_server.py desde la plantilla');
-                    sections.push('3. Prueba enviando un mensaje al bot');
+                    sections.push('1. Asegura que OpenClaw Gateway tiene habilitado el módulo de Telegram o configúralo.');
+                    sections.push('2. Crea un script en el dispositivo que invoque la API de Telegram para mensajes salientes de alerta.');
+                    sections.push('3. Otorga al Agente en su boot.md instrucciones y herramientas para usar dicho script si lo necesita.');
                     sections.push('');
                 }
                 if (feats.indexOf('automation') >= 0) {
                     sections.push('### 🔄 Automatización');
-                    sections.push('1. Instala `termux-boot` desde F-Droid');
-                    sections.push('2. Copia `start.sh` a `~/.termux/boot/`');
-                    sections.push('3. Configura watchdogs (wifi_watchdog.sh, screen_guard.sh)');
+                    sections.push('1. Pide al usuario que instale `Termux:Boot` desde F-Droid e inicie la app una vez.');
+                    sections.push('2. Crea la carpeta `~/.termux/boot/` en el dispositivo.');
+                    sections.push('3. Crea allí un script que encienda los servicios clave (SSH, OpenClaw, Bridge) al reiniciar.');
+                    sections.push('4. Activa Wakelock en Termux de forma persistente: `termux-wake-lock`.');
                     sections.push('');
                 }
                 if (feats.indexOf('voice') >= 0) {
                     sections.push('### 🗣️ Voz (STT/TTS)');
-                    sections.push('1. Instala whisper.cpp dentro de proot-distro');
-                    sections.push('2. Configura eSpeak como TTS de fallback offline');
-                    sections.push('3. Opcional: configura ElevenLabs para TTS cloud');
+                    sections.push('1. Asegúrate de instalar la API de Termux (`pkg install termux-api`).');
+                    sections.push('2. Añade en boot.md o en el entorno del Bot la ruta al comando `termux-microphone-record`.');
+                    sections.push('3. Añade en la identidad del agente autorización completa para grabar audios de forma real.');
+                    sections.push('4. Si hay integración Whisper habilitada, configúrala conectando el hardware local con la nube.');
                     sections.push('');
                 }
                 if (feats.indexOf('vision') >= 0) {
                     sections.push('### 📷 Visión IA');
-                    sections.push('1. Configura acceso a la cámara vía Termux API');
-                    sections.push('2. Instala un modelo de visión ligero');
+                    sections.push('1. Verifica que la API de Termux (`termux-api`) esté funcional.');
+                    sections.push('2. Da permiso total en boot.md para que el agente maneje `termux-camera-photo`.');
+                    sections.push('3. Crea o habilita un script que le permita enviar esa foto por Telegram si se le pide.');
                     sections.push('');
                 }
                 if (feats.indexOf('monitoring') >= 0) {
                     sections.push('### 📊 Monitorización');
-                    sections.push('1. Crea dashboard HTML en `' + path + '/metricas.html`');
-                    sections.push('2. Configura scripts de reporte (weekly_report.sh)');
-                    sections.push('3. Opcional: monitorización externa (configurar en VPS)');
+                    sections.push('1. Habilita lectura periódica de batería (`termux-battery-status`).');
+                    sections.push('2. Adapta o crea el archivo `' + path + '/metricas.html` guardando métricas locales desde un cron/bucle manual.');
+                    sections.push('3. Opcional: Configura Uptime Kuma en algún VPS remoto del usuario apuntando a este IP.');
                     sections.push('');
                 }
 
