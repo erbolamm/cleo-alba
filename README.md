@@ -106,6 +106,21 @@ Para estabilidad del framework, la referencia de motor se fija en el fork:
 
 - <https://github.com/erbolamm/openclaw>
 
+## 🔗 Vinculación ClawMobil ↔ fork OpenClaw
+
+Este proyecto ClawMobil y el fork `erbolamm/openclaw` se están actualizando en paralelo para asegurar compatibilidad real con móviles antiguos reacondicionados.
+
+Perfil de dispositivos validados en campo:
+
+- Samsung (legacy)
+- YesTeL Note series
+- Huawei P10
+
+En el fork se añadió un flujo reproducible de instalación para Android antiguos (Termux + ADB + SSH), pensado para que la comunidad pueda reutilizarlo sin depender de hardware nuevo:
+
+- <https://github.com/erbolamm/openclaw/blob/main/docs/legacy-termux-android.md>
+- <https://github.com/erbolamm/openclaw/blob/main/scripts/legacy/deploy-termux-via-adb.sh>
+
 ---
 
 ## 🛠️ ¿Qué consigues?
@@ -152,6 +167,18 @@ Si ClawMobil te resulta útil, comparte tu experiencia en redes con **#ClawMobil
 
 - **PayPal**: [paypal.me/erbolamm](https://www.paypal.com/paypalme/erbolamm)
 - **Ko-fi**: [![Ko-fi](https://storage.ko-fi.com/cdn/kofi5.png?v=6)](https://ko-fi.com/C0C11TWR1K)
+
+## 🌐 ¿Quieres tu propio servidor para el bot?
+
+ClawMobil funciona en un móvil viejo, pero si quieres un bot 24/7 en la nube (como @ApliArteBot), necesitas un VPS. Yo uso **Hostinger** y estoy encantado.
+
+Mi consejo: abre tu IA favorita y dile exactamente esto:
+
+> *"Quiero montar un servidor para un bot de Telegram con IA. Hazme 100 preguntas en bloques de 3 para entender exactamente qué necesito antes de recomendarme nada."*
+
+Así te aseguras de que la IA entiende TU caso antes de recomendarte algo. Filosofía Steve Jobs: **Ganar-Ganar** — tú ganas el servidor perfecto para ti, yo gano una pequeña comisión que me ayuda a seguir manteniendo ClawMobil.
+
+👉 **[Contratar Hostinger con mi referido](https://www.hostinger.com/es?REFERRALCODE=APLIARTE)** — Desde 2,99€/mes con VPS incluido.
 
 ## 🛡️ Licencia
 
