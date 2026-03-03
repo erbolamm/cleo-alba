@@ -20,6 +20,9 @@ migrate_working_dir/
 Mis_configuraciones_locales/
 Informacion_de_funcionalidades/
 
+# Bot config (mantenida en DockerHostinger, NO aquí)
+config/apliarte_bot/
+
 # The .vscode folder contains configuration for Visual Studio Code.
 # It is generally best to ignore it, unless you want to share settings across the team.
 .vscode/
