@@ -18,7 +18,7 @@ Este proyecto funciona como un **self-service**: tú descargas el proyecto (el b
 | `empezar.html` | Asistente web (prompt + perfil local) | ❌ No |
 | **`Mis_configuraciones_locales/`** | **Tu bandeja personal** | ✅ Sí, solo esta |
 
-> **Regla de oro**: si necesitas guardar una clave, un log, una nota, o cualquier cosa específica de tu setup → va dentro de `Mis_configuraciones_locales/`. El resto del proyecto se queda intacto.
+> **Regla de oro**: si necesitas guardar una clave, un log, una nota, **o el código fuente de una App Flutter** (ej. un chat) que controla un dispositivo específico → va TODO dentro de `Mis_configuraciones_locales/dispositivos/<dispositivo>/`. El resto del proyecto madre se queda intacto. De esta manera, tu carpeta de dispositivo se convierte en un proyecto independiente que te puedes llevar a donde quieras.
 
 ---
 

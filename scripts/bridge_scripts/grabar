@@ -1,0 +1,22 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# ═══════════════════════════════════════════════════════════
+# 🎙️ grabar — Grabar audio con el micrófono
+# Duración configurable (por defecto 10 segundos)
+# Callable desde PRoot: /data/data/com.termux/files/usr/bin/grabar [segundos]
+# ═══════════════════════════════════════════════════════════
+
+DURACION="${1:-10}"
+FNAME="/sdcard/audio_$(date +%Y%m%d_%H%M%S).m4a"
+
+echo "🎙️ Grabando $DURACION segundos..."
+
+termux-microphone-record -l "$DURACION" -f "$FNAME" 2>/dev/null
+sleep "$DURACION"
+termux-microphone-record -q 2>/dev/null
+
+if [ -f "$FNAME" ] && [ -s "$FNAME" ]; then
+    echo "✅ Audio guardado: $FNAME ($DURACION s)"
+else
+    echo "❌ Error grabando audio"
+    exit 1
+fi

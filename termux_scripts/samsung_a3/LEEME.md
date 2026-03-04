@@ -188,7 +188,7 @@ minSdk = 21   // NUNCA usar flutter.minSdkVersion (sería 24 y el A3 es API 23)
 **Usuaria**: Alba, 7 años, 1º-5º primaria
 **Bot**: Cleo 🌟 — amiga de aprender, cariñosa, con personalidad
 **Hermano**: Fran, 3 años (Cleo pregunta por él de vez en cuando)
-**Teléfono papá**: REDACTED_PHONE | **Teléfono mamá**: REDACTED_PHONE
+**Teléfono papá**: `<CONFIGURAR_EN_CLAVES.ENV>` | **Teléfono mamá**: `<CONFIGURAR_EN_CLAVES.ENV>`
 
 ### Funciones
 - Chat texto estilo WhatsApp (burbujas usuario/Cleo)

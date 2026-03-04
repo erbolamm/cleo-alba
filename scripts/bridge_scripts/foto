@@ -1,0 +1,26 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# ═══════════════════════════════════════════════════════════
+# 📷 foto — Tomar foto con la cámara
+# -c 0 = trasera, -c 1 = frontal (selfie)
+# Callable desde PRoot: /data/data/com.termux/files/usr/bin/foto [frontal]
+# ═══════════════════════════════════════════════════════════
+
+CAM=0
+TIPO="trasera"
+
+if [ "$1" = "frontal" ] || [ "$1" = "selfie" ] || [ "$1" = "front" ]; then
+    CAM=1
+    TIPO="frontal"
+fi
+
+FNAME="/sdcard/DCIM/foto_${TIPO}_$(date +%Y%m%d_%H%M%S).jpg"
+mkdir -p /sdcard/DCIM
+
+termux-camera-photo -c $CAM "$FNAME" 2>/dev/null
+
+if [ -f "$FNAME" ] && [ -s "$FNAME" ]; then
+    echo "✅ Foto $TIPO guardada: $FNAME"
+else
+    echo "❌ Error tomando foto"
+    exit 1
+fi

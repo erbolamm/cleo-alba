@@ -1,22 +1,29 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
 import 'alba_admin_screen.dart';
+import '../services/ollama_service.dart';
 
 // ─────────────────────────────────────────────────────────────────
 // Configuración
 // ─────────────────────────────────────────────────────────────────
 
-const _groqKey = String.fromEnvironment(
-    'GROQ_API_KEY'); // Pasa con: --dart-define=GROQ_API_KEY=tu_clave
+// Groq (fallback cloud) — pasa con: --dart-define=GROQ_API_KEY=tu_clave
+const _groqKey = String.fromEnvironment('GROQ_API_KEY');
 const _groqModel = 'llama-3.1-8b-instant';
-const _apiBase = 'https://api.groq.com/openai/v1';
+
+// Ollama — pasa con: --dart-define=OLLAMA_URL=http://IP:11434
+const _ollamaUrl = String.fromEnvironment('OLLAMA_URL',
+    defaultValue: 'http://127.0.0.1:11434');
+const _ollamaModel =
+    String.fromEnvironment('OLLAMA_MODEL', defaultValue: 'gemma2:2b');
+// URL extra para servidor LAN (ej: otro teléfono sirviendo Ollama)
+const _ollamaLanUrl =
+    String.fromEnvironment('OLLAMA_LAN_URL', defaultValue: '');
 
 const _systemPrompt = '''
 Eres Cleo 🌟, la amiga digital de Alba (7 años). Vives en su teléfono especial de aprender.
@@ -24,7 +31,7 @@ Eres Cleo 🌟, la amiga digital de Alba (7 años). Vives en su teléfono especi
 SOBRE ALBA:
 - Tiene 7 años, está en primaria (de 1º a 5º de primaria)
 - Su hermano se llama Fran, tiene 3 años. De vez en cuando pregúntale: "¿Cómo está Fran hoy? ¿Le has dado un abrazo?" — porque cuidar de un hermano pequeño es muy especial 💛
-- Teléfono de papá: REDACTED_PHONE | Teléfono de mamá: REDACTED_PHONE (solo los dices si ella los pide)
+- Los teléfonos de sus padres los tienes configurados en el dispositivo (solo los dices si ella los pide)
 
 TU PERSONALIDAD: cariñosa, divertida, paciente ❤️. Te encantan los chistes, los acertijos y los retos creativos.
 
@@ -66,6 +73,10 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   int _countdown = 10;
   Timer? _countdownTimer;
 
+  // IA multi-proveedor (Ollama local → LAN → Groq cloud)
+  late final OllamaService _aiService;
+  String _lastProvider = ''; // Para mostrar indicador
+
   // Engranaje — mantener pulsado 8 segundos para admin
   Timer? _gearTimer;
   double _gearProgress = 0.0;
@@ -77,6 +88,28 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     // Bloquear orientación y barra de sistema (modo kioskio)
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+    // Configurar servicio IA: Ollama local → LAN → Groq cloud
+    final endpoints = <OllamaEndpoint>[
+      OllamaEndpoint(
+        name: 'ollama-local',
+        baseUrl: _ollamaUrl,
+        model: _ollamaModel,
+      ),
+      if (_ollamaLanUrl.isNotEmpty)
+        OllamaEndpoint(
+          name: 'ollama-lan',
+          baseUrl: _ollamaLanUrl,
+          model: _ollamaModel,
+          timeout: const Duration(seconds: 45),
+        ),
+    ];
+    _aiService = OllamaService(
+      endpoints: endpoints,
+      groqApiKey: _groqKey,
+      groqModel: _groqModel,
+    );
+
     // Inicializar STT
     _speech.initialize().then((ok) => _speechAvailable = ok);
     // Mensaje de bienvenida de Cleo
@@ -117,7 +150,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     });
   }
 
-  // ── Chat con Groq ──────────────────────────────────────────────
+  // ── Chat con IA (Ollama → Groq fallback) ──────────────────────
 
   Future<void> _sendMessage(String text) async {
     text = text.trim();
@@ -129,40 +162,23 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     });
     _scrollBottom();
 
-    // Construir contexto para Groq
+    // Construir contexto (system prompt + historial)
     final chatMessages = <Map<String, String>>[
       {'role': 'system', 'content': _systemPrompt},
       ..._messages.where((m) => m.role != 'typing').map((m) => m.toJson()),
     ];
 
     try {
-      final resp = await http
-          .post(
-            Uri.parse('$_apiBase/chat/completions'),
-            headers: {
-              'Authorization': 'Bearer $_groqKey',
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode({
-              'model': _groqModel,
-              'messages': chatMessages,
-              'max_tokens': 250,
-              'temperature': 0.75,
-            }),
-          )
-          .timeout(const Duration(seconds: 30));
-
-      if (resp.statusCode == 200) {
-        final data = jsonDecode(utf8.decode(resp.bodyBytes));
-        final reply =
-            (data['choices'][0]['message']['content'] as String).trim();
-        setState(() {
-          _messages.add(_Msg(role: 'assistant', content: reply));
-          _isLoading = false;
-        });
-      } else {
-        _showError();
-      }
+      final result = await _aiService.chat(
+        messages: chatMessages,
+        maxTokens: 250,
+        temperature: 0.75,
+      );
+      setState(() {
+        _messages.add(_Msg(role: 'assistant', content: result.text));
+        _lastProvider = result.provider;
+        _isLoading = false;
+      });
     } catch (_) {
       _showError();
     }
@@ -300,7 +316,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
             ),
           ),
           const SizedBox(width: 10),
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -312,7 +328,11 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
                 ),
               ),
               Text(
-                'Tu amiga de aprender ✨',
+                _lastProvider.contains('ollama')
+                    ? '🟢 Local · Tu amiga de aprender ✨'
+                    : _lastProvider == 'groq'
+                        ? '🌐 Cloud · Tu amiga de aprender ✨'
+                        : 'Tu amiga de aprender ✨',
                 style: TextStyle(fontSize: 11, color: Colors.white54),
               ),
             ],
