@@ -171,6 +171,21 @@ Pulsa Enter.
 > 🔌 **Ahora puedes desconectar el WiFi.** Claw seguirá funcionando sin internet.
 > Es tu compañero, siempre disponible, en tu teléfono.
 
+## 🦀 ¿Qué puede hacer Claw?
+
+Una vez instalado, Claw puede:
+
+| Función | Ejemplo de lo que puedes decirle |
+|:---|:---|
+| 💬 **Conversar** | "Cuéntame algo bonito" o "¿Qué tal el día?" |
+| 📅 **Agenda** | "Recuérdame que mañana tengo médico a las 10" |
+| 📝 **Notas** | "Apunta que el número del fontanero es 612 345 678" |
+| 🛒 **Listas** | "Haz una lista de la compra: leche, pan, huevos" |
+| ❓ **Preguntas** | "¿Cuál es la capital de Francia?" |
+| 😊 **Compañía** | "Me siento solo" → Claw siempre está ahí |
+
+> 💡 Claw habla español y se adapta a ti. Si eres una persona mayor, te hablará con frases cortas y claras.
+
 ---
 
 ## ❓ Preguntas frecuentes
@@ -191,18 +206,55 @@ Cualquier Android con **3GB de RAM o más**: Samsung, Xiaomi, OPPO, Huawei, Moto
 Sí. Mantén el teléfono cargado y Claw estará siempre disponible para charlar.
 
 ### ¿Y si algo sale mal?
-No pasa nada. El script no modifica nada importante del teléfono. Si algo falla, desinstala la app desde Ajustes y empieza de nuevo.
+No pasa nada. El script no modifica nada importante del teléfono. Lee la sección "Borrar todo" más abajo.
 
 ---
 
-## 🤖 ¿Quieres que un asistente lo haga por ti?
+## 🤖 ¿Quieres que una IA lo haga por ti?
 
-Si prefieres que una inteligencia artificial haga toda la instalación por ti (como un técnico virtual), puedes usar **Antigravity**:
+> **¡No necesitas saber nada de tecnología!** Puedes pedirle a un asistente virtual que haga toda la instalación por ti.
 
-1. Descarga **Cursor** (un editor de código con IA): https://cursor.com
-2. Abre Cursor y clona este proyecto
-3. Dile al agente: *"Lee demo/README.md y configura ClawMobil en el teléfono que tengo conectado"*
-4. ¡El agente hace todo solo!
+### Cómo hacerlo:
+
+**1.** Descarga **Cursor** (es gratis) — un programa con inteligencia artificial integrada:
+
+> 🔗 **https://cursor.com** — Descárgalo e instálalo en tu ordenador.
+
+**2.** Abre Cursor y clona este proyecto (Cursor te ayudará a hacerlo).
+
+**3.** Conecta el teléfono Android por USB al ordenador.
+
+**4.** Escribe en el chat de Cursor:
+
+> *"Lee demo/README.md y configura ClawMobil en el teléfono que tengo conectado por USB"*
+
+**5.** ¡**La IA hace todo sola!** Verás cómo va ejecutando cada paso automáticamente.
+
+> 💡 Esto es **Antigravity** — una IA que programa por ti. Es como tener un técnico dentro del ordenador.
+
+---
+
+## 🗑️ Borrar todo (desinstalar)
+
+Si quieres eliminar todo del teléfono y dejarlo como estaba:
+
+### Desinstalar la app ClawMobil Chat
+1. Ve a **Ajustes → Apps** en el teléfono
+2. Busca **ClawMobil Chat**
+3. Pulsa **Desinstalar**
+
+### Desinstalar el cerebro (Termux + Ollama)
+1. Ve a **Ajustes → Apps** en el teléfono
+2. Busca **Termux**
+3. Pulsa **Desinstalar**
+
+> ✅ ¡Listo! El teléfono queda completamente limpio. No se ha modificado nada del sistema.
+
+### Desinstalar desde el ordenador (con cable USB)
+```
+adb uninstall com.apliarte.clawmobil
+adb uninstall com.termux
+```
 
 ---
 
