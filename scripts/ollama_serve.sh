@@ -162,6 +162,11 @@ cmd_start() {
     return 1
 }
 
+cmd_tunnel() {
+    local action="${2:-status}"
+    bash "$(dirname "$0")/toggle_tunnel.sh" "$action"
+}
+
 cmd_stop() {
     echo ""
     log_brain "${BOLD}Deteniendo servidor Ollama...${NC}"
@@ -200,6 +205,12 @@ cmd_status() {
     fi
 
     log_info "Servidor: ${CYAN}${OLLAMA_HOST}${NC}"
+    
+    # Mostrar estado del túnel si existe el script
+    if [ -f "$(dirname "$0")/toggle_tunnel.sh" ]; then
+        echo -n "   Túnel:    "
+        bash "$(dirname "$0")/toggle_tunnel.sh" status
+    fi
     echo ""
 
     # Listar modelos instalados
@@ -314,6 +325,7 @@ case "${1:-help}" in
     pull)   cmd_pull ;;
     test)   cmd_test ;;
     health) cmd_health ;;
+    tunnel) cmd_tunnel "$@" ;;
     *)
         echo ""
         echo -e "${BOLD}🧠 Ollama Server Manager — ClawMobil${NC}"
@@ -327,6 +339,7 @@ case "${1:-help}" in
         echo "  pull     Descarga el modelo recomendado para tu RAM"
         echo "  test     Test rápido de la API"
         echo "  health   Health check (para monitoreo)"
+        echo "  tunnel   Control del túnel {on|off|status}"
         echo ""
         echo "Variables de entorno:"
         echo "  OLLAMA_HOST   URL del servidor (default: http://127.0.0.1:11434)"
