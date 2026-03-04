@@ -206,6 +206,13 @@ cmd_status() {
 
     log_info "Servidor: ${CYAN}${OLLAMA_HOST}${NC}"
     
+    # Descubrimiento de IP Local
+    local ip_local=$(ip addr show wlan0 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d/ -f1 | head -n1 || ifconfig wlan0 2>/dev/null | grep "inet " | awk '{print $2}' | head -n1 || echo "No detectada")
+    if [ "$ip_local" != "No detectada" ]; then
+        echo -e "   IP Local: ${GREEN}${ip_local}${NC}"
+        echo -e "   App URL:  ${CYAN}http://${ip_local}:${OLLAMA_PORT}${NC}"
+    fi
+
     # Mostrar estado del túnel si existe el script
     if [ -f "$(dirname "$0")/toggle_tunnel.sh" ]; then
         echo -n "   Túnel:    "
