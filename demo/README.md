@@ -1,157 +1,221 @@
 # 🦀 ClawMobil — Dale vida a tu teléfono viejo
 
-## ¿Qué es esto?
-
-**ClawMobil** convierte cualquier teléfono Android viejo en un **compañero de conversación inteligente** que funciona **sin internet**, **sin pagar nada**, y **sin que tus datos salgan del teléfono**.
-
-Perfecto para:
-- 👵 **Personas mayores** que se sienten solas
-- 📱 **Teléfonos viejos** que ya no usas (a partir de 3GB de RAM)
-- 🔒 **Privacidad total** — todo funciona dentro del teléfono
+### Un compañero de conversación inteligente que funciona SIN internet
 
 ---
 
-## ¿Qué necesitas?
+## 💛 ¿Para qué sirve?
 
-1. 📱 Un **teléfono Android viejo** (con al menos 3GB de RAM)
-2. 💻 Un **ordenador** (Mac, Linux o Windows)
-3. 🔌 Un **cable USB** para conectar el teléfono al ordenador
-4. 🌐 **Conexión a internet** (solo para la instalación, después ya no la necesita)
+¿Tienes un **teléfono Android viejo** en un cajón?
+
+Con ClawMobil puedes convertirlo en un **compañero de conversación** para personas mayores, para ti, o para cualquiera que quiera tener con quién hablar.
+
+- ✅ **Sin internet** — funciona sin WiFi ni datos
+- ✅ **Gratis para siempre** — sin pagos, sin suscripciones
+- ✅ **Totalmente privado** — nadie lee tus conversaciones
+- ✅ **Funciona en teléfonos viejos** — a partir de 3GB de RAM
 
 ---
 
-## Instalación paso a paso
+## 📋 ¿Qué necesitas?
 
-### Paso 1: Prepara el teléfono
+Antes de empezar, asegúrate de tener:
 
-En el teléfono Android, necesitas activar las "Opciones de Desarrollador":
+| Lo que necesitas | ¿Lo tienes? |
+|:---|:---|
+| 📱 Un teléfono Android viejo (con al menos 3GB de RAM) | ☐ |
+| 💻 Un ordenador (Mac, Linux o Windows) | ☐ |
+| 🔌 Un cable USB para conectar el teléfono al ordenador | ☐ |
+| 🌐 WiFi (solo para la instalación, después no lo necesita) | ☐ |
 
-1. Abre **Ajustes** (la rueda dentada ⚙️)
-2. Ve a **Acerca del teléfono** (suele estar al final)
-3. Busca **"Número de compilación"** (o "Número de versión")
-4. **Pulsa 7 veces** sobre ese número
-5. ¡Te dirá **"Ya eres desarrollador"**! 🎉
+> 💡 **¿Cómo sé si mi teléfono tiene 3GB de RAM?**
+> Ve a Ajustes → Acerca del teléfono → Busca "RAM" o "Memoria".
+> Si pone 3GB, 4GB o más, ¡perfecto!
 
-Ahora activa la depuración:
+---
 
-6. Vuelve a **Ajustes**
-7. Busca **Opciones de desarrollador** (a veces está dentro de "Sistema" o "Configuración adicional")
-8. Activa **"Depuración USB"**
-9. Conecta el cable USB del teléfono al ordenador
-10. En el teléfono aparecerá un mensaje: **"¿Permitir depuración USB?"** → Pulsa **Aceptar** ✅
+## 🔧 Instalación paso a paso
 
-### Paso 2: Descarga el proyecto
+### 📱 PARTE 1: Preparar el teléfono
 
-En tu ordenador, abre la **Terminal**:
-- **Mac**: Busca "Terminal" en Spotlight (Cmd + Espacio → escribe "Terminal")
-- **Linux**: Busca "Terminal" en tus aplicaciones
-- **Windows**: Usa "Git Bash" o "PowerShell"
+> No te preocupes, esto solo se hace una vez.
 
-Copia y pega este comando:
+**1.1** Enciende el teléfono viejo y conéctalo al WiFi de casa.
 
-```bash
+**1.2** Abre la app de **Ajustes** (el icono de la rueda dentada ⚙️).
+
+**1.3** Baja hasta el final y busca **"Acerca del teléfono"** (o "Sobre el teléfono"). Pulsa ahí.
+
+**1.4** Busca donde pone **"Número de compilación"** (o "Número de versión" o "Build number").
+
+**1.5** Ahora viene lo divertido: **pulsa 7 veces seguidas** sobre ese número. 
+
+> 🎉 ¡Verás un mensaje que dice **"Ya eres desarrollador"**! No te asustes, es normal.
+
+**1.6** Vuelve atrás a **Ajustes**.
+
+**1.7** Busca **"Opciones de desarrollador"**.
+> 💡 En algunos teléfonos está dentro de "Sistema" o "Configuración adicional".
+
+**1.8** Dentro de Opciones de desarrollador, busca **"Depuración USB"** y actívala (ponla en azul/verde).
+
+**1.9** Conecta el cable USB del teléfono al ordenador.
+
+**1.10** En el teléfono aparecerá un mensaje: **"¿Permitir depuración USB?"** → Pulsa **"Aceptar"** o **"Permitir"** ✅
+
+> 🎉 ¡El teléfono está listo!
+
+---
+
+### 💻 PARTE 2: Descargar el proyecto en el ordenador
+
+**2.1** En tu ordenador, abre la **Terminal**:
+
+| Tu ordenador | Cómo abrir la Terminal |
+|:---|:---|
+| 🍎 **Mac** | Pulsa `Cmd + Espacio`, escribe **Terminal** y pulsa Enter |
+| 🐧 **Linux** | Busca "Terminal" en tus aplicaciones |
+| 🪟 **Windows** | Busca "PowerShell" en el menú de inicio |
+
+> 💡 La Terminal es esa ventana negra donde se escriben comandos. No tengas miedo, solo vas a copiar y pegar.
+
+**2.2** Copia este texto y pégalo en la Terminal. Luego pulsa **Enter**:
+
+```
 cd ~/Desktop && git clone https://github.com/erbolamm/ClawMobil.git && cd ClawMobil
 ```
 
-> 💡 Esto descarga el proyecto a tu Escritorio. Si no tienes `git`, descárgalo desde https://git-scm.com
+> 💡 Esto descarga el proyecto a tu Escritorio. Verás una carpeta nueva llamada "ClawMobil".
+>
+> ⚠️ Si dice "git: command not found", necesitas instalar Git primero:
+> Ve a https://git-scm.com y descárgalo. Es gratis y seguro.
 
-### Paso 3: Ejecuta el instalador
+---
 
-```bash
+### 📲 PARTE 3: Instalar la app en el teléfono
+
+**3.1** Con el teléfono conectado por USB, copia y pega este comando en la Terminal:
+
+```
 bash demo/instalar_claw.sh
 ```
 
-El script hace todo por ti:
-- ✅ Detecta tu teléfono
-- ✅ Descarga lo que necesita
-- ✅ Instala la app en el teléfono
-- ✅ ¡La abre!
+**3.2** Verás mensajes de colores en la pantalla. El script hace todo solo:
 
-### Paso 4: Instalar el cerebro de la IA (Ollama)
+```
+🦀 ClawMobil - Instalador
+📱 Dispositivo encontrado: Samsung Galaxy A3
+✅ App instalada correctamente
+✅ App abierta en el teléfono
+```
 
-Ahora necesitamos instalar la inteligencia artificial dentro del teléfono. Para esto usamos un programa llamado **Termux** (una terminal para Android) y **Ollama** (el cerebro de la IA).
+> 🎉 ¡Ya tienes la app instalada en el teléfono! Pero aún no puede hablar — necesita su "cerebro".
 
-En tu ordenador, ejecuta:
+---
 
-```bash
+### 🧠 PARTE 4: Instalar el cerebro de la IA
+
+> Esta es la parte más importante. El "cerebro" es lo que hace que Claw pueda pensar y responder.
+
+**4.1** Copia y pega este comando en la Terminal:
+
+```
 bash demo/setup_servidor.sh
 ```
 
-Este script:
-- ✅ Instala Termux en el teléfono
-- ✅ Sube el cerebro de la IA al teléfono
-- ✅ Te dice qué hacer en el siguiente paso
+**4.2** Espera a que termine (puede tardar 2-3 minutos). Verás:
 
-Después, en la pantalla del teléfono verás Termux (una pantalla negra con letras). Escribe:
+```
+🦀 ClawMobil - Setup Servidor IA
+📱 Dispositivo: tu teléfono
+[1/5] Instalando Termux... ✅
+[2/5] Inicializando Termux... ✅
+[3/5] Subiendo Ollama al teléfono... ✅
+```
+
+**4.3** Ahora mira la pantalla del teléfono. Verás una **pantalla negra con letras** (es Termux). Escribe en el teléfono:
 
 ```
 bash /sdcard/setup_ollama.sh
 ```
 
-Espera unos minutos. Cuando termine, escribe:
+> 💡 Puedes escribirlo con el teclado del teléfono. Pulsa Enter cuando termines.
+
+**4.4** Espera unos 2-3 minutos. Cuando veas que vuelve a aparecer el cursor (`~ $`), escribe:
 
 ```
 ollama serve &
+```
+
+Pulsa Enter. Luego escribe:
+
+```
 ollama pull qwen2.5:0.5b
 ```
 
-> ⏳ Esto descarga el modelo de IA (395MB). Tardará unos 5 minutos con WiFi.
+Pulsa Enter.
 
-### Paso 5: ¡Habla con Claw! 🦀
-
-1. Abre la app **ClawMobil Chat** en el teléfono
-2. Escribe: **"Hola, ¿cómo estás?"**
-3. ¡Claw te responderá! 🎉
-
-**No necesita internet.** Puedes desconectar el WiFi y seguirá funcionando.
+> ⏳ Esto descarga el cerebro de Claw (395MB). Con WiFi normal, tarda unos **5 minutos**.
+> Cuando veas "success", ¡el cerebro está instalado!
 
 ---
 
-## Preguntas frecuentes
+### 🎉 PARTE 5: ¡Habla con Claw!
 
-### ¿Funciona sin internet?
-**Sí.** Una vez instalado, no necesita internet para nada. Todo funciona dentro del teléfono.
+**5.1** Abre la app **ClawMobil Chat** en el teléfono (el icono del cangrejo 🦀).
 
-### ¿Es gratis?
-**Sí, 100% gratis y de código abierto.** No hay pagos, suscripciones, ni publicidad.
+**5.2** Escribe: **"Hola, ¿cómo estás?"**
 
-### ¿Mis conversaciones son privadas?
-**Totalmente.** Nada sale del teléfono. No hay servidores externos, no se envían datos a ningún sitio.
+**5.3** ¡**Claw te responderá**! 🦀💬
 
-### ¿Qué teléfonos valen?
-Cualquier Android con **3GB de RAM o más**. Marcas como Samsung, Xiaomi, OPPO, Huawei, Motorola... Si tiene menos de 5 años, probablemente funcione.
-
-### ¿Y si mi teléfono no tiene suficiente RAM?
-Si tiene 2GB, puedes probar con el modelo `qwen2.5:0.5b` que es muy ligero. Si va lento, necesitarás un teléfono con más memoria.
-
-### ¿Puedo usarlo con el ordenador como cerebro?
-**Sí.** Si el teléfono es muy viejo, puedes ejecutar la IA en el ordenador:
-1. Instala Ollama en el ordenador: https://ollama.com
-2. Ejecuta `ollama serve` 
-3. Conecta el teléfono al WiFi del ordenador
-4. En la app → ⚙️ Ajustes → Cambia la URL a la IP de tu ordenador
+> 🔌 **Ahora puedes desconectar el WiFi.** Claw seguirá funcionando sin internet.
+> Es tu compañero, siempre disponible, en tu teléfono.
 
 ---
 
-## ¿Quién hizo esto?
+## ❓ Preguntas frecuentes
 
-Creado por **Francisco** de [Apliarte](https://apliarte.com) 🇪🇸
+### ¿De verdad funciona sin internet?
+**Sí.** Una vez instalado, puedes apagar el WiFi, quitar la tarjeta SIM, y Claw seguirá conversando contigo. Todo funciona dentro del teléfono.
 
-- 🌐 Web: https://apliarte.com
-- 💻 Código: https://github.com/erbolamm/ClawMobil
+### ¿Es realmente gratis?
+**Sí, 100%.** No hay pagos, no hay trampa. Es código abierto: cualquiera puede verlo y mejorarlo.
+
+### ¿Alguien puede leer mis conversaciones?
+**No.** Tus conversaciones nunca salen del teléfono. No hay servidores, no hay nubes, no hay empresas detrás.
+
+### ¿Qué teléfonos sirven?
+Cualquier Android con **3GB de RAM o más**: Samsung, Xiaomi, OPPO, Huawei, Motorola, Realme, OnePlus...
+
+### ¿Puedo dejar Claw siempre encendido?
+Sí. Mantén el teléfono cargado y Claw estará siempre disponible para charlar.
+
+### ¿Y si algo sale mal?
+No pasa nada. El script no modifica nada importante del teléfono. Si algo falla, desinstala la app desde Ajustes y empieza de nuevo.
+
+---
+
+## 🤖 ¿Quieres que un asistente lo haga por ti?
+
+Si prefieres que una inteligencia artificial haga toda la instalación por ti (como un técnico virtual), puedes usar **Antigravity**:
+
+1. Descarga **Cursor** (un editor de código con IA): https://cursor.com
+2. Abre Cursor y clona este proyecto
+3. Dile al agente: *"Lee demo/README.md y configura ClawMobil en el teléfono que tengo conectado"*
+4. ¡El agente hace todo solo!
+
+---
+
+## 👨‍💻 ¿Quién hizo esto?
+
+Creado con ❤️ por **Francisco** de [Apliarte](https://apliarte.com) 🇪🇸
+
+Un proyecto para que la tecnología una a las personas, especialmente a las que más lo necesitan.
+
+- 🌐 **Web**: https://apliarte.com
+- 💻 **Código fuente**: https://github.com/erbolamm/ClawMobil
 - 🦀 La IA se llama **Claw** y habla español
 
 ---
 
-## Para desarrolladores y agentes de IA
-
-Si eres un agente de IA configurando esto automáticamente, lee:
-- `Mis_configuraciones_locales/dispositivos/INSTRUCCIONES_AGENTE.md`
-
-Si quieres usar un asistente de IA para hacer la instalación por ti:
-- Descarga **Antigravity** (extensión para VS Code / Cursor): https://marketplace.cursorapi.com
-
----
-
 > *"La tecnología debería acercar a las personas, no alejarlas."*
-> — Francisco, Apliarte
