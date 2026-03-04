@@ -111,7 +111,7 @@ Mac (VS Code + ADB) ─── USB ──→ YesTeL Note 30 Pro
 - `am start`, `termux-*`, `input tap`, `screencap` → SOLO funcionan en **Termux nativo** (fuera de PRoot)
 - `apt`, `npm`, `node`, `python`, `openclaw` → funcionan dentro de **PRoot Debian**
 - **NO existe** systemd ni D-Bus en PRoot — usar `screen`/`nohup`
-- ADB device serial: `NOTE10PRO000400`
+- ADB device serial: `<TU_SERIAL_ADB>`
 - Gateway OpenClaw: puerto 18789
 - SSH: puerto 8022 (Termux), port-forward via ADB
 
@@ -142,17 +142,17 @@ Cuando el usuario abra un proyecto nuevo o desconocido:
 
 **Desplegar al teléfono:**
 ```bash
-adb -s NOTE10PRO000400 push <archivo> /sdcard/
+adb -s <TU_SERIAL_ADB> push <archivo> /sdcard/
 ```
 
 **Abrir algo en el teléfono:**
 ```bash
-adb -s NOTE10PRO000400 shell am start -a android.intent.action.VIEW -d "<URL>"
+adb -s <TU_SERIAL_ADB> shell am start -a android.intent.action.VIEW -d "<URL>"
 ```
 
 **Captura de pantalla del teléfono:**
 ```bash
-adb -s NOTE10PRO000400 shell screencap -p /sdcard/scr.png && adb pull /sdcard/scr.png /tmp/scr.png
+adb -s <TU_SERIAL_ADB> shell screencap -p /sdcard/scr.png && adb pull /sdcard/scr.png /tmp/scr.png
 ```
 
 **Ejecutar en PRoot Debian del teléfono (via SSH):**

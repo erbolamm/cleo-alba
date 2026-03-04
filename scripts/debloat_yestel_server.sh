@@ -7,7 +7,7 @@
 # Solo necesita: WiFi + Termux + los servicios mínimos de Android
 #
 # Sin root — usa 'pm uninstall -k --user 0' (reversible con factory reset)
-# Serial: NOTE10PRO000400
+# Serial: <TU_SERIAL_ADB>
 # ═══════════════════════════════════════════════════════════════
 #
 # LO ÚNICO QUE SE CONSERVA:
@@ -22,7 +22,7 @@
 # Para restaurar TODO: factory reset
 # ═══════════════════════════════════════════════════════════════
 
-SERIAL="NOTE10PRO000400"
+SERIAL="<TU_SERIAL_ADB>"
 ADB="adb -s $SERIAL"
 OK='\033[1;32m✅\033[0m'
 SKIP='\033[1;33m⏩\033[0m'

@@ -4,11 +4,11 @@
 # ═══════════════════════════════════════════════════════════════
 # Ejecutar desde: MAC (VS Code terminal)
 # Requisito: ADB conectado y autorizado (depuración USB activa)
-# Serial: NOTE10PRO000400
+# Serial: <TU_SERIAL_ADB>
 # Fecha: 2026-03-02
 # ═══════════════════════════════════════════════════════════════
 
-SERIAL="NOTE10PRO000400"
+SERIAL="<TU_SERIAL_ADB>"
 ADB="adb -s $SERIAL"
 OK='\033[1;32m✅\033[0m'
 ERR='\033[1;31m❌\033[0m'

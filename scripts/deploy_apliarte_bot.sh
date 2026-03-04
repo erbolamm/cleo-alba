@@ -17,7 +17,7 @@ set -euo pipefail
 
 # ─── CONFIGURACIÓN ───
 VPS_USER="root"
-VPS_HOST="72.60.187.93"
+VPS_HOST="<TU_IP_VPS>"
 VPS_DIR="/home/apliarte/docker"
 LOCAL_CONFIG="$(cd "$(dirname "$0")/../config/apliarte_bot" && pwd)"
 OPENCLAW_FORK="$HOME/trabajo/openclaw"  # Ruta local del fork clonado

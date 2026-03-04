@@ -1,23 +1,23 @@
 # Diagnosticar el teléfono YesTeL Note 30 Pro
 
-Ejecuta un diagnóstico completo del dispositivo YesTeL Note 30 Pro (serial: NOTE10PRO000400).
+Ejecuta un diagnóstico completo del dispositivo YesTeL Note 30 Pro (serial: <TU_SERIAL_ADB>).
 
 ## Pasos obligatorios:
 
 1. **Verificar conexión ADB:**
    ```
-   adb -s NOTE10PRO000400 get-state
+   adb -s <TU_SERIAL_ADB> get-state
    ```
 
 2. **Estado de memoria y almacenamiento:**
    ```
-   adb -s NOTE10PRO000400 shell free -h
-   adb -s NOTE10PRO000400 shell df -h /data /sdcard
+   adb -s <TU_SERIAL_ADB> shell free -h
+   adb -s <TU_SERIAL_ADB> shell df -h /data /sdcard
    ```
 
 3. **Procesos más pesados:**
    ```
-   adb -s NOTE10PRO000400 shell top -n 1 -b | head -20
+   adb -s <TU_SERIAL_ADB> shell top -n 1 -b | head -20
    ```
 
 4. **Estado de Termux y PRoot:**
@@ -31,7 +31,7 @@ Ejecuta un diagnóstico completo del dispositivo YesTeL Note 30 Pro (serial: NOT
 
 6. **Estado de la SD Card:**
    ```
-   adb -s NOTE10PRO000400 shell df -h /storage/8245-190E/
+   adb -s <TU_SERIAL_ADB> shell df -h /storage/8245-190E/
    ```
 
 ## Formato de respuesta:

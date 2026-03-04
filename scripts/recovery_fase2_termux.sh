@@ -6,7 +6,7 @@
 # Requisito: Termux ya instalado y abierto al menos una vez
 # ═══════════════════════════════════════════════════════════════
 
-SERIAL="NOTE10PRO000400"
+SERIAL="<TU_SERIAL_ADB>"
 ADB="adb -s $SERIAL"
 OK='\033[1;32m✅\033[0m'
 ERR='\033[1;31m❌\033[0m'
@@ -150,7 +150,7 @@ fi
 
 # 4. Configurar Git
 git config --global user.name "ApliBot"
-git config --global user.email "erbolamm@gmail.com"
+git config --global user.email "<TU_EMAIL_GIT>"
 echo "✅ Git configurado"
 
 # 5. Configurar token de GitHub

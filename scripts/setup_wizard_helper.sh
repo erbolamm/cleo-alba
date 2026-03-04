@@ -17,7 +17,7 @@
 # Ejecuta este script paso a paso.
 # ═══════════════════════════════════════════════════════════════
 
-SERIAL="NOTE10PRO000400"
+SERIAL="<TU_SERIAL_ADB>"
 ADB="adb -s $SERIAL"
 
 # Pantalla: 720 x 1560

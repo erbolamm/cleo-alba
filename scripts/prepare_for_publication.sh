@@ -47,9 +47,17 @@ echo ""
 
 # --- 3. Buscar serials de dispositivo ---
 echo "📱 [3/5] Buscando serials de dispositivo..."
-SERIALS_FOUND=$(grep -rn "6PQ0217223005924" \
+# Busca serials reales: cadenas alfanuméricas de 12+ caracteres junto a 'SERIAL=' o 'adb -s'
+# Excluye placeholders (<TU_SERIAL_ADB>, <DEVICE_SERIAL>, etc.)
+SERIALS_FOUND=$(grep -rn -E "(SERIAL=\"[A-Za-z0-9]{8,}[0-9]{4,}\"|adb -s [A-Za-z0-9]{10,} )" \
     --include="*.py" --include="*.sh" --include="*.md" --include="*.html" --include="*.json" \
-    "$PROJECT_ROOT" 2>/dev/null | grep -v "Mis_configuraciones_locales/" | grep -v "prepare_for_publication.sh" || true)
+    "$PROJECT_ROOT" 2>/dev/null \
+    | grep -v "Mis_configuraciones_locales/" \
+    | grep -v "prepare_for_publication.sh" \
+    | grep -v "<TU_SERIAL_ADB>" \
+    | grep -v "<DEVICE_SERIAL>" \
+    | grep -v "ABC123456" \
+    || true)
 
 if [ -n "$SERIALS_FOUND" ]; then
     echo "  ❌ Serials encontrados:"
@@ -62,9 +70,16 @@ echo ""
 
 # --- 4. Buscar IDs de Telegram ---
 echo "💬 [4/5] Buscando IDs de chat de Telegram..."
-CHAT_IDS=$(grep -rn "288220381" \
-    --include="*.py" --include="*.sh" --include="*.md" --include="*.html" --include="*.json" \
-    "$PROJECT_ROOT" 2>/dev/null | grep -v "Mis_configuraciones_locales/" | grep -v "prepare_for_publication.sh" || true)
+# Busca IDs numéricos de Telegram reales (9+ dígitos seguidos solos en una línea, no entre palabras)
+CHAT_IDS=$(grep -rn -E "(^|[^0-9])[0-9]{9,10}([^0-9]|$)" \
+    --include="*.sh" --include="*.md" --include="*.html" \
+    "$PROJECT_ROOT" 2>/dev/null \
+    | grep -v "Mis_configuraciones_locales/" \
+    | grep -v "prepare_for_publication.sh" \
+    | grep -v "TU_ID_AQUI" \
+    | grep -v "1073741824" \
+    | grep -v "1771" \
+    || true)
 
 if [ -n "$CHAT_IDS" ]; then
     echo "  ❌ Chat IDs encontrados:"

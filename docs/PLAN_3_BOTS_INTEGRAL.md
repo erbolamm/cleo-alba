@@ -55,7 +55,7 @@ Clon del conocimiento de Javier Mateo. Asistente personal, coach, guardián de l
 - **Contexto persistente:** recuerda sesiones anteriores, decisiones, razones
 - **Base de conocimiento indexada:** todo lo que Javier sabe sobre código, negocios, apps
 - **Modo familia:** Mabel → Alba → Fran pueden preguntar y recibir guía personalizada
-  - Contacto emergencia: <mabelsb@gmail.com>
+  - Contacto emergencia: <<EMAIL_EMERGENCIA>>
   - Google Inactive Account Manager ya configurado (3-6 meses → Mabel)
 
 #### C. Experto en Prompts
@@ -199,7 +199,7 @@ telegram:
   allowed_users: [TU_ID_AQUI]
 ```
 
-> **RESUELTO:** Token 8354047887 va para @ApliArteBot (regenerado en BotFather). @ApliMobilBot tiene token nuevo: 7687752283.
+> **RESUELTO:** Token `<ID_BOT_APLIARTE>` va para @ApliArteBot (regenerado en BotFather). @ApliMobilBot tiene token nuevo: `<ID_BOT_APLIMOBIL>`.
 
 ---
 
@@ -226,7 +226,7 @@ Mano derecha de automatizaciones. Ejecuta flujos n8n mediante comandos de texto 
 |---------|--------|-----------|
 | `N8n_status:` | Cambia estado de algo (streaming, servicio, etc.) | Alta |
 | `N8n_directo:` | Gestión de directos (start/stop/schedule) | Alta |
-| `N8n_correo:` | Envía email via SMTP (erbolamm@gmail.com) | Alta |
+| `N8n_correo:` | Envía email via SMTP (<TU_EMAIL_GIT>) | Alta |
 | `N8n_monitor:` | Consulta estado de Uptime Kuma (7 monitores) | Media |
 | `N8n_deploy:` | Despliega/actualiza servicio en Docker | Media |
 | `N8n_backup:` | Fuerza backup de memoria/web a GitHub | Media |
@@ -236,7 +236,7 @@ Mano derecha de automatizaciones. Ejecuta flujos n8n mediante comandos de texto 
 
 #### Automatizaciones sin comando (programadas)
 - **Cron:** Post automático semanal en redes (Tutograti, CalcaApp, etc.)
-- **Monitor:** Alerta si algún servicio cae (Uptime Kuma → Telegram grupo -4805181577)
+- **Monitor:** Alerta si algún servicio cae (Uptime Kuma → Telegram grupo `<ID_GRUPO_TELEGRAM>`)
 - **Backup:** Backup diario de memoria a GitHub a las 04:00
 - **Health:** Ping diario al teléfono (verificar que @ApliMobilBot responde)
 
@@ -260,15 +260,15 @@ Switch (mode: Rules, por prefijo del texto)
 ```
 Host: smtp.gmail.com
 Puerto: 587
-User: erbolamm@gmail.com
-Pass: fwyx ogcd gong sfvj (app password)
+User: <TU_EMAIL_GIT>
+Pass: <TU_GMAIL_APP_PASSWORD>
 ```
 
 ---
 
 ## COMUNICACIÓN ENTRE BOTS
 
-Los 3 bots conviven en el grupo de Telegram (ID: -4805181577). La comunicación es via mensajes de texto en el grupo.
+Los 3 bots conviven en el grupo de Telegram (ID: `<ID_GRUPO_TELEGRAM>`). La comunicación es via mensajes de texto en el grupo.
 
 ### Flujos de comunicación
 
@@ -307,7 +307,7 @@ Los 3 bots conviven en el grupo de Telegram (ID: -4805181577). La comunicación 
 9. Test exhaustivo
 
 ### FASE 2 — @ApliMobilBot (después de Fase 1)
-1. Decidir token (reusar el actual 8354047887 o crear nuevo)
+1. Decidir token (reusar el actual `<ID_BOT_APLIARTE>` o crear nuevo)
 2. Reset YesTeL + reinstalar Termux + PRoot Debian
 3. Instalar OpenClaw desde el fork
 4. Configurar bridge scripts
@@ -381,6 +381,6 @@ Los 3 bots conviven en el grupo de Telegram (ID: -4805181577). La comunicación 
 ## PREGUNTAS PENDIENTES PARA JAVIER
 
 1. ~~¿Cuáles son los 3 tokens?~~ ✅ RESUELTO (3 de marzo 2026)
-2. ~~¿El token actual se reasigna?~~ ✅ RESUELTO — 8354047887 → @ApliArteBot (regenerado)
+2. ~~¿El token actual se reasigna?~~ ✅ RESUELTO — `<ID_BOT_APLIARTE>` → @ApliArteBot (regenerado)
 3. **¿El teléfono YesTeL ya se reseteó o sigue sin funcionar tras el crash?**
 4. **¿Empezamos hoy con @ApliArteBot en el VPS?**

@@ -277,8 +277,8 @@ OpenClaw es un **gateway IA multi-canal** (Node.js) que permite que un bot de IA
 # Dentro de Debian/proot en Termux:
 openclaw config set provider groq
 openclaw config set model groq/llama-3.3-70b-versatile
-openclaw config set telegram.botToken "7687752283:AAE..."
-openclaw config set telegram.allowedUsers "[\"1234567890\"]"
+openclaw config set telegram.botToken "TU_TELEGRAM_TOKEN_AQUI"
+openclaw config set telegram.allowedUsers "[\"TU_ID_AQUI\"]"
 openclaw config set gateway.port 18789
 openclaw config set gateway.bind "127.0.0.1"
 openclaw gateway run  # Arranca el gateway

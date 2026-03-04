@@ -4,7 +4,7 @@
 # ═══════════════════════════════════════════════════════════════
 # Sin root — usa 'pm uninstall -k --user 0' (reversible)
 # Para restaurar un paquete: adb shell cmd package install-existing <pkg>
-# Serial: NOTE10PRO000400
+# Serial: <TU_SERIAL_ADB>
 # Chip: MediaTek Helio P23 (MT6763V) — 8x Cortex-A53 @ 2GHz
 # RAM: 4GB — cada MB cuenta para ClawMobil
 # ═══════════════════════════════════════════════════════════════
@@ -24,10 +24,10 @@
 #
 # Para restaurar TODO de golpe: reiniciar de fábrica
 # Para restaurar UNA app:
-#   adb -s NOTE10PRO000400 shell cmd package install-existing <paquete>
+#   adb -s <TU_SERIAL_ADB> shell cmd package install-existing <paquete>
 # ═══════════════════════════════════════════════════════════════
 
-SERIAL="NOTE10PRO000400"
+SERIAL="<TU_SERIAL_ADB>"
 ADB="adb -s $SERIAL"
 OK='\033[1;32m✅\033[0m'
 SKIP='\033[1;33m⏩\033[0m'
