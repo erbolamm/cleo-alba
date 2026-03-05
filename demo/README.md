@@ -67,6 +67,24 @@ Antes de empezar, asegúrate de tener:
 
 ---
 
+### 🖥️ PARTE 1.5: Ver el teléfono en la pantalla del ordenador (opcional pero recomendado)
+
+> 💡 **¿Para qué sirve?** Vysor te permite ver y controlar la pantalla del teléfono directamente desde el ordenador. Así es mucho más cómodo y si estás enseñando a alguien, todos pueden ver lo que pasa.
+
+**1.5.1** Abre tu navegador y ve a:
+
+> 🔗 **https://vysor.io** — Pulsa **"Download"** e instálalo.
+
+**1.5.2** Abre Vysor. Con el teléfono conectado por USB, verás tu teléfono en la lista.
+
+**1.5.3** Pulsa **"View"** (o "Ver"). ¡La pantalla del teléfono aparecerá en tu ordenador! 📱➡️🖥️
+
+> 💡 Ahora puedes hacer todo desde el ordenador: tocar, escribir, abrir apps... ¡como si tuvieras el teléfono en la pantalla!
+>
+> ⚠️ Si no ves el teléfono en Vysor, asegúrate de que la **Depuración USB** está activada (Parte 1, paso 1.8).
+
+---
+
 ### 💻 PARTE 2: Descargar el proyecto en el ordenador
 
 **2.1** En tu ordenador, abre la **Terminal**:
