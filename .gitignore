@@ -89,3 +89,17 @@ termux_scripts/samsung_a3/app/.gradle/
 # Python cache
 __pycache__/
 *.pyc
+
+# Internal / development files (not for public)
+LEEME
+PLAN_SAMSUNG_A3_INDEPENDIENTE.md
+promt.json
+start_bot.sh
+devtools_options.yaml
+carpeta_capturas/
+recursos_termux/
+config/
+scripts/
+termux_scripts/
+.metadata
+.flutter-plugins-dependencies
