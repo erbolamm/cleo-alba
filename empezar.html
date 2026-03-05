@@ -4,1508 +4,925 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClawMobil — Asistente de Configuración</title>
+    <title>ClawMobilApp — La app que convierte tu móvil viejo en tu IA privada</title>
     <meta name="description"
-        content="Wizard paso a paso para configurar tu dispositivo Android como servidor de IA con ClawMobil.">
+        content="🦀 Descarga, instala, y ya tienes un asistente de IA en tu móvil viejo. Sin internet, sin nube, sin suscripciones. Gratis.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://erbolamm.github.io/ClawMobil/empezar.html">
+    <meta property="og:title" content="🦀 ClawMobilApp — Tu móvil viejo, tu IA privada.">
+    <meta property="og:description"
+        content="Convierte ese Android del cajón en una IA que funciona SIN internet. Gratis. Sin big tech. Hecho en España.">
+    <meta property="og:image" content="https://erbolamm.github.io/ClawMobil/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@erbolamm">
+    <meta name="twitter:title" content="🦀 ClawMobilApp — Tu móvil viejo ahora es tu IA">
+    <meta name="twitter:description"
+        content="Un español está creando una app que convierte móviles viejos en IAs privadas. Sin internet. Gratis.">
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="canonical" href="https://erbolamm.github.io/ClawMobil/empezar.html">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* ═══════════════════════════════════════════
-           APLIARTE — Brand Kit (shared with index.html)
-           ═══════════════════════════════════════════ */
-        :root {
-            --brand-primary: #005fa9;
-            --brand-primary-dark: #00467b;
-            --brand-secondary: #5ecef5;
-            --brand-accent: #e8955e;
-            --brand-accent-dark: #b46734;
-            --brand-light-blue: #8fd5fa;
-            --bg: #fdfdfd;
-            --bg-soft: #f4f5f7;
-            --bg-dark: #303030;
-            --text: #303030;
-            --text-muted: #6b7280;
-            --text-light: #bebbb9;
-            --border: #d9d9d9;
-            --white: #ffffff;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.1);
-            --font: 'Inter', -apple-system, 'Segoe UI', sans-serif;
-        }
-
         *,
         *::before,
         *::after {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brand: #005fa9;
+            --brand-dark: #003d6b;
+            --brand-light: #8fd5fa;
+            --accent: #FF6B35;
+            --accent-glow: rgba(255, 107, 53, 0.4);
+            --bg: #0a0e1a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text: #e8ecf4;
+            --text-dim: #8892a4;
+            --text-bright: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(0, 95, 169, 0.5);
+            --radius: 16px;
+            --glow-brand: 0 0 60px rgba(0, 95, 169, 0.15);
+            --glow-accent: 0 0 40px rgba(255, 107, 53, 0.2);
         }
 
         html {
             scroll-behavior: smooth;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
         }
 
         body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* ═══ Header ═══ */
-        .site-header {
-            background: var(--brand-primary);
-            position: sticky;
+        /* ─── ANIMATED BG ─── */
+        .bg-glow {
+            position: fixed;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 16px rgba(0, 95, 169, 0.25);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
         }
 
-        .site-header-inner {
-            max-width: 1080px;
+        .bg-glow::before {
+            content: '';
+            position: absolute;
+            top: -300px;
+            left: -200px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 95, 169, 0.12) 0%, transparent 70%);
+            animation: floatGlow 20s ease-in-out infinite;
+        }
+
+        .bg-glow::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
+            animation: floatGlow 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatGlow {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(80px, 60px);
+            }
+        }
+
+        /* ─── LAYOUT ─── */
+        .wrap {
+            max-width: 900px;
             margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 0 24px;
-            height: 56px;
-            gap: 20px;
-        }
-
-        .site-logo {
-            font-weight: 900;
-            font-size: 1.05rem;
-            color: var(--white);
-            letter-spacing: 2.5px;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .site-nav {
-            display: flex;
-            gap: 2px;
-            margin-left: auto;
-        }
-
-        .site-nav a {
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.72);
-            text-decoration: none;
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .site-nav a:hover,
-        .site-nav a.active {
-            background: rgba(255, 255, 255, 0.14);
-            color: var(--white);
-        }
-
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-left: auto;
-            padding: 4px 8px;
-        }
-
-        /* ═══ Main container ═══ */
-        .main-wrap {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 24px 80px;
-        }
-
-        /* ═══ Wizard Header ═══ */
-        .wizard-header {
+            justify-content: center;
             text-align: center;
-            margin-bottom: 40px;
+            padding: 80px 24px 60px;
+            position: relative;
         }
 
-        .wizard-header .section-label {
-            font-size: 12px;
+        .hero-content {
+            max-width: 720px;
+        }
+
+        .hero-emoji {
+            font-size: 5rem;
+            margin-bottom: 16px;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1px solid var(--accent);
+            border-radius: 100px;
+            color: var(--accent);
+            font-size: 0.82rem;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--brand-primary);
-            margin-bottom: 8px;
+            margin-bottom: 28px;
+            animation: pulseTag 2s ease-in-out infinite;
         }
 
-        .wizard-header h1 {
-            font-size: clamp(1.6rem, 4vw, 2.2rem);
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 10px;
+        @keyframes pulseTag {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 var(--accent-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px transparent;
+            }
         }
 
-        .wizard-header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            max-width: 540px;
-            margin: 0 auto;
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--text-bright);
         }
 
-        /* ═══ Device Selector ═══ */
-        .device-selector {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 32px 28px;
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--brand-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 580px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-subtitle strong {
+            color: var(--text-bright);
+        }
+
+        /* ─── CTA BUTTONS ─── */
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
             margin-bottom: 32px;
         }
 
-        .device-selector h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--brand-primary-dark);
-        }
-
-        .device-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .device-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .device-item:hover {
-            border-color: var(--brand-light-blue);
-            background: rgba(143, 213, 250, 0.06);
-        }
-
-        .device-item.selected {
-            border-color: var(--brand-primary);
-            background: rgba(0, 95, 169, 0.05);
-        }
-
-        .device-item .device-icon {
-            font-size: 1.5rem;
-        }
-
-        .device-item .device-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .device-item .device-meta {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .device-item .device-status {
-            margin-left: auto;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 12px;
-        }
-
-        .status-ready {
-            background: rgba(34, 197, 94, 0.12);
-            color: var(--success);
-        }
-
-        .status-pending {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--warning);
-        }
-
-        .status-new {
-            background: rgba(0, 95, 169, 0.1);
-            color: var(--brand-primary);
-        }
-
-        /* ═══ New device form ═══ */
-        .new-device-form {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            flex: 1;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 0.92rem;
-            font-family: var(--font);
-            transition: border-color 0.2s;
-            background: var(--bg);
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--brand-primary);
-        }
-
-        .form-group input::placeholder {
-            color: var(--text-light);
-        }
-
-        /* ═══ Buttons ═══ */
-        .btn {
+        .btn-cta {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 11px 22px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            font-size: 0.88rem;
+            padding: 18px 40px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 800;
             text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.25s ease;
-            font-family: var(--font);
-            white-space: nowrap;
+            border: none;
         }
 
         .btn-primary {
-            background: var(--brand-primary);
+            background: linear-gradient(135deg, var(--accent), #e85d2c);
             color: white;
+            box-shadow: 0 8px 32px var(--accent-glow);
         }
 
         .btn-primary:hover {
-            background: var(--brand-primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(0, 95, 169, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px var(--accent-glow);
         }
 
-        .btn-accent {
-            background: var(--brand-accent);
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-bright);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--brand-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-paypal {
+            background: linear-gradient(135deg, #0070ba, #003087);
             color: white;
+            box-shadow: 0 8px 32px rgba(0, 112, 186, 0.3);
         }
 
-        .btn-accent:hover {
-            background: var(--brand-accent-dark);
-            transform: translateY(-1px);
+        .btn-paypal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px rgba(0, 112, 186, 0.4);
         }
 
-        .btn-outline {
-            background: transparent;
-            border-color: var(--border);
-            color: var(--text-muted);
+        .scroll-hint {
+            margin-top: 48px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            animation: bounce 2s ease-in-out infinite;
         }
 
-        .btn-outline:hover {
-            border-color: var(--brand-primary);
-            color: var(--brand-primary);
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(8px);
+            }
         }
 
-        .btn:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
+        /* ─── SECTIONS ─── */
+        .section {
+            padding: 100px 24px;
         }
 
-        /* ═══ Phase cards ═══ */
-        .phases-container {
-            display: flex;
-            flex-direction: column;
+        .section-tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--brand-light);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .section h2 {
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: var(--text-bright);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* ─── FEATURE CARDS ─── */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
         }
 
-        .phase-card {
-            background: var(--white);
+        .f-card {
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
+        }
+
+        .f-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .f-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-active);
+            transform: translateY(-4px);
+        }
+
+        .f-card:hover::before {
+            opacity: 1;
+        }
+
+        .f-card .icon {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+        }
+
+        .f-card h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 8px;
+        }
+
+        .f-card p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* ─── PROBLEM / SOLUTION ─── */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .p-card {
+            padding: 28px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .p-card.problem {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .p-card.solution {
+            background: rgba(34, 197, 94, 0.06);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .p-card h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-bright);
+        }
+
+        .p-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .p-card li {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            padding: 6px 0;
+            line-height: 1.5;
+        }
+
+        .p-card.problem li::before {
+            content: '✗ ';
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .p-card.solution li::before {
+            content: '✓ ';
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        /* ─── NUMBERS ─── */
+        .numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            margin: 60px 0;
+        }
+
+        .num-card {
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .num-card .val {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--brand-light);
+            line-height: 1;
+        }
+
+        .num-card .label {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+        }
+
+        /* ─── SUPPORT SECTION ─── */
+        .support-section {
+            background: linear-gradient(180deg, transparent, rgba(255, 107, 53, 0.04), transparent);
+            padding: 100px 24px;
+            text-align: center;
+        }
+
+        .support-story {
+            max-width: 640px;
+            margin: 0 auto 48px;
+            font-size: 1.1rem;
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .support-story strong {
+            color: var(--text-bright);
+        }
+
+        .support-story .em {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto 48px;
+        }
+
+        .tier {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tier:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--glow-accent);
+        }
+
+        .tier.featured {
+            border-color: var(--accent);
+            background: rgba(255, 107, 53, 0.06);
+        }
+
+        .tier.featured::after {
+            content: '⭐ MÁS POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 16px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            border-radius: 100px;
+        }
+
+        .tier .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .tier h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 8px;
+        }
+
+        .tier .price {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .tier p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tier .benefit {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #22c55e;
+            margin-bottom: 16px;
+        }
+
+        /* ─── SHARE SECTION ─── */
+        .share-section {
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .share-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 32px 0;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 22px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-card);
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+
+        .share-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--brand-light);
+            transform: translateY(-2px);
+        }
+
+        /* ─── FOLLOW ─── */
+        .follow-section {
+            padding: 60px 24px 40px;
+            text-align: center;
+        }
+
+        .follow-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .follow-link {
+            padding: 14px 28px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-bright);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
             transition: all 0.3s;
         }
 
-        .phase-card.locked {
-            opacity: 0.4;
-            filter: grayscale(0.4);
-            pointer-events: none;
-            user-select: none;
+        .follow-link:hover {
+            border-color: var(--brand-light);
+            background: rgba(0, 95, 169, 0.1);
+            transform: translateY(-2px);
         }
 
-        .phase-card.locked .phase-body {
-            filter: blur(2px);
-        }
-
-        .phase-card.active {
-            border-color: var(--brand-primary);
-            box-shadow: 0 4px 20px rgba(0, 95, 169, 0.12);
-        }
-
-        .phase-card.completed {
-            border-color: var(--success);
-        }
-
-        .phase-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 18px 22px;
-            background: var(--bg-soft);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .phase-card.active .phase-header {
-            background: rgba(0, 95, 169, 0.06);
-        }
-
-        .phase-card.completed .phase-header {
-            background: rgba(34, 197, 94, 0.06);
-        }
-
-        .phase-num {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--brand-primary);
-            color: white;
-            font-weight: 900;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .phase-card.completed .phase-num {
-            background: var(--success);
-        }
-
-        .phase-card.locked .phase-num {
-            background: var(--text-light);
-        }
-
-        .phase-title {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .phase-subtitle {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .phase-status-badge {
-            margin-left: auto;
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .phase-body {
-            padding: 22px;
-        }
-
-        .phase-body p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            line-height: 1.7;
-        }
-
-        .phase-lock-msg {
+        /* ─── FOOTER ─── */
+        footer {
             text-align: center;
-            padding: 16px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .phase-lock-msg span {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        /* ═══ Prompt output ═══ */
-        .prompt-output {
-            background: #1a1a2e;
-            border-radius: var(--radius-sm);
-            padding: 18px;
-            position: relative;
-            margin-top: 12px;
-        }
-
-        .prompt-output pre {
-            color: #e0e0e0;
-            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
-            font-size: 0.78rem;
-            line-height: 1.65;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-height: 360px;
-            overflow-y: auto;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: var(--font);
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .copy-btn.copied {
-            background: var(--success);
-            border-color: var(--success);
-        }
-
-        /* ═══ Feature grid (Phase 3+) ═══ */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-        }
-
-        .feature-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .feature-option:hover {
-            border-color: var(--brand-light-blue);
-        }
-
-        .feature-option.selected {
-            border-color: var(--brand-primary);
-            background: rgba(0, 95, 169, 0.04);
-        }
-
-        .feature-option.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .feature-option .feat-icon {
-            font-size: 1.3rem;
-        }
-
-        .feature-option .feat-name {
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .feature-option .feat-req {
-            font-size: 0.7rem;
-            color: var(--text-light);
-        }
-
-        /* ═══ Separator ═══ */
-        .divider {
-            height: 1px;
-            background: var(--border);
-            margin: 28px 0;
-        }
-
-        /* ═══ Info callout ═══ */
-        .callout {
-            padding: 14px 18px;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-
-        .callout-info {
-            background: rgba(0, 95, 169, 0.06);
-            border-left: 3px solid var(--brand-primary);
-            color: var(--brand-primary-dark);
-        }
-
-        .callout-warning {
-            background: rgba(245, 158, 11, 0.08);
-            border-left: 3px solid var(--warning);
-            color: #92400e;
-        }
-
-        .callout-success {
-            background: rgba(34, 197, 94, 0.08);
-            border-left: 3px solid var(--success);
-            color: #166534;
-        }
-
-        /* ═══ Footer ═══ */
-        .site-footer {
-            background: var(--bg-dark);
-            color: rgba(255, 255, 255, 0.55);
-            padding: 28px 24px;
-            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
             font-size: 0.82rem;
         }
 
-        .site-footer a {
-            color: var(--brand-light-blue);
+        footer a {
+            color: var(--brand-light);
             text-decoration: none;
         }
 
-        /* ═══ Responsive ═══ */
-        @media (max-width: 768px) {
-            .site-nav {
-                display: none;
-                position: absolute;
-                top: 56px;
-                left: 0;
-                right: 0;
-                background: var(--brand-primary-dark);
-                flex-direction: column;
-                padding: 12px 16px;
-                gap: 4px;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
 
-            .site-nav.open {
-                display: flex;
-            }
+        .back-link:hover {
+            color: var(--text-bright);
+        }
 
-            .nav-toggle {
-                display: block;
-            }
-
-            .main-wrap {
-                padding: 24px 16px 60px;
-            }
-
-            .device-selector {
-                padding: 20px 16px;
-            }
-
-            .new-device-form {
-                flex-direction: column;
-            }
-
-            .feature-grid {
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 600px) {
+            .problem-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 60px 16px 40px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .btn-cta {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-group {
+                flex-direction: column;
+            }
+
+            .tier {
+                padding: 24px 20px;
             }
         }
     </style>
 </head>
 
 <body>
+    <div class="bg-glow"></div>
 
-    <!-- ═══ HEADER ═══ -->
-    <header class="site-header">
-        <div class="site-header-inner">
-            <a href="index.html" class="site-logo">APLIARTE</a>
-            <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')"
-                aria-label="Menú">☰</button>
-            <nav class="site-nav">
-                <a href="index.html">← Inicio</a>
-                <a href="#" class="active">Empezar</a>
-                <a href="https://github.com/erbolamm/ClawMobil" target="_blank">⭐ GitHub</a>
-            </nav>
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-emoji">🦀📱</div>
+            <div class="hero-tag">🔥 Próximamente — Early Access</div>
+            <h1>Tu móvil viejo.<br>Tu <span class="highlight">IA privada.</span></h1>
+            <p class="hero-subtitle">
+                <strong>ClawMobilApp</strong> convierte cualquier Android que tengas olvidado en un asistente de
+                inteligencia artificial que funciona <strong>sin internet</strong>, <strong>sin nube</strong>, y
+                <strong>sin pagar un céntimo al mes</strong>. Descárgalo. Instálalo. Habla con él.
+            </p>
+            <div class="cta-group">
+                <a class="btn-cta btn-primary" href="#apoyar">☕ Apoyar el proyecto</a>
+                <a class="btn-cta btn-secondary" href="#que-es">↓ Ver qué es esto</a>
+            </div>
+            <div class="scroll-hint">↓ Baja para descubrir todo</div>
         </div>
-    </header>
+    </section>
 
-    <div class="main-wrap">
+    <!-- ═══ QUÉ ES ═══ -->
+    <section class="section" id="que-es">
+        <div class="wrap">
+            <span class="section-tag">El problema</span>
+            <h2>Pagas por hablar con una IA.<br>¿No te parece absurdo?</h2>
+            <p class="section-desc">ChatGPT: 20€/mes. Gemini: 20€/mes. Copilot: 22€/mes. Suscripciones sin fin para
+                algo que tu viejo Samsung del cajón podría hacer <strong>gratis</strong>.</p>
 
-        <!-- ═══ WIZARD HEADER ═══ -->
-        <div class="wizard-header">
-            <div class="section-label">Asistente de Configuración</div>
-            <h1>Configura tu dispositivo</h1>
-            <p>Selecciona un dispositivo existente o crea uno nuevo. Cada paso genera un prompt que pegas en tu
-                asistente IA.</p>
-        </div>
-
-        <!-- ═══ DEVICE SELECTOR ═══ -->
-        <div class="device-selector" id="deviceSelector">
-            <h2>📱 Tus dispositivos</h2>
-
-            <!-- Lista de dispositivos (generada por JS) -->
-            <div class="device-list" id="deviceList">
-                <!-- Se rellenará por JavaScript -->
+            <div class="problem-grid">
+                <div class="p-card problem">
+                    <h3>❌ Lo que hay ahora</h3>
+                    <ul>
+                        <li>Suscripciones mensuales de 20€+</li>
+                        <li>Tus conversaciones en servidores ajenos</li>
+                        <li>Necesitas internet siempre</li>
+                        <li>Tu privacidad no existe</li>
+                        <li>Tus datos entrenan modelos de otros</li>
+                    </ul>
+                </div>
+                <div class="p-card solution">
+                    <h3>✅ ClawMobilApp</h3>
+                    <ul>
+                        <li>Gratis para siempre (con anuncios)</li>
+                        <li>Todo funciona en TU móvil viejo</li>
+                        <li>Funciona sin WiFi, sin datos</li>
+                        <li>Privacidad total: 0 datos enviados</li>
+                        <li>Tu IA es TUYA, no de una empresa</li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- Crear nuevo -->
-            <div class="divider"></div>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; font-weight:600;">
-                ➕ Añadir nuevo dispositivo</p>
-            <div class="new-device-form">
-                <div class="form-group">
-                    <label>Alias del dispositivo</label>
-                    <input type="text" id="newDeviceName" placeholder="ejemplo: mi_pixel_5" pattern="[a-z0-9_-]+"
-                        title="Solo minúsculas, números, guiones bajos y guiones">
+            <div class="numbers">
+                <div class="num-card">
+                    <div class="val">0€</div>
+                    <div class="label">para siempre</div>
                 </div>
-                <button class="btn btn-primary" id="createDeviceBtn" onclick="createDevice()">
-                    Crear dispositivo
-                </button>
+                <div class="num-card">
+                    <div class="val">0</div>
+                    <div class="label">datos enviados</div>
+                </div>
+                <div class="num-card">
+                    <div class="val">0</div>
+                    <div class="label">internet necesario</div>
+                </div>
+                <div class="num-card">
+                    <div class="val">∞</div>
+                    <div class="label">conversaciones</div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- ═══ FASES (se muestran al seleccionar/crear dispositivo) ═══ -->
-        <div class="phases-container" id="phasesContainer" style="display:none;">
+    <!-- ═══ FEATURES ═══ -->
+    <section class="section" style="padding-top: 40px;">
+        <div class="wrap">
+            <span class="section-tag">Características</span>
+            <h2>Una app. Un móvil viejo. <span class="highlight"
+                    style="background: linear-gradient(135deg, var(--brand-light), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tu
+                    IA.</span></h2>
+            <p class="section-desc">Sin configuración, sin terminales, sin conocimientos técnicos. Solo descarga,
+                instala, y ya tienes un compañero de IA.</p>
 
-            <!-- ═══ FASE 1: Reconocimiento ═══ -->
-            <div class="phase-card" id="phase1" data-phase="1">
-                <div class="phase-header">
-                    <div class="phase-num">1</div>
-                    <div>
-                        <div class="phase-title">Reconocimiento del dispositivo</div>
-                        <div class="phase-subtitle">Conecta tu Android por USB. El agente detectará sus capacidades.
-                        </div>
-                    </div>
-                    <span class="phase-status-badge" id="phase1Badge"></span>
+            <div class="feature-grid">
+                <div class="f-card">
+                    <div class="icon">🔒</div>
+                    <h3>100% Privado</h3>
+                    <p>Tu IA funciona en tu dispositivo. Ni una sola palabra sale de tu casa. Ni Google, ni OpenAI, ni
+                        nadie escucha tus conversaciones.</p>
                 </div>
-                <div class="phase-body">
-                    <div class="callout callout-info">
-                        <strong>¿Qué hace este paso?</strong> El prompt le dice a tu asistente IA que ejecute
-                        <code>adb devices</code> y una serie de comandos para reconocer el hardware de tu teléfono
-                        (RAM, CPU, almacenamiento, versión de Android). Con esa información, creará la carpeta de
-                        tu dispositivo y un perfil de capacidades.
-                    </div>
-                    <p>⚠️ <strong>Requisito:</strong> Tu teléfono debe estar conectado por USB con
-                        <em>Depuración USB</em> activada. Revisa siempre el prompt antes de pegarlo.
+                <div class="f-card">
+                    <div class="icon">📡</div>
+                    <h3>Sin Internet</h3>
+                    <p>Funciona offline. En el pueblo, en el campo, en una isla. Donde haya un enchufe, tu IA funciona.
                     </p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">💬</div>
+                    <h3>Compañero Real</h3>
+                    <p>Habla contigo, recuerda lo que le dices, te hace compañía. Ideal para personas mayores que viven
+                        solas.</p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">📥</div>
+                    <h3>Instala y Listo</h3>
+                    <p>Descargas el APK, lo instalas, y funciona. Sin terminales, sin comandos, sin configurar nada.</p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">♻️</div>
+                    <h3>Reciclaje Real</h3>
+                    <p>Ese móvil que iba a la basura ahora es tu asistente personal. Ecología y tecnología de la mano.
+                    </p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">💚</div>
+                    <h3>Gratis para Siempre</h3>
+                    <p>Con anuncios para sostener el desarrollo. Sin suscripciones, sin costes ocultos, sin sorpresas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    <!-- APIS form -->
-                    <div class="api-keys-container"
-                        style="background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px; margin-top: 20px; margin-bottom: 20px;">
-                        <h3
-                            style="font-size: 0.95rem; font-weight: 700; color: var(--brand-primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <span>🔑</span> Configuración de APIs (claves.env)
-                        </h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-                            Opcional: Las claves que introduzcas aquí se guardarán en tu navegador e irán integradas en
-                            el prompt. La IA las usará para crear el archivo <code>claves.env</code> del dispositivo
-                            automáticamente. Muy útil para preparar demostraciones o directos.
-                        </p>
-                        <div class="feature-grid">
-                            <div class="form-group">
-                                <label>Bot de Telegram (Token)</label>
-                                <input type="password" id="inputTelegramKey" placeholder="ej: 123456:ABC-DEF..."
-                                    onchange="saveApiKeysLocally()">
-                            </div>
-                            <div class="form-group">
-                                <label>Groq API Key (Modelos instant)</label>
-                                <input type="password" id="inputGroqKey" placeholder="gsk_..."
-                                    onchange="saveApiKeysLocally()">
-                            </div>
-                            <div class="form-group">
-                                <label>Brave Search (Búsqueda Web)</label>
-                                <input type="password" id="inputBraveKey" placeholder="BSA..."
-                                    onchange="saveApiKeysLocally()">
-                            </div>
-                            <div class="form-group">
-                                <label>GitHub Copilot Token</label>
-                                <input type="password" id="inputCopilotKey" placeholder="ghu_..."
-                                    onchange="saveApiKeysLocally()">
-                            </div>
-                        </div>
-                    </div>
+    <!-- ═══ APOYAR ═══ -->
+    <section class="support-section" id="apoyar">
+        <div class="wrap">
+            <span class="section-tag">Apoya el proyecto</span>
+            <h2>Esto no lo hace una empresa.<br>Lo hace <span style="color: var(--accent);">una persona.</span></h2>
 
-                    <button class="btn btn-accent" onclick="generatePrompt(1)">📋 Generar prompt de
-                        reconocimiento y claves</button>
+            <div class="support-story">
+                <p>Me llamo <strong>Francisco</strong>. Soy de España. No tengo equipo, no tengo inversores, no tengo
+                    departamento de marketing. Solo tengo una idea: que la inteligencia artificial sea accesible para
+                    <span class="em">todo el mundo</span>, no solo para quien puede pagar 20€ al mes.
+                </p>
+                <br>
+                <p>He invertido <strong>miles de horas</strong> en hacer esto realidad. Cada café que me invitas, cada
+                    euro que donas, es gasolina para que esto siga adelante. Y te prometo algo: <span class="em">los que
+                        apoyen ahora serán los primeros en tener ventajas cuando la app se lance.</span></p>
+            </div>
 
-                    <div class="prompt-output" id="prompt1Output" style="display:none;">
-                        <button class="copy-btn" onclick="copyPrompt(1)">Copiar</button>
-                        <pre id="prompt1Text"></pre>
-                    </div>
-
-                    <div id="phase1Done" style="display:none; margin-top:16px;">
-                        <div class="callout callout-success">
-                            ✅ <strong>¡Reconocimiento completado!</strong> Ahora puedes continuar con el setup básico.
-                        </div>
-                        <button class="btn btn-primary" onclick="completePhase(1)">Continuar a Fase 2 →</button>
-                    </div>
+            <div class="tiers">
+                <div class="tier">
+                    <div class="emoji">☕</div>
+                    <h3>Un Café</h3>
+                    <div class="price">3€</div>
+                    <p>Un gesto que vale mucho. Me das energía para seguir una noche más programando.</p>
+                    <span class="benefit">✓ Aparecerás en los créditos</span>
+                    <br><br>
+                    <a class="btn-cta btn-primary" style="font-size:0.9rem; padding: 12px 28px;"
+                        href="https://ko-fi.com/C0C11TWR1K" target="_blank">☕ Invitar café</a>
+                </div>
+                <div class="tier featured">
+                    <div class="emoji">🚀</div>
+                    <h3>Impulsor</h3>
+                    <div class="price">10€+</div>
+                    <p>Tu apoyo acelera semanas de desarrollo. Eres parte activa del proyecto.</p>
+                    <span class="benefit">✓ Early access + sin anuncios 1 mes</span>
+                    <br><br>
+                    <a class="btn-cta btn-primary" style="font-size:0.9rem; padding: 12px 28px;"
+                        href="https://www.paypal.com/paypalme/erbolamm" target="_blank">🚀 Impulsar</a>
+                </div>
+                <div class="tier">
+                    <div class="emoji">🌟</div>
+                    <h3>Founding Member</h3>
+                    <div class="price">25€+</div>
+                    <p>Eres co-creador. Tu nombre queda grabado para siempre en la historia de ClawMobilApp.</p>
+                    <span class="benefit">✓ Early access + sin anuncios 6 meses + badge exclusivo</span>
+                    <br><br>
+                    <a class="btn-cta btn-paypal" style="font-size:0.9rem; padding: 12px 28px;"
+                        href="https://www.paypal.com/paypalme/erbolamm" target="_blank">🌟 Ser Founder</a>
                 </div>
             </div>
 
-            <!-- ═══ FASE 2: Setup Básico ═══ -->
-            <div class="phase-card locked" id="phase2" data-phase="2">
-                <div class="phase-header">
-                    <div class="phase-num">2</div>
-                    <div>
-                        <div class="phase-title">Setup básico obligatorio</div>
-                        <div class="phase-subtitle">Instala Termux, SSH y la base del servidor.</div>
-                    </div>
-                    <span class="phase-status-badge" id="phase2Badge"></span>
-                </div>
-                <div class="phase-body">
-                    <div class="callout callout-info">
-                        <strong>¿Qué instala?</strong> Termux (terminal Linux), proot-distro (Debian),
-                        servidor SSH (puerto 8022) y la estructura base del servidor. Sin esto, nada más funciona.
-                    </div>
+            <p style="color: var(--text-dim); font-size: 0.9rem; max-width: 500px; margin: 0 auto;">
+                💡 <strong style="color: var(--text);">Cada donación cuenta.</strong> No importa la cantidad. Lo que
+                importa es que creas en esto tanto como yo.
+            </p>
+        </div>
+    </section>
 
-                    <p>Elige el entorno de tu dispositivo:</p>
-                    <div class="feature-grid" style="margin-bottom:16px;">
-                        <div class="feature-option selected" data-env="hybrid" onclick="selectEnv(this)">
-                            <span class="feat-icon">🔄</span>
-                            <div>
-                                <div class="feat-name">Híbrido</div>
-                                <div class="feat-req">Local + Cloud</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-env="local" onclick="selectEnv(this)">
-                            <span class="feat-icon">📡</span>
-                            <div>
-                                <div class="feat-name">Solo offline</div>
-                                <div class="feat-req">Requiere ≥4GB RAM</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-env="cloud" onclick="selectEnv(this)">
-                            <span class="feat-icon">☁️</span>
-                            <div>
-                                <div class="feat-name">Cloud asistido</div>
-                                <div class="feat-req">Requiere internet</div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- ═══ COMPARTIR ═══ -->
+    <section class="share-section" id="compartir">
+        <div class="wrap">
+            <span class="section-tag">Haz que esto explote</span>
+            <h2>💥 Comparte. Que se entere el mundo.</h2>
+            <p class="section-desc" style="margin: 0 auto 32px;">Un tweet, un story, un mensaje a un amigo. Cada share
+                acerca ClawMobilApp a quienes más lo necesitan.</p>
 
-                    <div id="envWarning" class="callout callout-warning" style="display:none;">
-                        ⚠️ Tu dispositivo tiene menos de 4GB de RAM. El modo <strong>Solo offline</strong> con IA local
-                        puede no funcionar correctamente. Recomendamos <strong>Híbrido</strong>.
-                    </div>
-
-                    <button class="btn btn-accent" onclick="generatePrompt(2)">📋 Generar prompt de setup</button>
-
-                    <div class="prompt-output" id="prompt2Output" style="display:none;">
-                        <button class="copy-btn" onclick="copyPrompt(2)">Copiar</button>
-                        <pre id="prompt2Text"></pre>
-                    </div>
-
-                    <div id="phase2Done" style="display:none; margin-top:16px;">
-                        <div class="callout callout-success">
-                            ✅ <strong>¡Setup básico completado!</strong> Ahora puedes añadir funcionalidades a tu
-                            servidor.
-                        </div>
-                        <button class="btn btn-primary" onclick="completePhase(2)">Desbloquear features →</button>
-                    </div>
-                </div>
+            <div class="share-grid">
+                <a class="share-btn"
+                    href="https://twitter.com/intent/tweet?text=%F0%9F%A6%9E%20Un%20espa%C3%B1ol%20est%C3%A1%20creando%20una%20app%20que%20convierte%20m%C3%B3viles%20viejos%20en%20IAs%20privadas.%20Sin%20internet.%20GRATIS.%20%F0%9F%94%A5%0A%0AEsto%20SÍ%20es%20tecnología%20para%20la%20gente.%0A%0A%23ClawMobilApp%20%23IA%20%40erbolamm%0A%0Ahttps%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">𝕏 Twitter</a>
+                <a class="share-btn"
+                    href="https://wa.me/?text=%F0%9F%A6%9E%20Mira%20esto%3A%20una%20app%20que%20convierte%20cualquier%20m%C3%B3vil%20viejo%20en%20una%20IA%20que%20funciona%20SIN%20internet.%20Gratis.%20Perfecto%20para%20personas%20mayores.%0A%0Ahttps%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">💬 WhatsApp</a>
+                <a class="share-btn"
+                    href="https://t.me/share/url?url=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html&text=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20M%C3%B3vil%20viejo%20%2B%20esta%20app%20%3D%20tu%20IA%20privada%20SIN%20internet.%20Gratis."
+                    target="_blank">✈️ Telegram</a>
+                <a class="share-btn"
+                    href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">💼 LinkedIn</a>
+                <a class="share-btn"
+                    href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">🔵 Facebook</a>
+                <a class="share-btn"
+                    href="https://www.reddit.com/submit?url=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html&title=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20Free%20app%20turns%20old%20Android%20phones%20into%20private%20offline%20AI%20assistants"
+                    target="_blank">🟠 Reddit</a>
+                <a class="share-btn"
+                    href="https://www.threads.net/intent/post?text=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20convierte%20m%C3%B3viles%20viejos%20en%20IAs%20privadas.%20Sin%20internet.%20Gratis.%20Hecho%20en%20Espa%C3%B1a%20%F0%9F%87%AA%F0%9F%87%B8%20https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">🧵 Threads</a>
+                <a class="share-btn"
+                    href="mailto:?subject=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20IA%20gratis%20en%20tu%20m%C3%B3vil%20viejo&body=Mira%20esto%3A%20una%20app%20que%20convierte%20cualquier%20Android%20viejo%20en%20una%20IA%20privada%20que%20funciona%20SIN%20internet.%20Gratis.%0A%0Ahttps%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html">📧
+                    Email</a>
             </div>
 
-            <!-- ═══ FASE 3: Features opcionales ═══ -->
-            <div class="phase-card locked" id="phase3" data-phase="3">
-                <div class="phase-header">
-                    <div class="phase-num">3</div>
-                    <div>
-                        <div class="phase-title">Funcionalidades adicionales</div>
-                        <div class="phase-subtitle">Elige qué capacidades quieres añadir a tu servidor.</div>
-                    </div>
-                    <span class="phase-status-badge" id="phase3Badge"></span>
-                </div>
-                <div class="phase-body">
-                    <p>Selecciona las funcionalidades que quieras instalar. Se generará un prompt individual para cada
-                        una.</p>
+            <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 12px;">
+                #ClawMobilApp #IA #Android #Reciclaje #Privacidad #HechoEnEspaña @erbolamm
+            </p>
+        </div>
+    </section>
 
-                    <div class="feature-grid" id="featuresGrid">
-                        <div class="feature-option" data-feat="ollama" onclick="toggleFeature(this)">
-                            <span class="feat-icon">🤖</span>
-                            <div>
-                                <div class="feat-name">IA Local (Ollama)</div>
-                                <div class="feat-req">Requiere ≥4GB RAM</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-feat="telegram" onclick="toggleFeature(this)">
-                            <span class="feat-icon">💬</span>
-                            <div>
-                                <div class="feat-name">Bot Telegram</div>
-                                <div class="feat-req">Requiere internet</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-feat="automation" onclick="toggleFeature(this)">
-                            <span class="feat-icon">🔄</span>
-                            <div>
-                                <div class="feat-name">Automatización</div>
-                                <div class="feat-req">termux-boot, cron</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-feat="voice" onclick="toggleFeature(this)">
-                            <span class="feat-icon">🗣️</span>
-                            <div>
-                                <div class="feat-name">Voz (STT/TTS)</div>
-                                <div class="feat-req">Micrófono requerido</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-feat="vision" onclick="toggleFeature(this)">
-                            <span class="feat-icon">📷</span>
-                            <div>
-                                <div class="feat-name">Visión IA</div>
-                                <div class="feat-req">Cámara requerida</div>
-                            </div>
-                        </div>
-                        <div class="feature-option" data-feat="monitoring" onclick="toggleFeature(this)">
-                            <span class="feat-icon">📊</span>
-                            <div>
-                                <div class="feat-name">Monitorización</div>
-                                <div class="feat-req">Dashboard web</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top:16px;">
-                        <button class="btn btn-accent" id="generateFeaturesBtn" onclick="generatePrompt(3)" disabled>
-                            📋 Generar prompt de features seleccionados
-                        </button>
-                    </div>
-
-                    <div class="prompt-output" id="prompt3Output" style="display:none;">
-                        <button class="copy-btn" onclick="copyPrompt(3)">Copiar</button>
-                        <pre id="prompt3Text"></pre>
-                    </div>
-                </div>
+    <!-- ═══ FOLLOW ═══ -->
+    <section class="follow-section">
+        <div class="wrap">
+            <h2 style="font-size: 1.5rem;">Sígueme para estar al día</h2>
+            <p style="color: var(--text-dim); margin-top: 8px;">Primero en enterarte cuando se lance la app.</p>
+            <div class="follow-links">
+                <a class="follow-link" href="https://twitter.com/erbolamm" target="_blank">𝕏 @erbolamm</a>
+                <a class="follow-link" href="https://github.com/erbolamm" target="_blank">👤 GitHub</a>
+                <a class="follow-link" href="https://apliarte.com" target="_blank">🌐 ApliArte.com</a>
             </div>
+        </div>
+    </section>
 
-        </div><!-- /phases-container -->
-
-    </div><!-- /main-wrap -->
-
-    <!-- ═══ FOOTER ═══ -->
-    <footer class="site-footer">
-        <p>ClawMobil — <a href="https://apliarte.com" target="_blank">ApliArte.com</a> · Software Libre · 2026</p>
+    <!-- ═══ BACK TO INDEX ═══ -->
+    <footer>
+        <a class="back-link" href="index.html">← Volver a ClawMobilApp</a>
+        <p>🦀 ClawMobilApp — Creado con ❤️ por <a href="https://apliarte.com" target="_blank">Francisco de
+                ApliArte.com</a> · España · 2026</p>
+        <p style="margin-top: 8px; font-style: italic;">"La gente que dice que no se puede hacer no debería interrumpir
+            a los que lo están haciendo."</p>
     </footer>
-
-    <!-- ═══ SCRIPT ═══ -->
-    <script>
-        (function () {
-            'use strict';
-
-            // ── Estado ──
-            var STORAGE_KEY = 'clawmobil_devices';
-            var state = {
-                devices: loadDevices(),
-                currentDevice: null,
-                currentPhase: 0,
-                selectedEnv: 'hybrid',
-                selectedFeatures: []
-            };
-
-            // ── Persistencia API Keys ──
-            window.loadApiKeys = function () {
-                var keys = {};
-                try { keys = JSON.parse(localStorage.getItem('clawmobil_apikeys')) || {}; } catch (e) { }
-                var elTel = document.getElementById('inputTelegramKey');
-                if (elTel) elTel.value = keys.telegram || '';
-                var elGroq = document.getElementById('inputGroqKey');
-                if (elGroq) elGroq.value = keys.groq || '';
-                var elCopilot = document.getElementById('inputCopilotKey');
-                if (elCopilot) elCopilot.value = keys.copilot || '';
-                var elBrave = document.getElementById('inputBraveKey');
-                if (elBrave) elBrave.value = keys.brave || '';
-            };
-
-            window.saveApiKeysLocally = function () {
-                var keys = {
-                    telegram: document.getElementById('inputTelegramKey').value.trim(),
-                    groq: document.getElementById('inputGroqKey').value.trim(),
-                    copilot: document.getElementById('inputCopilotKey').value.trim(),
-                    brave: document.getElementById('inputBraveKey').value.trim()
-                };
-                localStorage.setItem('clawmobil_apikeys', JSON.stringify(keys));
-            };
-
-            // ── Persistencia ──
-            function loadDevices() {
-                try {
-                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-                } catch (e) {
-                    return {};
-                }
-            }
-            function saveDevices() {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state.devices));
-            }
-
-            // ── Init ──
-            renderDeviceList();
-            if (typeof loadApiKeys === 'function') setTimeout(loadApiKeys, 0);
-
-            // ── Render lista de dispositivos ──
-            function renderDeviceList() {
-                var list = document.getElementById('deviceList');
-                var deviceNames = Object.keys(state.devices).filter(function (n) { return n !== '_plantilla'; });
-
-                if (deviceNames.length === 0) {
-                    list.innerHTML = '<p style="color:var(--text-muted); font-size:0.88rem; padding:8px 0;">' +
-                        'No tienes dispositivos configurados todavía. Crea uno nuevo para empezar.</p>';
-                    return;
-                }
-
-                list.innerHTML = deviceNames.map(function (name) {
-                    var d = state.devices[name];
-                    var phase = d.phase || 0;
-                    var statusClass = phase >= 2 ? 'status-ready' : (phase >= 1 ? 'status-pending' : 'status-new');
-                    var statusText = phase >= 2 ? 'Listo' : (phase >= 1 ? 'En progreso' : 'Nuevo');
-
-                    return '<div class="device-item' + (state.currentDevice === name ? ' selected' : '') +
-                        '" onclick="selectDevice(\'' + name + '\')">' +
-                        '<span class="device-icon">📱</span>' +
-                        '<div><div class="device-name">' + name + '</div>' +
-                        '<div class="device-meta">Fase ' + phase + ' completada</div></div>' +
-                        '<span class="device-status ' + statusClass + '">' + statusText + '</span>' +
-                        '</div>';
-                }).join('');
-            }
-
-            // ── Crear dispositivo ──
-            window.createDevice = function () {
-                var input = document.getElementById('newDeviceName');
-                var name = input.value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
-
-                if (!name) {
-                    input.style.borderColor = 'var(--danger)';
-                    input.focus();
-                    return;
-                }
-                if (state.devices[name]) {
-                    alert('Ya existe un dispositivo con ese nombre. Selecciónalo de la lista.');
-                    return;
-                }
-
-                state.devices[name] = {
-                    created: new Date().toISOString(),
-                    phase: 0
-                };
-                saveDevices();
-                input.value = '';
-                input.style.borderColor = '';
-                selectDevice(name);
-            };
-
-            // ── Seleccionar dispositivo ──
-            window.selectDevice = function (name) {
-                state.currentDevice = name;
-                var d = state.devices[name];
-                state.currentPhase = d.phase || 0;
-
-                renderDeviceList();
-                showPhases();
-                updatePhaseStates();
-            };
-
-            // ── Mostrar fases ──
-            function showPhases() {
-                document.getElementById('phasesContainer').style.display = 'flex';
-                document.getElementById('phasesContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-
-            // ── Actualizar estados de fases ──
-            function updatePhaseStates() {
-                var phase = state.currentPhase;
-
-                // Fase 1
-                var p1 = document.getElementById('phase1');
-                p1.className = 'phase-card ' + (phase >= 1 ? 'completed' : 'active');
-                document.getElementById('phase1Badge').textContent = phase >= 1 ? '✅ COMPLETA' : '↻ ACTUAL';
-                document.getElementById('phase1Badge').className = 'phase-status-badge ' +
-                    (phase >= 1 ? 'status-ready' : 'status-pending');
-                document.getElementById('phase1Done').style.display = phase < 1 ? 'block' : 'none';
-
-                // Fase 2
-                var p2 = document.getElementById('phase2');
-                if (phase >= 2) {
-                    p2.className = 'phase-card completed';
-                    document.getElementById('phase2Badge').textContent = '✅ COMPLETA';
-                    document.getElementById('phase2Badge').className = 'phase-status-badge status-ready';
-                    document.getElementById('phase2Done').style.display = 'none';
-                } else if (phase >= 1) {
-                    p2.className = 'phase-card active';
-                    document.getElementById('phase2Badge').textContent = '↻ ACTUAL';
-                    document.getElementById('phase2Badge').className = 'phase-status-badge status-pending';
-                    document.getElementById('phase2Done').style.display = 'block';
-                } else {
-                    p2.className = 'phase-card locked';
-                    document.getElementById('phase2Badge').textContent = '🔒 BLOQUEADA';
-                    document.getElementById('phase2Badge').className = 'phase-status-badge';
-                }
-
-                // Fase 3
-                var p3 = document.getElementById('phase3');
-                if (phase >= 2) {
-                    p3.className = 'phase-card active';
-                    document.getElementById('phase3Badge').textContent = '🛠️ DISPONIBLE';
-                    document.getElementById('phase3Badge').className = 'phase-status-badge status-new';
-                } else {
-                    p3.className = 'phase-card locked';
-                    document.getElementById('phase3Badge').textContent = '🔒 BLOQUEADA';
-                    document.getElementById('phase3Badge').className = 'phase-status-badge';
-                }
-            }
-
-            // ── Completar fase ──
-            window.completePhase = function (phase) {
-                if (!state.currentDevice) return;
-                state.devices[state.currentDevice].phase = phase;
-                state.currentPhase = phase;
-                saveDevices();
-                renderDeviceList();
-                updatePhaseStates();
-            };
-
-            // ── Seleccionar entorno ──
-            window.selectEnv = function (el) {
-                document.querySelectorAll('.feature-option[data-env]').forEach(function (e) {
-                    e.classList.remove('selected');
-                });
-                el.classList.add('selected');
-                state.selectedEnv = el.getAttribute('data-env');
-
-                // Warning de RAM para modo offline
-                var warning = document.getElementById('envWarning');
-                warning.style.display = state.selectedEnv === 'local' ? 'block' : 'none';
-            };
-
-            // ── Toggle feature ──
-            window.toggleFeature = function (el) {
-                el.classList.toggle('selected');
-                var feats = [];
-                document.querySelectorAll('.feature-option[data-feat].selected').forEach(function (e) {
-                    feats.push(e.getAttribute('data-feat'));
-                });
-                state.selectedFeatures = feats;
-                document.getElementById('generateFeaturesBtn').disabled = feats.length === 0;
-            };
-
-            // ── Generar prompt ──
-            window.generatePrompt = function (phase) {
-                var name = state.currentDevice;
-                if (!name) return;
-
-                var devicePath = 'Mis_configuraciones_locales/dispositivos/' + name;
-                var prompt = '';
-
-                if (phase === 1) {
-                    prompt = generatePhase1Prompt(name, devicePath);
-                } else if (phase === 2) {
-                    prompt = generatePhase2Prompt(name, devicePath);
-                } else if (phase === 3) {
-                    prompt = generatePhase3Prompt(name, devicePath);
-                }
-
-                var outputEl = document.getElementById('prompt' + phase + 'Output');
-                var textEl = document.getElementById('prompt' + phase + 'Text');
-                textEl.textContent = prompt;
-                outputEl.style.display = 'block';
-                outputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            };
-
-            // ── Copiar prompt ──
-            window.copyPrompt = function (phase) {
-                var text = document.getElementById('prompt' + phase + 'Text').textContent;
-                navigator.clipboard.writeText(text).then(function () {
-                    var btn = document.querySelector('#prompt' + phase + 'Output .copy-btn');
-                    btn.textContent = '¡Copiado!';
-                    btn.classList.add('copied');
-                    setTimeout(function () {
-                        btn.textContent = 'Copiar';
-                        btn.classList.remove('copied');
-                    }, 2000);
-                });
-            };
-
-            // ═══════════════════════════════════════
-            // GENERADORES DE PROMPTS
-            // ═══════════════════════════════════════
-
-            function generatePhase1Prompt(name, path) {
-                var keys = {};
-                try { keys = JSON.parse(localStorage.getItem('clawmobil_apikeys')) || {}; } catch (e) { }
-
-                var envContent = [];
-                if (keys.telegram) envContent.push('TELEGRAM_BOT_TOKEN=' + keys.telegram);
-                if (keys.groq) envContent.push('GROQ_API_KEY=' + keys.groq);
-                if (keys.copilot) envContent.push('GITHUB_COPILOT_TOKEN=' + keys.copilot);
-                if (keys.brave) envContent.push('BRAVE_SEARCH_API_KEY=' + keys.brave);
-
-                var envTask = '';
-                if (envContent.length > 0) {
-                    envTask = [
-                        '### 3.1 Generar archivo de claves (claves.env)',
-                        'Crea el archivo `' + path + '/claves.env` con las credenciales que ha introducido el usuario:',
-                        '```env',
-                        envContent.join('\\n'),
-                        '```',
-                        ''
-                    ].join('\n');
-                } else {
-                    envTask = [
-                        '### 3.1 Generar archivo de claves (claves.env) vacío',
-                        'Crea el archivo `' + path + '/claves.env` (vacío, para que el usuario añada sus claves luego):',
-                        '```bash',
-                        'touch "' + path + '/claves.env"',
-                        '```',
-                        ''
-                    ].join('\n');
-                }
-
-                return [
-                    '# ClawMobil — Fase 1: Reconocimiento del dispositivo "' + name + '"',
-                    '',
-                    '## Contexto',
-                    'El usuario quiere configurar un dispositivo Android como servidor con ClawMobil.',
-                    'Este es el PRIMER PASO. Reconocimiento, creación de infraestructura y panel de gestión.',
-                    '',
-                    '## REGLA FUNDAMENTAL',
-                    '⚠️ NUNCA modifiques archivos de la raíz del proyecto. Solo crea/edita dentro de:',
-                    '`' + path + '/`',
-                    '',
-                    '## REFERENCIA OBLIGATORIA',
-                    'Antes de crear cualquier archivo, LEE el dispositivo de referencia que ya existe:',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/index.html` → estructura del panel principal',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/styles/brand.css` → diseño completo (COPIA tal cual)',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/control_huawei_p10.html` → ejemplo de panel de control',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/backup_restore.html` → ejemplo de backup',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/comandos_p10.html` → ejemplo de comandos',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/metricas.html` → ejemplo de métricas',
-                    '- `Mis_configuraciones_locales/dispositivos/huawei_p10/uso_apliarte_bot.html` → ejemplo de ayuda',
-                    '',
-                    '## Tareas (ejecutar en orden)',
-                    '',
-                    '### 1. Verificar conexión ADB',
-                    '```bash',
-                    'adb devices',
-                    '```',
-                    'Si no hay dispositivos, pide al usuario que active Depuración USB.',
-                    '',
-                    '### 2. Reconocer hardware',
-                    '```bash',
-                    '# RAM total',
-                    'adb shell cat /proc/meminfo | head -1',
-                    '# CPU',
-                    'adb shell cat /proc/cpuinfo | grep "model name\\|Hardware\\|Processor" | head -3',
-                    '# Almacenamiento',
-                    'adb shell df -h /data',
-                    '# Versión Android',
-                    'adb shell getprop ro.build.version.release',
-                    '# Modelo',
-                    'adb shell getprop ro.product.model',
-                    '# Marca',
-                    'adb shell getprop ro.product.brand',
-                    '# Arquitectura',
-                    'adb shell getprop ro.product.cpu.abi',
-                    '# Serial',
-                    'adb shell getprop ro.serialno',
-                    '```',
-                    '',
-                    '### 3. Crear carpeta del dispositivo',
-                    '```bash',
-                    'mkdir -p "' + path + '/styles"',
-                    'mkdir -p "' + path + '/transferencia_de_archivos"',
-                    'mkdir -p "' + path + '/logs"',
-                    'mkdir -p "' + path + '/backups_openclaw"',
-                    'cp -r Mis_configuraciones_locales/dispositivos/_plantilla/* "' + path + '/"',
-                    '```',
-                    '',
-                    envTask,
-                    '### 4. Generar device_info.json',
-                    'Crea `' + path + '/device_info.json` con toda la información recopilada:',
-                    '```json',
-                    '{',
-                    '  "alias": "' + name + '",',
-                    '  "brand": "<MARCA>",',
-                    '  "model": "<MODELO>",',
-                    '  "android_version": "<VERSION>",',
-                    '  "cpu_arch": "<ARQUITECTURA>",',
-                    '  "ram_mb": <RAM_EN_MB>,',
-                    '  "storage_total_gb": <ALMACENAMIENTO_TOTAL>,',
-                    '  "storage_free_gb": <ALMACENAMIENTO_LIBRE>,',
-                    '  "serial": "<SERIAL_ADB>",',
-                    '  "capabilities": {',
-                    '    "supports_ollama": <true/false basado en RAM ≥ 4096>,',
-                    '    "supports_offline_ai": <true/false basado en RAM ≥ 3072>,',
-                    '    "supports_camera": true,',
-                    '    "supports_microphone": true',
-                    '  },',
-                    '  "phase_completed": 1,',
-                    '  "created_at": "<FECHA_ACTUAL>"',
-                    '}',
-                    '```',
-                    '',
-                    '### 5. Copiar brand.css',
-                    'Copia el sistema de diseño completo:',
-                    '```bash',
-                    'cp -r Mis_configuraciones_locales/dispositivos/huawei_p10/styles/* "' + path + '/styles/"',
-                    '```',
-                    '',
-                    '### 6. Crear panel de dispositivo COMPLETO',
-                    '',
-                    '⚠️ **MUY IMPORTANTE**: El panel debe tener EXACTAMENTE la misma estructura y',
-                    'calidad que el del Huawei P10. LEE cada archivo del P10 como referencia y',
-                    'crea uno equivalente adaptado a este dispositivo (' + name + ').',
-                    '',
-                    'Archivos a crear (usa el P10 como plantilla, adaptando nombre, serial, modelo):',
-                    '',
-                    '#### 6.1 `' + path + '/index.html`',
-                    'Panel principal con:',
-                    '- Header + Nav bar APLIARTE con links a todas las secciones',
-                    '- Grid de paneles: Control, Backup, Comandos, Archivos, Métricas, Ayuda',
-                    '- Acciones rápidas con botones de copiar (SSH, batería, estado, autónomo)',
-                    '- Tabla con info del dispositivo (modelo, serial, RAM, rol)',
-                    '- Toast de "copiado" y footer',
-                    '- `<link rel="stylesheet" href="styles/brand.css">`',
-                    '',
-                    '#### 6.2 `' + path + '/control_' + name + '.html`',
-                    'Panel de control con:',
-                    '- Estado de OpenClaw (health check)',
-                    '- Diagnóstico del sistema (RAM, CPU, temp, batería)',
-                    '- Mantenimiento (limpiar cache, reiniciar servicios)',
-                    '- Screen Guard (monitorización de procesos)',
-                    '- Modo autónomo (on/off)',
-                    '',
-                    '#### 6.3 `' + path + '/backup_restore.html`',
-                    'Panel de backup con:',
-                    '- Crear y restaurar snapshots',
-                    '- Migración entre dispositivos',
-                    '- Sincronización con Mac/PC',
-                    '- Servidor local de archivos',
-                    '',
-                    '#### 6.4 `' + path + '/comandos_' + name + '.html`',
-                    'Referencia rápida de comandos:',
-                    '- Comandos ADB (conectar, shell, push, pull)',
-                    '- Comandos SSH (conectar, ejecutar remotamente)',
-                    '- Utilidades Termux (batería, wifi, volumen)',
-                    '- Cada comando debe tener botón de copiar',
-                    '',
-                    '#### 6.5 `' + path + '/metricas.html`',
-                    'Dashboard de métricas:',
-                    '- Gráficos de temperatura, batería, RAM, CPU',
-                    '- Uptime del servidor',
-                    '- Placeholder con instrucciones para activar monitorización',
-                    '',
-                    '#### 6.6 `' + path + '/uso_apliarte_bot.html`',
-                    'Página de ayuda/FAQ:',
-                    '- Guía rápida de uso',
-                    '- Troubleshooting (no conecta, no responde, etc.)',
-                    '- Referencia de comandos del bot',
-                    '',
-                    'Todos los HTML deben:',
-                    '- Usar `<link rel="stylesheet" href="styles/brand.css">`',
-                    '- Tener el mismo header/nav con links entre secciones',
-                    '- Adaptar nombres/seriales al dispositivo real detectado',
-                    '- Incluir los scripts de copiar al portapapeles',
-                    '',
-                    '### 7. Informar resultados',
-                    'Muestra un resumen con:',
-                    '- Modelo y marca detectados',
-                    '- RAM disponible y si es compatible con IA offline',
-                    '- Almacenamiento libre',
-                    '- Lista de archivos creados',
-                    '- Recomendaciones según las capacidades',
-                    '',
-                    '## SNAPSHOT',
-                    'Antes de terminar, crea un snapshot del estado actual:',
-                    '```bash',
-                    'tar -czf "' + path + '/snapshot_fase1_$(date +%Y%m%d_%H%M%S).tar.gz" -C "' + path + '" .',
-                    '```',
-                ].join('\n');
-            }
-
-            function generatePhase2Prompt(name, path) {
-                var env = state.selectedEnv;
-                return [
-                    '# ClawMobil — Fase 2: Setup básico para "' + name + '"',
-                    '',
-                    '## Contexto',
-                    'El dispositivo ya fue reconocido (Fase 1 completa).',
-                    'Consulta `' + path + '/device_info.json` para conocer sus capacidades.',
-                    'Entorno elegido: **' + env + '**',
-                    '',
-                    '## REGLA FUNDAMENTAL',
-                    '⚠️ NUNCA modifiques archivos de la raíz del proyecto. Solo edita en:',
-                    '`' + path + '/`',
-                    '',
-                    '## Tareas (ejecutar en orden)',
-                    '',
-                    '### 1. Verificar Termux instalado',
-                    '```bash',
-                    'adb shell pm list packages | grep com.termux',
-                    '```',
-                    'Si NO está instalado, pide al usuario que instale Termux desde F-Droid:',
-                    'https://f-droid.org/packages/com.termux/',
-                    '',
-                    '### 2. Instalar paquetes base en Termux',
-                    'Envía estos comandos al dispositivo (vía ADB o pide al usuario que los ejecute en Termux):',
-                    '```bash',
-                    '# En Termux:',
-                    'pkg update -y && pkg upgrade -y',
-                    'pkg install -y openssh screen proot-distro git wget curl',
-                    '```',
-                    '',
-                    '### 3. Configurar SSH',
-                    '```bash',
-                    '# En Termux:',
-                    'passwd  # El usuario elige contraseña',
-                    'sshd    # Inicia SSH en puerto 8022',
-                    '```',
-                    'Verifica que SSH funciona desde el Mac/PC:',
-                    '```bash',
-                    'ssh -p 8022 $(adb shell ip addr show wlan0 | grep "inet " | awk \'{print $2}\' | cut -d/ -f1)',
-                    '```',
-                    '',
-                    '### 4. Instalar proot-distro (Debian)',
-                    '```bash',
-                    '# En Termux:',
-                    'proot-distro install debian',
-                    'proot-distro login debian -- apt update && apt install -y python3 python3-pip nodejs npm',
-                    '```',
-                    '',
-                    env === 'local' ? [
-                        '### 5. Preparar Ollama (modo offline)',
-                        '```bash',
-                        'proot-distro login debian -- bash -c "curl -fsSL https://ollama.ai/install.sh | sh"',
-                        'proot-distro login debian -- ollama pull tinyllama',
-                        '```',
-                    ].join('\n') : '',
-                    '',
-                    '### 6. Crear script de arranque',
-                    'Crea `' + path + '/start.sh`:',
-                    '```bash',
-                    '#!/data/data/com.termux/files/usr/bin/bash',
-                    '# ClawMobil — Script de arranque para ' + name,
-                    'sshd',
-                    'echo "✅ SSH activo en puerto 8022"',
-                    'screen -dmS openclaw proot-distro login debian -- bash -c "cd /root && python3 -m http.server 8080"',
-                    'echo "✅ Servidor iniciado en screen openclaw"',
-                    '```',
-                    '',
-                    '### 7. Subir script al dispositivo',
-                    '```bash',
-                    'adb push "' + path + '/start.sh" /sdcard/clawmobil/start.sh',
-                    'adb shell "chmod +x /sdcard/clawmobil/start.sh"',
-                    '```',
-                    '',
-                    '### 8. Actualizar device_info.json',
-                    'Edita `' + path + '/device_info.json` y cambia:',
-                    '```json',
-                    '"phase_completed": 2,',
-                    '"environment": "' + env + '",',
-                    '"ssh_port": 8022,',
-                    '"setup_date": "<FECHA_ACTUAL>"',
-                    '```',
-                    '',
-                    '## SNAPSHOT',
-                    '```bash',
-                    'tar -czf "' + path + '/snapshot_fase2_$(date +%Y%m%d_%H%M%S).tar.gz" -C "' + path + '" .',
-                    '```',
-                ].join('\n');
-            }
-
-            function generatePhase3Prompt(name, path) {
-                var feats = state.selectedFeatures;
-                if (feats.length === 0) return 'Selecciona al menos una funcionalidad.';
-
-                var sections = [];
-                sections.push('# ClawMobil — Fase 3: Features para "' + name + '"');
-                sections.push('');
-                sections.push('## Contexto');
-                sections.push('El dispositivo tiene setup básico completado (Fase 2).');
-                sections.push('Consulta `' + path + '/device_info.json` para sus capacidades.');
-                sections.push('');
-                sections.push('## REGLA FUNDAMENTAL');
-                sections.push('⚠️ NUNCA modifiques archivos de la raíz. Solo edita en: `' + path + '/`');
-                sections.push('');
-                sections.push('## Features a instalar');
-                sections.push('');
-
-                if (feats.indexOf('ollama') >= 0) {
-                    sections.push('### 🤖 IA Local (Ollama)');
-                    sections.push('⚠️ Verifica la memoria RAM dispobible en device_info.json.');
-                    sections.push('Si es menor a 4GB omite este paso y avisa al usuario.');
-                    sections.push('Si tiene RAM suficiente:');
-                    sections.push('1. Instala Ollama nativo en termux o dentro de proot-distro.');
-                    sections.push('2. Descarga un modelo ligero como `tinyllama` o `phi-3-mini` según la memoria.');
-                    sections.push('3. Configura el fichero de modelos en la carpeta del dispositivo para permitir ese LLM.');
-                    sections.push('');
-                }
-                if (feats.indexOf('telegram') >= 0) {
-                    sections.push('### 💬 Bot Telegram');
-                    sections.push('1. Asegura que OpenClaw Gateway tiene habilitado el módulo de Telegram o configúralo.');
-                    sections.push('2. Crea un script en el dispositivo que invoque la API de Telegram para mensajes salientes de alerta.');
-                    sections.push('3. Otorga al Agente en su boot.md instrucciones y herramientas para usar dicho script si lo necesita.');
-                    sections.push('');
-                }
-                if (feats.indexOf('automation') >= 0) {
-                    sections.push('### 🔄 Automatización');
-                    sections.push('1. Pide al usuario que instale `Termux:Boot` desde F-Droid e inicie la app una vez.');
-                    sections.push('2. Crea la carpeta `~/.termux/boot/` en el dispositivo.');
-                    sections.push('3. Crea allí un script que encienda los servicios clave (SSH, OpenClaw, Bridge) al reiniciar.');
-                    sections.push('4. Activa Wakelock en Termux de forma persistente: `termux-wake-lock`.');
-                    sections.push('');
-                }
-                if (feats.indexOf('voice') >= 0) {
-                    sections.push('### 🗣️ Voz (STT/TTS)');
-                    sections.push('1. Asegúrate de instalar la API de Termux (`pkg install termux-api`).');
-                    sections.push('2. Añade en boot.md o en el entorno del Bot la ruta al comando `termux-microphone-record`.');
-                    sections.push('3. Añade en la identidad del agente autorización completa para grabar audios de forma real.');
-                    sections.push('4. Si hay integración Whisper habilitada, configúrala conectando el hardware local con la nube.');
-                    sections.push('');
-                }
-                if (feats.indexOf('vision') >= 0) {
-                    sections.push('### 📷 Visión IA');
-                    sections.push('1. Verifica que la API de Termux (`termux-api`) esté funcional.');
-                    sections.push('2. Da permiso total en boot.md para que el agente maneje `termux-camera-photo`.');
-                    sections.push('3. Crea o habilita un script que le permita enviar esa foto por Telegram si se le pide.');
-                    sections.push('');
-                }
-                if (feats.indexOf('monitoring') >= 0) {
-                    sections.push('### 📊 Monitorización');
-                    sections.push('1. Habilita lectura periódica de batería (`termux-battery-status`).');
-                    sections.push('2. Adapta o crea el archivo `' + path + '/metricas.html` guardando métricas locales desde un cron/bucle manual.');
-                    sections.push('3. Opcional: Configura Uptime Kuma en algún VPS remoto del usuario apuntando a este IP.');
-                    sections.push('');
-                }
-
-                sections.push('## SNAPSHOT');
-                sections.push('```bash');
-                sections.push('tar -czf "' + path + '/snapshot_fase3_$(date +%Y%m%d_%H%M%S).tar.gz" -C "' + path + '" .');
-                sections.push('```');
-
-                return sections.join('\n');
-            }
-
-        })();
-    </script>
 
 </body>
 

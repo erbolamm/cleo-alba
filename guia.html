@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClawMobil — Guía: Convierte tu Móvil Viejo en un Servidor IA</title>
+    <title>ClawMobilApp — Guía Técnica: Convierte tu Móvil Viejo en una IA</title>
     <meta name="description"
-        content="Guía interactiva paso a paso para convertir tu teléfono Android antiguo en un servidor de IA personal con OpenClaw. Elige tu modelo, evalúa compatibilidad, y sigue los pasos.">
+        content="Guía interactiva paso a paso para convertir tu teléfono Android antiguo en un asistente de IA privado. Evalúa compatibilidad y sigue los pasos. De ClawMobilApp.">
+    <meta property="og:title" content="🦀 ClawMobilApp — Guía Técnica">
+    <meta property="og:description" content="Guía paso a paso para montar tu propia IA local en un móvil viejo.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@erbolamm">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
@@ -25,23 +29,23 @@
         }
 
         :root {
-            --bg: #fdfdfd;
-            --bg-warm: #f4f5f7;
-            --bg-card: #ffffff;
-            --bg-card-hover: #f9fafb;
-            --border: rgba(0, 95, 169, 0.15);
+            --bg: #0a0e1a;
+            --bg-warm: #0f1525;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.08);
             --border-active: rgba(0, 95, 169, 0.5);
-            --text: #303030;
-            --text-dim: #6b7280;
-            --text-bright: #1a1a2e;
-            --gold: #005fa9;
-            --gold-dim: rgba(0, 95, 169, 0.3);
+            --text: #c8cdd8;
+            --text-dim: #6b7890;
+            --text-bright: #e8ecf4;
+            --gold: #8fd5fa;
+            --gold-dim: rgba(143, 213, 250, 0.3);
             --green: #22c55e;
-            --green-bg: rgba(34, 197, 94, 0.08);
+            --green-bg: rgba(34, 197, 94, 0.1);
             --red: #ef4444;
-            --red-bg: rgba(239, 68, 68, 0.08);
+            --red-bg: rgba(239, 68, 68, 0.1);
             --amber: #f59e0b;
-            --amber-bg: rgba(245, 158, 11, 0.08);
+            --amber-bg: rgba(245, 158, 11, 0.1);
             --mono: 'IBM Plex Mono', 'Courier New', monospace;
         }
 
@@ -100,7 +104,10 @@
         }
 
         .header h1 span {
-            color: #5ecef5;
+            background: linear-gradient(135deg, #8fd5fa, #FF6B35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header p {
@@ -692,6 +699,38 @@
             text-decoration: none;
         }
 
+        .footer a:hover {
+            color: var(--text-bright);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .top-nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .top-nav a:hover {
+            color: var(--gold);
+        }
+
+        .top-nav .brand {
+            color: var(--text-bright);
+            font-weight: 800;
+            font-size: 14px;
+        }
+
         /* ============================================
            RESPONSIVE
            ============================================ */
@@ -746,13 +785,24 @@
 
 <body class="show-all">
 
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <a href="index.html" class="brand">🦀 ClawMobilApp</a>
+        <div style="display: flex; gap: 16px;">
+            <a href="index.html">← Inicio</a>
+            <a href="empezar.html">🚀 Empezar</a>
+            <a href="https://ko-fi.com/C0C11TWR1K" target="_blank">☕ Apoyar</a>
+        </div>
+    </nav>
+
     <div class="container">
 
         <!-- HEADER -->
         <header class="header">
-            <div class="header-badge">Guía Paso a Paso</div>
-            <h1>Convierte tu Móvil Viejo en un <span>Servidor IA</span></h1>
-            <p>Evalúa tu teléfono, prepáralo y sigue los pasos. Sin experiencia previa necesaria.</p>
+            <div class="header-badge">Guía Técnica</div>
+            <h1>Convierte tu Móvil Viejo en una <span>IA Privada</span></h1>
+            <p>Evalúa tu teléfono, prepáralo y sigue los pasos. Esta guía comparte todo el conocimiento técnico detrás
+                de ClawMobilApp.</p>
         </header>
 
         <!-- PROGRESS BAR -->
@@ -1163,11 +1213,21 @@ openclaw wizard</code>
             </div>
         </section>
 
+        <!-- FINAL CTA -->
+        <section class="section" style="padding: 60px 0; text-align: center;">
+            <h2 style="font-size: 1.8rem; margin-bottom: 24px;">¿Prefieres algo más sencillo?</h2>
+            <p class="section-desc" style="margin: 0 auto 32px;">Si no quieres configurar nada manualmente, descarga la
+                app oficial y empieza a hablar con tu IA en segundos.</p>
+            <a href="empezar.html" class="spec-btn selected"
+                style="padding: 18px 40px; font-size: 1.1rem; text-decoration: none; display: inline-block;">🚀 Ir a
+                ClawMobilApp</a>
+        </section>
+
         <!-- FOOTER -->
         <footer class="footer">
             <p>
-                ClawMobil — Un proyecto de <a href="https://apliarte.com" target="_blank">ApliArte</a><br>
-                Código abierto en <a href="https://github.com/erbolamm/ClawMobil" target="_blank">GitHub</a>
+                ClawMobilApp — Un proyecto de <a href="https://apliarte.com" target="_blank">ApliArte</a><br>
+                Hecho en España con ❤️
             </p>
         </footer>
 
