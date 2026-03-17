@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ─────────────────────────────────────────────────────────────────
 // Panel de administración para papá/mamá
@@ -23,10 +25,72 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
   String _statusMsg = 'Comprobando conexión...';
   String _serverStatus = 'Comprobando servidor local...';
 
+  // ── TTS ──────────────────────────────────────────────────────
+  final FlutterTts _tts = FlutterTts();
+  double _speedAlba = 0.48;
+  double _speedFran = 0.38;
+  List<Map<String, String>> _voices = [];
+  String _selectedVoice = '';   // nombre de voz seleccionada
+  bool _loadingVoices = true;
+
   @override
   void initState() {
     super.initState();
     _runDiagnostics();
+    _loadTtsSettings();
+  }
+
+  // ── TTS settings ──────────────────────────────────────────────
+
+  Future<void> _loadTtsSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rawVoices = await _tts.getVoices as List?;
+    final voices = <Map<String, String>>[];
+    if (rawVoices != null) {
+      for (final v in rawVoices) {
+        final map = Map<String, dynamic>.from(v as Map);
+        final name   = map['name']   as String? ?? '';
+        final locale = map['locale'] as String? ?? '';
+        // Solo voces en español
+        if (locale.toLowerCase().startsWith('es') && name.isNotEmpty) {
+          voices.add({'name': name, 'locale': locale});
+        }
+      }
+    }
+    // Ordenar por nombre
+    voices.sort((a, b) => a['name']!.compareTo(b['name']!));
+
+    setState(() {
+      _speedAlba      = prefs.getDouble('tts_speed_alba') ?? 0.48;
+      _speedFran      = prefs.getDouble('tts_speed_fran') ?? 0.38;
+      _selectedVoice  = prefs.getString('tts_voice') ?? '';
+      _voices         = voices;
+      _loadingVoices  = false;
+    });
+  }
+
+  Future<void> _saveTtsSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('tts_speed_alba', _speedAlba);
+    await prefs.setDouble('tts_speed_fran', _speedFran);
+    await prefs.setString('tts_voice', _selectedVoice);
+    _showSnack('✅ Ajustes de voz guardados');
+  }
+
+  Future<void> _testVoice() async {
+    await _tts.setLanguage('es-ES');
+    await _tts.setSpeechRate(_speedAlba);
+    await _tts.setPitch(1.15);
+    if (_selectedVoice.isNotEmpty) {
+      final v = _voices.firstWhere(
+        (x) => x['name'] == _selectedVoice,
+        orElse: () => {},
+      );
+      if (v.isNotEmpty) {
+        await _tts.setVoice({'name': v['name']!, 'locale': v['locale']!});
+      }
+    }
+    await _tts.speak('¡Hola! Soy Cleo, tu amiga de aprender. ¿Qué quieres descubrir hoy?');
   }
 
   // ── Diagnóstico ────────────────────────────────────────────────
@@ -299,6 +363,143 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
               onTap: _stopServerAndClose,
             ),
 
+            const SizedBox(height: 28),
+            const Divider(color: Colors.white12),
+            const SizedBox(height: 16),
+
+            // ── Sección voz de Cleo ──────────────────────────────────────
+            const Row(
+              children: [
+                Icon(Icons.record_voice_over, color: Color(0xFF7C3AED), size: 18),
+                SizedBox(width: 8),
+                Text(
+                  'Voz de Cleo',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Selector de voz
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1A2E),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white12),
+              ),
+              child: _loadingVoices
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    )
+                  : DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        dropdownColor: const Color(0xFF1A1A2E),
+                        value: _selectedVoice.isEmpty ? null : _selectedVoice,
+                        hint: const Text(
+                          'Voz del sistema (por defecto)',
+                          style: TextStyle(color: Colors.white38, fontSize: 13),
+                        ),
+                        items: [
+                          const DropdownMenuItem<String>(
+                            value: '',
+                            child: Text(
+                              'Voz del sistema (por defecto)',
+                              style: TextStyle(color: Colors.white70, fontSize: 13),
+                            ),
+                          ),
+                          ..._voices.map((v) => DropdownMenuItem<String>(
+                                value: v['name'],
+                                child: Text(
+                                  '${v['name']} (${v['locale']})',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                        ],
+                        onChanged: (val) =>
+                            setState(() => _selectedVoice = val ?? ''),
+                        icon: const Icon(Icons.expand_more, color: Colors.white38),
+                      ),
+                    ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Velocidad Alba
+            _buildSpeedSlider(
+              label: '👧 Velocidad Alba',
+              emoji: '👧',
+              value: _speedAlba,
+              color: const Color(0xFF7C3AED),
+              onChanged: (v) => setState(() => _speedAlba = v),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Velocidad Fran
+            _buildSpeedSlider(
+              label: '👦 Velocidad Fran',
+              emoji: '👦',
+              value: _speedFran,
+              color: const Color(0xFFE05A7A),
+              onChanged: (v) => setState(() => _speedFran = v),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Botones probar + guardar
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _testVoice,
+                    icon: const Icon(Icons.play_arrow, size: 18),
+                    label: const Text('Probar voz'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF7C3AED),
+                      side: const BorderSide(color: Color(0xFF7C3AED)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _saveTtsSettings,
+                    icon: const Icon(Icons.save, size: 18),
+                    label: const Text('Guardar'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF7C3AED),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 32),
 
             // ── Info ──
@@ -399,6 +600,87 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSpeedSlider({
+    required String label,
+    required String emoji,
+    required double value,
+    required Color color,
+    required ValueChanged<double> onChanged,
+  }) {
+    final pct = ((value - 0.2) / (0.8 - 0.2) * 100).round();
+    final desc = value < 0.35
+        ? 'Muy lenta'
+        : value < 0.45
+            ? 'Lenta'
+            : value < 0.55
+                ? 'Normal'
+                : value < 0.65
+                    ? 'Rápida'
+                    : 'Muy rápida';
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A2E),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 6),
+              Text(
+                label.replaceFirst('$emoji ', ''),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$desc  $pct%',
+                  style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          SliderTheme(
+            data: SliderThemeData(
+              activeTrackColor: color,
+              inactiveTrackColor: color.withValues(alpha: 0.2),
+              thumbColor: color,
+              overlayColor: color.withValues(alpha: 0.15),
+              trackHeight: 4,
+            ),
+            child: Slider(
+              value: value,
+              min: 0.2,
+              max: 0.8,
+              divisions: 12,
+              onChanged: onChanged,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('🐢 Lenta', style: TextStyle(color: Colors.white24, fontSize: 10)),
+              Text('🐇 Rápida', style: TextStyle(color: Colors.white24, fontSize: 10)),
+            ],
+          ),
+        ],
       ),
     );
   }

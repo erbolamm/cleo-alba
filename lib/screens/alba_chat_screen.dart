@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
@@ -141,6 +142,12 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   String _lastProvider = 'vps';
 
+  // ── Ajustes TTS (cargados desde SharedPreferences) ────────────
+  double _ttsSpeedAlba = 0.48;
+  double _ttsSpeedFran = 0.38;
+  String _ttsVoiceName = '';
+  String _ttsVoiceLocale = 'es-ES';
+
   // Engranaje — mantener pulsado 8 segundos para admin
   Timer? _gearTimer;
   double _gearProgress = 0.0;
@@ -181,7 +188,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _speech.initialize().then((ok) => _speechAvailable = ok);
-    _initTts();
+    _loadTtsSettings();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _addBotMsg(
@@ -205,11 +212,17 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   // ── TTS ────────────────────────────────────────────────────────
 
-  Future<void> _initTts() async {
+  Future<void> _loadTtsSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _ttsSpeedAlba = prefs.getDouble('tts_speed_alba') ?? 0.48;
+      _ttsSpeedFran = prefs.getDouble('tts_speed_fran') ?? 0.38;
+      _ttsVoiceName = prefs.getString('tts_voice') ?? '';
+    });
     await _tts.setLanguage('es-ES');
     await _tts.setVolume(1.0);
-    await _tts.setPitch(1.15); // voz ligeramente aguda — más infantil
-    await _tts.setSpeechRate(0.48); // velocidad natural para niños
+    await _tts.setPitch(1.15);
+    await _tts.setSpeechRate(_ttsSpeedAlba);
     await _tts.awaitSpeakCompletion(false);
   }
 
@@ -221,13 +234,12 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
         .replaceAll(RegExp(r'[*_~`]'), '')
         .trim();
     if (clean.isEmpty) return;
-    // Fran: voz más lenta y dulce
-    if (_currentUser == _User.fran) {
-      await _tts.setSpeechRate(0.38);
-      await _tts.setPitch(1.25);
-    } else {
-      await _tts.setSpeechRate(0.48);
-      await _tts.setPitch(1.15);
+    final speed = _currentUser == _User.fran ? _ttsSpeedFran : _ttsSpeedAlba;
+    final pitch = _currentUser == _User.fran ? 1.25 : 1.15;
+    await _tts.setSpeechRate(speed);
+    await _tts.setPitch(pitch);
+    if (_ttsVoiceName.isNotEmpty) {
+      await _tts.setVoice({'name': _ttsVoiceName, 'locale': _ttsVoiceLocale});
     }
     await _tts.stop();
     await _tts.speak(clean);
@@ -429,6 +441,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
       MaterialPageRoute(builder: (_) => const AlbaAdminScreen()),
     ).then((_) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      _loadTtsSettings(); // recargar ajustes al volver de admin
     });
   }
 
