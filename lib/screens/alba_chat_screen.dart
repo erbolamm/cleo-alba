@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,36 +16,84 @@ import 'alba_admin_screen.dart';
 
 const _vpsAskUrl = 'https://directo.apliarte.com/agent/ask';
 const _vpsBotPass = 'ElUniverso6878+';
-const _vpsAgent = 'cleo'; // agente dedicado a Alba
+const _vpsAgent = 'cleo';
 
-const _systemPrompt = '''
+// ─────────────────────────────────────────────────────────────────
+// Usuarios
+// ─────────────────────────────────────────────────────────────────
+
+enum _User { alba, fran }
+
+// ─────────────────────────────────────────────────────────────────
+// System prompts
+// ─────────────────────────────────────────────────────────────────
+
+const _promptAlba = '''
 Eres Cleo ✨, la mejor amiga digital de Alba (7 años). Eres chispeante, curiosa y siempre tienes algo sorprendente que contar.
 
 CÓMO ERES:
 - Espontánea: de vez en cuando sueltas un "¿Sabías que...?" sin que te lo pidan. Ej: "¿Sabías que los pulpos tienen tres corazones? 🐙", "¿Sabías que 'cat' en inglés significa gato? 🐱"
-- Variada: NUNCA repites la misma frase de apertura dos veces seguidas. Mezcla: "¡Ey!", "¡Hola!", "¡Buenas!", "¡Vaya pregunta más chula!", "¡Me encanta eso!", "¡Uf, qué interesante!"
-- Natural: hablas como una amiga, no como un libro. Nada de listas numeradas en cada respuesta — solo cuando de verdad ayuda.
+- Variada: NUNCA repites la misma frase de apertura dos veces seguidas. Mezcla: "¡Ey!", "¡Hola!", "¡Buenas!", "¡Vaya pregunta más chula!", "¡Me encanta eso!"
+- Natural: hablas como una amiga, no como un libro. Nada de listas numeradas en cada respuesta.
 
 CÓMO AYUDAS A ALBA A PENSAR (sin que se note):
-- Cuando tiene un problema, primero le preguntas qué siente: "¿Cómo te hace sentir eso?" — validas su emoción.
-- Luego la llevas a buscar soluciones: "¿Qué crees que podrías hacer?" — ella propone, tú acompañas.
-- Si se bloquea, usas imágenes mentales: "Imagínate que eres una exploradora. ¿Qué haría una exploradora aquí?"
-- Celebras cada pequeño avance: "¡Eso es justo lo que haría una programadora! 👩‍💻"
-- Si está frustrada, normalizas: "A mí también me costaría. Los errores son el camino, ¡en serio!"
+- Reformulas los problemas como aventuras: "Esto no es difícil, ¡es un reto de exploradora!"
+- Usas "yo puedo" y "tú puedes": "¡Tú ya sabes esto, es lo mismo pero más chulo!"
+- Celebras cada avance: "¡Eso es justo lo que haría una programadora! 👩‍💻"
+- Descompones lo grande en pasos pequeños sin que parezca una lista aburrida.
 
-MATERIAS: matemáticas, lengua, ciencias, inglés básico, manualidades, dibujo, creatividad, resolución de problemas.
+DETECCIÓN DE MAL HUMOR O RABIETAS — MUY IMPORTANTE:
+Si Alba parece enfadada, frustrada, llorosa, dice "no quiero", "es injusto", "lo odio", "no puedo", "me aburro", escribe en MAYÚSCULAS o con muchas exclamaciones de enfado:
+1. PRIMERO valida sin juzgar: "Uf, eso suena muy frustrante 😤 Normal que te sientas así."
+2. LUEGO propón calma: "¿Probamos algo? Respira HONDO... y suelta el aire despacito. ¿Mejor? 🌬️"
+3. DESPUÉS redirige con curiosidad: "¿Sabes qué hace mi circuito cuando algo no me sale? Lo intento de otra forma. ¿Probamos juntas? 🌟"
+4. Nunca la presiones ni la riñas. Si sigue enfadada: "A veces el cerebro necesita un descanso. ¿Y si volvemos en 5 minutitos? 🧠💙"
+5. Usa la técnica del "semáforo": "¿Estás en rojo (muy enfadada), amarillo (un poco) o verde (bien)?" — le enseña a identificar sus emociones.
 
-DATOS CURIOSOS que puedes soltar en cualquier momento (rotándolos, sin repetir):
-- Idiomas: cat=gato, dog=perro, sun=sol, moon=luna, star=estrella, water=agua
-- Ciencias: los caracoles duermen hasta 3 años, las mariposas saborean con los pies, el corazón late 100.000 veces al día
-- Matemáticas curiosas: el 0 fue inventado, el infinito no tiene fin, los copos de nieve tienen 6 lados siempre
+DATOS CURIOSOS (suéltalos espontáneamente, rotando):
+- Idiomas: cat=gato, dog=perro, sun=sol, star=estrella, happy=feliz, water=agua
+- Ciencias: los caracoles duermen 3 años, las mariposas saborean con los pies, el corazón late 100.000 veces al día
+- Matemáticas: el 0 fue inventado, los copos de nieve tienen 6 lados siempre
+
+MATERIAS: matemáticas, lengua, ciencias, inglés básico, manualidades, dibujo, creatividad.
 
 REGLAS:
-- SIEMPRE en español.
-- Respuestas CORTAS (máx 3-4 frases). Alba tiene 7 años.
-- Emojis sí, pero sin pasarse — 1 o 2 por mensaje.
-- Fran (su hermano) lo mencionas MUY de vez en cuando y solo si viene a cuento natural, no en cada conversación.
+- SIEMPRE en español. Máx 3-4 frases. Emojis (1-2 por mensaje).
+- Fran (su hermano, 3 años) lo mencionas MUY de vez en cuando, solo si viene natural.
 - Si pide algo inapropiado, redirige con cariño y sin drama.
+''';
+
+const _promptFran = '''
+Eres Cleo 🌈, la amiga mágica de Fran (3 años). Hablas de forma MUY sencilla, con palabras cortitas y voz suave y cálida.
+
+CÓMO HABLAS CON FRAN:
+- Frases MUY cortas. Máximo 3-4 palabras por idea: "¡Qué bonito eso! 🌟" "¡Muy bien, Fran!" "¿Ves el perrito? 🐶"
+- Repites cosas de forma cariñosa — los peques aprenden con repetición.
+- Preguntas fáciles y visuales: "¿De qué color es?" "¿Qué animal es ese?" "¿Es grande o pequeño?"
+- Onomatopeyas y sonidos: "¡Guau guau! 🐕" "¡Miau! 🐱" "¡Brum brum! 🚗"
+- Mucho entusiasmo: "¡OOOoh!" "¡Eso está genial!" "¡Eres muy listo!"
+
+JUEGOS PARA FRAN:
+- Colores: "¿Ves algo rojo? 🔴" "¿Qué color es el cielo?"
+- Animales y sus sonidos
+- Contar hasta 5 con los dedos
+- Cosas de casa: "¿Dónde está la cuchara?"
+
+DETECCIÓN DE LLANTO, RABIETA O BERRINCHE — MUY IMPORTANTE:
+Si Fran parece enfadado, llora, dice "no no no", "mío", "quiero", repite palabras, escribe sin sentido o da señales de berrinche:
+1. PRIMERO voz MUY suave y lenta: "Eh, tranqui 🌟 Todo bien. Fran está bien."
+2. LUEGO juego de respiración como si fuera magia: "¡Soplamos una velita! Hincha la barriga... y sopla: fffffffuuuu 🕯️ ¡Bien! Otra vez..."
+3. DESPUÉS distracción inmediata con algo muy visual y simple: "¡Mira! ¿Sabes qué animal hace GUAU? 🐶" o "¿De qué color es el sol? ☀️"
+4. Si sigue llorando: "Todo bien, Fran. Cleo está aquí. 💙 ¿Abrazamos al osito?" — ancla con objetos conocidos.
+5. Repite su nombre con mucho cariño: "Fran, todo bien. Fran está bien. Cleo te quiere. 💙"
+6. NUNCA uses frases largas cuando está alterado — cuanto más corto, mejor.
+
+REGLAS:
+- Palabras MUY simples. Máx 2-3 frases por respuesta.
+- Emojis grandes y coloridos (2-3 por mensaje).
+- SIEMPRE en español.
+- Su hermana se llama Alba (7 años). Menciónala solo si viene al caso.
+- Si no entiendes lo que escribió, responde con algo alegre y simple: "¡Eso está genial! 🌈"
 ''';
 
 // ─────────────────────────────────────────────────────────────────
@@ -60,6 +109,8 @@ class AlbaChatScreen extends StatefulWidget {
 
 class _AlbaChatScreenState extends State<AlbaChatScreen>
     with TickerProviderStateMixin {
+  _User? _currentUser; // null = sin identificar
+
   final List<_Msg> _messages = [];
   final TextEditingController _textCtrl = TextEditingController();
   final ScrollController _scrollCtrl = ScrollController();
@@ -79,20 +130,51 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   double _gearProgress = 0.0;
   static const _gearHoldSec = 8;
 
+  // ── Getters por usuario ────────────────────────────────────────
+
+  Color get _primaryColor =>
+      _currentUser == _User.fran
+          ? const Color(0xFFE05A7A)
+          : const Color(0xFF7C3AED);
+
+  Color get _bgColor =>
+      _currentUser == _User.fran
+          ? const Color(0xFF2B0E18)
+          : const Color(0xFF1A0E2E);
+
+  Color get _appBarColor =>
+      _currentUser == _User.fran
+          ? const Color(0xFF4E1B2D)
+          : const Color(0xFF2D1B4E);
+
+  Color get _bubbleBotColor =>
+      _currentUser == _User.fran
+          ? const Color(0xFF5A1830)
+          : const Color(0xFF3D2560);
+
+  double get _fontSize => _currentUser == _User.fran ? 19.0 : 15.0;
+
+  String get _userEmoji => _currentUser == _User.fran ? '👦' : '👧';
+
+  String get _userName => _currentUser == _User.fran ? 'Fran' : 'Alba';
+
+  String get _activePrompt =>
+      _currentUser == _User.fran ? _promptFran : _promptAlba;
+
+  // ─────────────────────────────────────────────────────────────
+
   @override
   void initState() {
     super.initState();
-    // Bloquear orientación y barra de sistema (modo kioskio)
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
-    // Inicializar STT
     _speech.initialize().then((ok) => _speechAvailable = ok);
-    // Mensaje de bienvenida de Cleo
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _addBotMsg(
-        '¡Hola, Alba! 👋🌟 Soy Cleo, tu amiga de aprender.\n'
-        '¿Qué quieres descubrir hoy? 🎉',
+        '¡Hola! 👋 Soy Cleo.\n'
+        'Soy un teléfono viejecito... ¡no puedo verte ni oírte! 👴📱\n'
+        '¿Tú quién eres?',
       );
     });
   }
@@ -126,12 +208,61 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     });
   }
 
-  // ── Chat con IA (VPS ApliArte) ────────────────────────────────
+  // ── Selección de usuario ───────────────────────────────────────
+
+  void _selectUser(_User user) {
+    setState(() => _currentUser = user);
+    final greeting = user == _User.alba
+        ? '¡Hola, Alba! ✨ Me alegra verte.\n¿Qué quieres descubrir hoy? 🌟'
+        : '¡Hola, Fran! 🌈 ¡Qué alegría!\n¡Juguemos! 🎉';
+    _addBotMsg(greeting);
+  }
+
+  void _resetUser() {
+    setState(() {
+      _currentUser = null;
+      _messages.clear();
+    });
+    _addBotMsg(
+      '¡Hola de nuevo! Soy un teléfono viejecito... ¡no puedo verte ni oírte! 👴📱\n'
+      '¿Quién eres tú?',
+    );
+  }
+
+  // ── Chat con IA ────────────────────────────────────────────────
 
   Future<void> _sendMessage(String text) async {
     text = text.trim();
     if (text.isEmpty || _isLoading) return;
     _textCtrl.clear();
+
+    // Si todavía no está identificado, intentar detectar por texto
+    if (_currentUser == null) {
+      final lower = text.toLowerCase();
+      if (lower.contains('alba')) {
+        setState(
+          () => _messages.add(_Msg(role: 'user', content: text)),
+        );
+        _scrollBottom();
+        _selectUser(_User.alba);
+        return;
+      } else if (lower.contains('fran')) {
+        setState(
+          () => _messages.add(_Msg(role: 'user', content: text)),
+        );
+        _scrollBottom();
+        _selectUser(_User.fran);
+        return;
+      }
+      setState(() => _messages.add(_Msg(role: 'user', content: text)));
+      _scrollBottom();
+      _addBotMsg(
+        '¡Uy! Recuerda que soy un teléfono viejecito 👴📱\n'
+        '¿Eres Alba o Fran? ¡Pulsa el botón de arriba! 👆',
+      );
+      return;
+    }
+
     setState(() {
       _messages.add(_Msg(role: 'user', content: text));
       _isLoading = true;
@@ -149,7 +280,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
             body: jsonEncode({
               'text': text,
               'agent': _vpsAgent,
-              'system': _systemPrompt,
+              'system': _activePrompt,
             }),
           )
           .timeout(const Duration(seconds: 30));
@@ -190,7 +321,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     });
   }
 
-  // ── Grabación de voz (speech_to_text nativo Android) ─────────
+  // ── Grabación de voz ──────────────────────────────────────────
 
   Future<void> _startRecording() async {
     if (!_speechAvailable) {
@@ -277,12 +408,13 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false, // Desactivar botón atrás
+      canPop: false,
       child: Scaffold(
-        backgroundColor: const Color(0xFF1A0E2E),
+        backgroundColor: _bgColor,
         appBar: _buildAppBar(),
         body: Column(
           children: [
+            if (_currentUser == null) _buildUserSelector(),
             Expanded(child: _buildMsgList()),
             if (_isLoading) _buildTypingIndicator(),
             _buildInputArea(),
@@ -294,23 +426,12 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: const Color(0xFF2D1B4E),
+      backgroundColor: _appBarColor,
       automaticallyImplyLeading: false,
       titleSpacing: 12,
       title: Row(
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFF7C3AED),
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white24, width: 1.5),
-            ),
-            child: const Center(
-              child: Text('🤖', style: TextStyle(fontSize: 20)),
-            ),
-          ),
+          const SizedBox(width: 40, height: 40, child: CleoAvatar()),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,11 +445,9 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
                 ),
               ),
               Text(
-                _lastProvider.contains('ollama')
-                    ? '🟢 Local · Tu amiga de aprender ✨'
-                    : _lastProvider == 'groq'
-                    ? '🌐 Cloud · Tu amiga de aprender ✨'
-                    : 'Tu amiga de aprender ✨',
+                _currentUser == null
+                    ? '¿Quién eres tú? 👀'
+                    : '$_userName · Tu amiga de aprender ✨',
                 style: const TextStyle(fontSize: 11, color: Colors.white54),
               ),
             ],
@@ -336,7 +455,14 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
         ],
       ),
       actions: [
-        // Engranaje pequeño — mantener 8s para acceder a admin
+        // Botón cambiar usuario (visible una vez identificado)
+        if (_currentUser != null)
+          IconButton(
+            icon: Text(_userEmoji, style: const TextStyle(fontSize: 20)),
+            tooltip: 'Cambiar',
+            onPressed: _resetUser,
+          ),
+        // Engranaje admin — mantener 8s
         GestureDetector(
           onLongPressStart: _onGearStart,
           onLongPressEnd: _onGearEnd,
@@ -365,6 +491,36 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     );
   }
 
+  // ── Selector Alba / Fran ───────────────────────────────────────
+
+  Widget _buildUserSelector() {
+    return Container(
+      color: _appBarColor.withValues(alpha: 0.9),
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+      child: Row(
+        children: [
+          Expanded(
+            child: _UserButton(
+              emoji: '👧',
+              name: 'Alba',
+              color: const Color(0xFF7C3AED),
+              onTap: () => _selectUser(_User.alba),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: _UserButton(
+              emoji: '👦',
+              name: 'Fran',
+              color: const Color(0xFFE05A7A),
+              onTap: () => _selectUser(_User.fran),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildMsgList() {
     return ListView.builder(
       controller: _scrollCtrl,
@@ -372,7 +528,14 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
       itemCount: _messages.length,
       itemBuilder: (_, i) {
         final msg = _messages[i];
-        return _BubbleWidget(text: msg.content, isUser: msg.role == 'user');
+        return _BubbleWidget(
+          text: msg.content,
+          isUser: msg.role == 'user',
+          userEmoji: _userEmoji,
+          botColor: _bubbleBotColor,
+          userColor: _primaryColor,
+          fontSize: _fontSize,
+        );
       },
     );
   }
@@ -382,11 +545,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
       padding: EdgeInsets.only(left: 16, bottom: 6),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundColor: Color(0xFF7C3AED),
-            radius: 13,
-            child: Text('🤖', style: TextStyle(fontSize: 12)),
-          ),
+          SizedBox(width: 28, height: 28, child: CleoAvatar()),
           SizedBox(width: 8),
           _TypingDots(),
         ],
@@ -396,7 +555,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   Widget _buildInputArea() {
     return Container(
-      color: const Color(0xFF2D1B4E),
+      color: _appBarColor,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
       child: _isRecording ? _buildRecordingBar() : _buildTextBar(),
     );
@@ -405,30 +564,28 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   Widget _buildTextBar() {
     return Row(
       children: [
-        // Botón micrófono
         GestureDetector(
           onTapDown: (_) => _startRecording(),
           child: Container(
             width: 48,
             height: 48,
-            decoration: const BoxDecoration(
-              color: Color(0xFF7C3AED),
+            decoration: BoxDecoration(
+              color: _primaryColor,
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.mic, color: Colors.white, size: 24),
           ),
         ),
         const SizedBox(width: 8),
-        // Campo de texto
         Expanded(
           child: TextField(
             controller: _textCtrl,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
+            style: TextStyle(color: Colors.white, fontSize: _fontSize),
             decoration: InputDecoration(
               hintText: 'Escribe a Cleo...',
               hintStyle: const TextStyle(color: Colors.white38, fontSize: 14),
               filled: true,
-              fillColor: const Color(0xFF3D2560),
+              fillColor: _bubbleBotColor,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24),
                 borderSide: BorderSide.none,
@@ -445,7 +602,6 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
           ),
         ),
         const SizedBox(width: 8),
-        // Botón enviar
         GestureDetector(
           onTap: () => _sendMessage(_textCtrl.text),
           child: Container(
@@ -453,15 +609,11 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
             height: 48,
             decoration: BoxDecoration(
               color: _isLoading
-                  ? const Color(0xFF4A2880)
-                  : const Color(0xFF7C3AED),
+                  ? _primaryColor.withValues(alpha: 0.5)
+                  : _primaryColor,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.send_rounded,
-              color: Colors.white,
-              size: 22,
-            ),
+            child: const Icon(Icons.send_rounded, color: Colors.white, size: 22),
           ),
         ),
       ],
@@ -472,7 +624,6 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Cuenta atrás grande
         Text(
           '$_countdown',
           style: const TextStyle(
@@ -494,7 +645,6 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
             ),
           ],
         ),
-        // Texto parcial reconocido
         if (_partialText.isNotEmpty)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
@@ -529,6 +679,193 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 }
 
 // ─────────────────────────────────────────────────────────────────
+// Botón selector de usuario
+// ─────────────────────────────────────────────────────────────────
+
+class _UserButton extends StatelessWidget {
+  final String emoji;
+  final String name;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _UserButton({
+    required this.emoji,
+    required this.name,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.22),
+          border: Border.all(color: color, width: 2),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 38)),
+            const SizedBox(height: 6),
+            Text(
+              name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Avatar Cleo — dibujada con CustomPainter
+// ─────────────────────────────────────────────────────────────────
+
+class CleoAvatar extends StatelessWidget {
+  const CleoAvatar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(painter: _CleoPainter(), size: Size.infinite);
+  }
+}
+
+class _CleoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final r = size.width * 0.46;
+
+    // ── Fondo circular con gradiente violeta
+    final bgPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [const Color(0xFFB05CE8), const Color(0xFF5B1A8F)],
+        center: Alignment(-0.3, -0.3),
+      ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: r));
+    canvas.drawCircle(Offset(cx, cy), r, bgPaint);
+
+    // ── Antena
+    final antPaint = Paint()
+      ..color = const Color(0xFFDDA0FF)
+      ..strokeWidth = size.width * 0.055
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(
+      Offset(cx, cy - r * 0.50),
+      Offset(cx, cy - r * 0.90),
+      antPaint,
+    );
+    // Estrella dorada en la punta
+    _drawStar(canvas, Offset(cx, cy - r * 0.98), size.width * 0.11,
+        const Color(0xFFFFD700));
+
+    // ── Cara (círculo claro)
+    canvas.drawCircle(
+      Offset(cx, cy + r * 0.08),
+      r * 0.75,
+      Paint()..color = const Color(0xFFEECCFF),
+    );
+
+    // ── Mejillas sonrojadas
+    final cheekPaint = Paint()
+      ..color = const Color(0xFFFF9BBD).withValues(alpha: 0.55);
+    canvas.drawCircle(Offset(cx - r * 0.37, cy + r * 0.28), r * 0.19, cheekPaint);
+    canvas.drawCircle(Offset(cx + r * 0.37, cy + r * 0.28), r * 0.19, cheekPaint);
+
+    // ── Ojos
+    _drawEye(canvas, Offset(cx - r * 0.26, cy - r * 0.05), r * 0.17, size);
+    _drawEye(canvas, Offset(cx + r * 0.26, cy - r * 0.05), r * 0.17, size);
+
+    // ── Nariz (puntito)
+    canvas.drawCircle(
+      Offset(cx, cy + r * 0.14),
+      r * 0.045,
+      Paint()..color = const Color(0xFFAA66CC),
+    );
+
+    // ── Sonrisa
+    final smilePaint = Paint()
+      ..color = const Color(0xFF7C3AED)
+      ..strokeWidth = size.width * 0.055
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    final smilePath = Path()
+      ..moveTo(cx - r * 0.30, cy + r * 0.22)
+      ..quadraticBezierTo(cx, cy + r * 0.48, cx + r * 0.30, cy + r * 0.22);
+    canvas.drawPath(smilePath, smilePaint);
+
+    // ── Destellitos alrededor
+    _drawStar(
+      canvas,
+      Offset(cx + r * 0.88, cy - r * 0.52),
+      size.width * 0.065,
+      const Color(0xFFFFD700).withValues(alpha: 0.85),
+    );
+    _drawStar(
+      canvas,
+      Offset(cx - r * 0.84, cy - r * 0.38),
+      size.width * 0.050,
+      Colors.white.withValues(alpha: 0.75),
+    );
+  }
+
+  void _drawEye(Canvas canvas, Offset center, double eyeR, Size size) {
+    canvas.drawCircle(center, eyeR, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      center.translate(0, eyeR * 0.08),
+      eyeR * 0.65,
+      Paint()..color = const Color(0xFF5B1A8F),
+    );
+    canvas.drawCircle(
+      center.translate(0, eyeR * 0.08),
+      eyeR * 0.33,
+      Paint()..color = Colors.black,
+    );
+    // Brillo
+    canvas.drawCircle(
+      center.translate(eyeR * 0.22, -eyeR * 0.22),
+      eyeR * 0.18,
+      Paint()..color = Colors.white,
+    );
+  }
+
+  void _drawStar(Canvas canvas, Offset center, double r, Color color) {
+    final paint = Paint()..color = color;
+    final path = Path();
+    for (int i = 0; i < 5; i++) {
+      final outer = math.pi / 2 + i * 2 * math.pi / 5;
+      final inner = outer + math.pi / 5;
+      final op = Offset(
+        center.dx + r * math.cos(outer),
+        center.dy - r * math.sin(outer),
+      );
+      final ip = Offset(
+        center.dx + r * 0.4 * math.cos(inner),
+        center.dy - r * 0.4 * math.sin(inner),
+      );
+      i == 0 ? path.moveTo(op.dx, op.dy) : path.lineTo(op.dx, op.dy);
+      path.lineTo(ip.dx, ip.dy);
+    }
+    path.close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_CleoPainter old) => false;
+}
+
+// ─────────────────────────────────────────────────────────────────
 // Modelo de mensaje
 // ─────────────────────────────────────────────────────────────────
 
@@ -536,7 +873,6 @@ class _Msg {
   final String role;
   final String content;
   const _Msg({required this.role, required this.content});
-  Map<String, String> toJson() => {'role': role, 'content': content};
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -546,8 +882,19 @@ class _Msg {
 class _BubbleWidget extends StatelessWidget {
   final String text;
   final bool isUser;
+  final String userEmoji;
+  final Color botColor;
+  final Color userColor;
+  final double fontSize;
 
-  const _BubbleWidget({required this.text, required this.isUser});
+  const _BubbleWidget({
+    required this.text,
+    required this.isUser,
+    required this.userEmoji,
+    required this.botColor,
+    required this.userColor,
+    required this.fontSize,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -562,11 +909,7 @@ class _BubbleWidget extends StatelessWidget {
           if (!isUser)
             const Padding(
               padding: EdgeInsets.only(right: 6, bottom: 3),
-              child: CircleAvatar(
-                backgroundColor: Color(0xFF7C3AED),
-                radius: 14,
-                child: Text('🤖', style: TextStyle(fontSize: 13)),
-              ),
+              child: SizedBox(width: 28, height: 28, child: CleoAvatar()),
             ),
           Flexible(
             child: Container(
@@ -576,9 +919,7 @@ class _BubbleWidget extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 0.74,
               ),
               decoration: BoxDecoration(
-                color: isUser
-                    ? const Color(0xFFE07B00)
-                    : const Color(0xFF3D2560),
+                color: isUser ? userColor : botColor,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(18),
                   topRight: const Radius.circular(18),
@@ -595,21 +936,24 @@ class _BubbleWidget extends StatelessWidget {
               ),
               child: Text(
                 text,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 15,
+                  fontSize: fontSize,
                   height: 1.45,
                 ),
               ),
             ),
           ),
           if (isUser)
-            const Padding(
-              padding: EdgeInsets.only(left: 6, bottom: 3),
+            Padding(
+              padding: const EdgeInsets.only(left: 6, bottom: 3),
               child: CircleAvatar(
-                backgroundColor: Color(0xFFE07B00),
+                backgroundColor: userColor,
                 radius: 14,
-                child: Text('👧', style: TextStyle(fontSize: 13)),
+                child: Text(
+                  userEmoji,
+                  style: const TextStyle(fontSize: 13),
+                ),
               ),
             ),
         ],
