@@ -1,7 +1,7 @@
 name: aplibot_system
 description: "A new Flutter project for ApliBot System."
 publish_to: 'none'
-version: 5.2.0+1
+version: 1.1.0+1002
 
 environment:
   sdk: '>=3.2.0 <4.0.0'

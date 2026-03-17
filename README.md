@@ -1,8 +1,28 @@
-# ClawMobil 🦞
+# Cleo — Asistente de Alba 🌟
 
-Convierte cualquier teléfono Android antiguo en un **servidor de IA personal** con [OpenClaw](https://github.com/erbolamm/openclaw). Sin cloud. Sin suscripciones. Tu propio cerebro digital de bolsillo.
+App Android hecha por papá para Alba. Cleo es su amiga digital de aprender.
 
-**Web**: [ApliArte.com](https://apliarte.com) · **#ClawMobil**
+## Qué hace
+- Chat por voz o texto con IA educativa adaptada a 7 años
+- Modo kiosco: solo Alba puede usarlo, sin salir por accidente
+- Acceso admin secreto (mantener pulsado el engranaje 8 segundos)
+- Conectada al VPS de ApliArte — sin necesidad de API keys
+
+## Dispositivo objetivo
+Samsung Galaxy A3 2015 (SM-A300FU) · Android 6.0.1 · API 23
+
+## Cómo compilar e instalar
+```bash
+flutter build apk --release --target-platform android-arm
+adb -s <ID_SAMSUNG> install -r build/app/outputs/flutter-apk/app-release.apk
+```
+
+## Configuración VPS
+La app apunta a `https://directo.apliarte.com/agent/ask` con el agente `cleo`.
+El token está en `lib/screens/alba_chat_screen.dart` → `_vpsBotPass`.
+
+## Hecho con ❤️ por Javier Mateo (ApliArte)
+Para Alba, con todo el amor del mundo.
 
 ---
 

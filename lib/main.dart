@@ -28,7 +28,7 @@ class ClawMobilApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      initialRoute: '/',
+      initialRoute: '/alba',
       routes: {
         '/': (context) => const ControlPanelScreen(),
         '/alba': (context) => const AlbaChatScreen(),

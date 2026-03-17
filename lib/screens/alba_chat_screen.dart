@@ -1,29 +1,21 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 
 import 'alba_admin_screen.dart';
-import '../services/ollama_service.dart';
 
 // ─────────────────────────────────────────────────────────────────
-// Configuración
+// Configuración — VPS ApliArte
 // ─────────────────────────────────────────────────────────────────
 
-// Groq (fallback cloud) — pasa con: --dart-define=GROQ_API_KEY=tu_clave
-const _groqKey = String.fromEnvironment('GROQ_API_KEY');
-const _groqModel = 'llama-3.1-8b-instant';
-
-// Ollama — pasa con: --dart-define=OLLAMA_URL=http://IP:11434
-const _ollamaUrl = String.fromEnvironment('OLLAMA_URL',
-    defaultValue: 'http://127.0.0.1:11434');
-const _ollamaModel =
-    String.fromEnvironment('OLLAMA_MODEL', defaultValue: 'gemma2:2b');
-// URL extra para servidor LAN (ej: otro teléfono sirviendo Ollama)
-const _ollamaLanUrl =
-    String.fromEnvironment('OLLAMA_LAN_URL', defaultValue: '');
+const _vpsAskUrl = 'https://directo.apliarte.com/agent/ask';
+const _vpsBotPass = 'ElUniverso6878+';
+const _vpsAgent = 'cleo'; // agente dedicado a Alba
 
 const _systemPrompt = '''
 Eres Cleo 🌟, la amiga digital de Alba (7 años). Vives en su teléfono especial de aprender.
@@ -73,9 +65,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   int _countdown = 10;
   Timer? _countdownTimer;
 
-  // IA multi-proveedor (Ollama local → LAN → Groq cloud)
-  late final OllamaService _aiService;
-  String _lastProvider = ''; // Para mostrar indicador
+  String _lastProvider = 'vps';
 
   // Engranaje — mantener pulsado 8 segundos para admin
   Timer? _gearTimer;
@@ -88,27 +78,6 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     // Bloquear orientación y barra de sistema (modo kioskio)
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-
-    // Configurar servicio IA: Ollama local → LAN → Groq cloud
-    final endpoints = <OllamaEndpoint>[
-      OllamaEndpoint(
-        name: 'ollama-local',
-        baseUrl: _ollamaUrl,
-        model: _ollamaModel,
-      ),
-      if (_ollamaLanUrl.isNotEmpty)
-        OllamaEndpoint(
-          name: 'ollama-lan',
-          baseUrl: _ollamaLanUrl,
-          model: _ollamaModel,
-          timeout: const Duration(seconds: 45),
-        ),
-    ];
-    _aiService = OllamaService(
-      endpoints: endpoints,
-      groqApiKey: _groqKey,
-      groqModel: _groqModel,
-    );
 
     // Inicializar STT
     _speech.initialize().then((ok) => _speechAvailable = ok);
@@ -150,7 +119,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     });
   }
 
-  // ── Chat con IA (Ollama → Groq fallback) ──────────────────────
+  // ── Chat con IA (VPS ApliArte) ────────────────────────────────
 
   Future<void> _sendMessage(String text) async {
     text = text.trim();
@@ -162,23 +131,40 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     });
     _scrollBottom();
 
-    // Construir contexto (system prompt + historial)
-    final chatMessages = <Map<String, String>>[
-      {'role': 'system', 'content': _systemPrompt},
-      ..._messages.where((m) => m.role != 'typing').map((m) => m.toJson()),
-    ];
-
     try {
-      final result = await _aiService.chat(
-        messages: chatMessages,
-        maxTokens: 250,
-        temperature: 0.75,
-      );
-      setState(() {
-        _messages.add(_Msg(role: 'assistant', content: result.text));
-        _lastProvider = result.provider;
-        _isLoading = false;
-      });
+      final res = await http
+          .post(
+            Uri.parse(_vpsAskUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $_vpsBotPass',
+            },
+            body: jsonEncode({
+              'text': text,
+              'agent': _vpsAgent,
+              'system': _systemPrompt,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body) as Map<String, dynamic>;
+        final reply = data['reply'] as String? ?? '';
+        setState(() {
+          _messages.add(
+            _Msg(
+              role: 'assistant',
+              content: reply.isNotEmpty
+                  ? reply
+                  : '🤔 No entendí bien. ¿Lo intentamos de nuevo?',
+            ),
+          );
+          _lastProvider = 'vps';
+          _isLoading = false;
+        });
+      } else {
+        _showError();
+      }
     } catch (_) {
       _showError();
     }
@@ -187,10 +173,12 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   void _showError() {
     setState(() {
-      _messages.add(const _Msg(
-        role: 'assistant',
-        content: '😕 Ups, no puedo conectarme ahora.\nDile a papá o mamá 📱',
-      ));
+      _messages.add(
+        const _Msg(
+          role: 'assistant',
+          content: '😕 Ups, no puedo conectarme ahora.\nDile a papá o mamá 📱',
+        ),
+      );
       _isLoading = false;
     });
   }
@@ -203,7 +191,8 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     }
     if (!_speechAvailable) {
       _addBotMsg(
-          '❌ El micrófono no está disponible. Prueba a reiniciar la app 🎤');
+        '❌ El micrófono no está disponible. Prueba a reiniciar la app 🎤',
+      );
       return;
     }
 
@@ -319,7 +308,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Cleo',
                 style: TextStyle(
                   fontSize: 17,
@@ -331,9 +320,9 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
                 _lastProvider.contains('ollama')
                     ? '🟢 Local · Tu amiga de aprender ✨'
                     : _lastProvider == 'groq'
-                        ? '🌐 Cloud · Tu amiga de aprender ✨'
-                        : 'Tu amiga de aprender ✨',
-                style: TextStyle(fontSize: 11, color: Colors.white54),
+                    ? '🌐 Cloud · Tu amiga de aprender ✨'
+                    : 'Tu amiga de aprender ✨',
+                style: const TextStyle(fontSize: 11, color: Colors.white54),
               ),
             ],
           ),
@@ -376,10 +365,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
       itemCount: _messages.length,
       itemBuilder: (_, i) {
         final msg = _messages[i];
-        return _BubbleWidget(
-          text: msg.content,
-          isUser: msg.role == 'user',
-        );
+        return _BubbleWidget(text: msg.content, isUser: msg.role == 'user');
       },
     );
   }
@@ -440,8 +426,10 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
                 borderRadius: BorderRadius.circular(24),
                 borderSide: BorderSide.none,
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 11,
+              ),
             ),
             onSubmitted: _sendMessage,
             textInputAction: TextInputAction.send,
@@ -462,8 +450,11 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
                   : const Color(0xFF7C3AED),
               shape: BoxShape.circle,
             ),
-            child:
-                const Icon(Icons.send_rounded, color: Colors.white, size: 22),
+            child: const Icon(
+              Icons.send_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
           ),
         ),
       ],
@@ -556,8 +547,9 @@ class _BubbleWidget extends StatelessWidget {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isUser)
@@ -577,8 +569,9 @@ class _BubbleWidget extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 0.74,
               ),
               decoration: BoxDecoration(
-                color:
-                    isUser ? const Color(0xFFE07B00) : const Color(0xFF3D2560),
+                color: isUser
+                    ? const Color(0xFFE07B00)
+                    : const Color(0xFF3D2560),
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(18),
                   topRight: const Radius.circular(18),

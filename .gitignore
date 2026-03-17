@@ -1,105 +1,64 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.buildlog/
-.history
-.svn/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# Local configuration and private scripts
-Mis_configuraciones_locales/
-Informacion_de_funcionalidades/
-
-# Bot config (mantenida en DockerHostinger, NO aquí)
-config/apliarte_bot/
-
-# The .vscode folder contains configuration for Visual Studio Code.
-# It is generally best to ignore it, unless you want to share settings across the team.
-.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# Flutter / Dart
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
-/build/
+build/
+*.iml
 
-# Symbolication related
-app.*.symbols
+# Android
+android/.gradle/
+android/app/release/
+android/key.properties
+*.jks
+*.keystore
 
-# Obfuscation related
-app.*.map.json
+# iOS
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/
 
-# Android related
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
+# VS Code
+.vscode/
 
-# iOS/macOS related
-**/ios/**/*.mode1v3
-**/ios/**/*.mode2v3
-**/ios/**/*.pbxuser
-**/ios/**/*.perspectivev3
-**/ios/**/*.backup
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/app.flx
-**/ios/Flutter/app.zip
-**/ios/Flutter/flutter_assets/
-**/ios/Flutter/flutter_export_environment.sh
-**/ios/ServiceDefinitions.json
-**/ios/Pods/
-**/ios/.symlinks/
-**/ios/.generated/
-**/macos/Flutter/GeneratedPluginRegistrant.swift
-**/macos/Flutter/ephemeral/
-**/macos/ServiceDefinitions.json
-**/macos/Pods/
+# macOS
+.DS_Store
 
-# Web related
-**/lib/generated_plugin_registrant.dart
+# Secrets — NUNCA subir
+lib/firebase_options.dart
+google-services.json
+GoogleService-Info.plist
 
-# Logs and generated files
-openclaw_gateway.log
-*.resolved
-
-# Samsung A3 build artifacts
-termux_scripts/samsung_a3/app/build/
-termux_scripts/samsung_a3/app/.gradle/
-
-# Python cache
+# Configuraciones locales privadas (no van al repo público)
+Mis_configuraciones_locales/
+MemoClaw/
+Informacion_de_funcionalidades/
+LEEME
+.agents/
+.github/prompts/
+*.zip
+*.sh
+recursos_termux/
+termux_scripts/
+scripts/
+demo/
+docs/
+promt.json
+PLAN_*.md
+# Archivos compilados y cache
 __pycache__/
 *.pyc
+.idea/
 
-# Internal / development files (not for public)
-LEEME
-PLAN_SAMSUNG_A3_INDEPENDIENTE.md
-promt.json
-start_bot.sh
-devtools_options.yaml
-carpeta_capturas/
-recursos_termux/
-config/
-scripts/
-termux_scripts/
-.metadata
-.flutter-plugins-dependencies
+# Keep common media if they are in the root
+!/*.png
+!/*.jpg
+!/*.gif
+
+# Ensure git itself is ignored (though usually implied)
+.git/
+node_modules/
+.DS_Store
+*.log

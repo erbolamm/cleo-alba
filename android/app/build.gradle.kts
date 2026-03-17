@@ -9,7 +9,7 @@ plugins {
 val appMinSdk = 23
 
 android {
-    namespace = "com.apliarte.bot"
+    namespace = "com.apliarte.cleo_samsung_a3"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,11 +23,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.apliarte.bot"
+        applicationId = "com.apliarte.cleo_samsung_a3"
         minSdk = appMinSdk
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 1002
+        versionName = "1.1.0"
     }
 
     buildTypes {
