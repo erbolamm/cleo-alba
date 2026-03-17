@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -115,6 +116,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   final TextEditingController _textCtrl = TextEditingController();
   final ScrollController _scrollCtrl = ScrollController();
   final SpeechToText _speech = SpeechToText();
+  final FlutterTts _tts = FlutterTts();
   bool _speechAvailable = false;
   String _partialText = '';
 
@@ -132,25 +134,21 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
 
   // ── Getters por usuario ────────────────────────────────────────
 
-  Color get _primaryColor =>
-      _currentUser == _User.fran
-          ? const Color(0xFFE05A7A)
-          : const Color(0xFF7C3AED);
+  Color get _primaryColor => _currentUser == _User.fran
+      ? const Color(0xFFE05A7A)
+      : const Color(0xFF7C3AED);
 
-  Color get _bgColor =>
-      _currentUser == _User.fran
-          ? const Color(0xFF2B0E18)
-          : const Color(0xFF1A0E2E);
+  Color get _bgColor => _currentUser == _User.fran
+      ? const Color(0xFF2B0E18)
+      : const Color(0xFF1A0E2E);
 
-  Color get _appBarColor =>
-      _currentUser == _User.fran
-          ? const Color(0xFF4E1B2D)
-          : const Color(0xFF2D1B4E);
+  Color get _appBarColor => _currentUser == _User.fran
+      ? const Color(0xFF4E1B2D)
+      : const Color(0xFF2D1B4E);
 
-  Color get _bubbleBotColor =>
-      _currentUser == _User.fran
-          ? const Color(0xFF5A1830)
-          : const Color(0xFF3D2560);
+  Color get _bubbleBotColor => _currentUser == _User.fran
+      ? const Color(0xFF5A1830)
+      : const Color(0xFF3D2560);
 
   double get _fontSize => _currentUser == _User.fran ? 19.0 : 15.0;
 
@@ -169,6 +167,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _speech.initialize().then((ok) => _speechAvailable = ok);
+    _initTts();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _addBotMsg(
@@ -184,9 +183,40 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     _countdownTimer?.cancel();
     _gearTimer?.cancel();
     _speech.stop();
+    _tts.stop();
     _textCtrl.dispose();
     _scrollCtrl.dispose();
     super.dispose();
+  }
+
+  // ── TTS ────────────────────────────────────────────────────────
+
+  Future<void> _initTts() async {
+    await _tts.setLanguage('es-ES');
+    await _tts.setVolume(1.0);
+    await _tts.setPitch(1.15); // voz ligeramente aguda — más infantil
+    await _tts.setSpeechRate(0.48); // velocidad natural para niños
+    await _tts.awaitSpeakCompletion(false);
+  }
+
+  Future<void> _speak(String text) async {
+    // Quitar emojis y caracteres especiales que confunden el TTS
+    final clean = text
+        .replaceAll(RegExp(r'[\u{1F000}-\u{1FFFF}]', unicode: true), '')
+        .replaceAll(RegExp(r'[\u{2600}-\u{27BF}]', unicode: true), '')
+        .replaceAll(RegExp(r'[*_~`]'), '')
+        .trim();
+    if (clean.isEmpty) return;
+    // Fran: voz más lenta y dulce
+    if (_currentUser == _User.fran) {
+      await _tts.setSpeechRate(0.38);
+      await _tts.setPitch(1.25);
+    } else {
+      await _tts.setSpeechRate(0.48);
+      await _tts.setPitch(1.15);
+    }
+    await _tts.stop();
+    await _tts.speak(clean);
   }
 
   // ── Mensajes ───────────────────────────────────────────────────
@@ -194,6 +224,7 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
   void _addBotMsg(String text) {
     setState(() => _messages.add(_Msg(role: 'assistant', content: text)));
     _scrollBottom();
+    _speak(text);
   }
 
   void _scrollBottom() {
@@ -240,16 +271,12 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
     if (_currentUser == null) {
       final lower = text.toLowerCase();
       if (lower.contains('alba')) {
-        setState(
-          () => _messages.add(_Msg(role: 'user', content: text)),
-        );
+        setState(() => _messages.add(_Msg(role: 'user', content: text)));
         _scrollBottom();
         _selectUser(_User.alba);
         return;
       } else if (lower.contains('fran')) {
-        setState(
-          () => _messages.add(_Msg(role: 'user', content: text)),
-        );
+        setState(() => _messages.add(_Msg(role: 'user', content: text)));
         _scrollBottom();
         _selectUser(_User.fran);
         return;
@@ -613,7 +640,11 @@ class _AlbaChatScreenState extends State<AlbaChatScreen>
                   : _primaryColor,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.send_rounded, color: Colors.white, size: 22),
+            child: const Icon(
+              Icons.send_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
           ),
         ),
       ],
@@ -767,8 +798,12 @@ class _CleoPainter extends CustomPainter {
       antPaint,
     );
     // Estrella dorada en la punta
-    _drawStar(canvas, Offset(cx, cy - r * 0.98), size.width * 0.11,
-        const Color(0xFFFFD700));
+    _drawStar(
+      canvas,
+      Offset(cx, cy - r * 0.98),
+      size.width * 0.11,
+      const Color(0xFFFFD700),
+    );
 
     // ── Cara (círculo claro)
     canvas.drawCircle(
@@ -780,8 +815,16 @@ class _CleoPainter extends CustomPainter {
     // ── Mejillas sonrojadas
     final cheekPaint = Paint()
       ..color = const Color(0xFFFF9BBD).withValues(alpha: 0.55);
-    canvas.drawCircle(Offset(cx - r * 0.37, cy + r * 0.28), r * 0.19, cheekPaint);
-    canvas.drawCircle(Offset(cx + r * 0.37, cy + r * 0.28), r * 0.19, cheekPaint);
+    canvas.drawCircle(
+      Offset(cx - r * 0.37, cy + r * 0.28),
+      r * 0.19,
+      cheekPaint,
+    );
+    canvas.drawCircle(
+      Offset(cx + r * 0.37, cy + r * 0.28),
+      r * 0.19,
+      cheekPaint,
+    );
 
     // ── Ojos
     _drawEye(canvas, Offset(cx - r * 0.26, cy - r * 0.05), r * 0.17, size);
@@ -950,10 +993,7 @@ class _BubbleWidget extends StatelessWidget {
               child: CircleAvatar(
                 backgroundColor: userColor,
                 radius: 14,
-                child: Text(
-                  userEmoji,
-                  style: const TextStyle(fontSize: 13),
-                ),
+                child: Text(userEmoji, style: const TextStyle(fontSize: 13)),
               ),
             ),
         ],
