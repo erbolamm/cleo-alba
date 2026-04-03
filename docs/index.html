@@ -300,136 +300,98 @@
             text-align: center;
         }
 
-        /* Demo Section */
-        .demo {
+        /* Conversación Section */
+        .conversacion {
             padding: 80px 0;
             background: white;
         }
 
-        .demo h2 {
+        .conversacion h2 {
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 60px;
             color: var(--dark);
         }
 
-        .demo-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .phone-mockup {
-            background: var(--dark);
-            border-radius: 30px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            max-width: 300px;
+        .conversacion-content {
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        .phone-screen {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            min-height: 400px;
-        }
-
-        .chat-interface {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-
-        .message.user {
-            flex-direction: row-reverse;
-        }
-
-        .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .message.bot .avatar {
-            background: var(--primary);
-            color: white;
-        }
-
-        .message.user .avatar {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .bubble {
-            background: #F3F4F6;
-            padding: 12px 16px;
-            border-radius: 18px;
-            max-width: 200px;
-        }
-
-        .message.user .bubble {
-            background: var(--primary);
-            color: white;
-        }
-
-        .input-area {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #E5E7EB;
-        }
-
-        .input-area input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #E5E7EB;
-            border-radius: 20px;
-            outline: none;
-        }
-
-        .send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .demo-features h3 {
+        .conversacion-text h3 {
             font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .conversacion-text p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #4B5563;
+            line-height: 1.6;
+        }
+
+        .conversacion-text ul {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .conversacion-text li {
+            padding: 12px 0;
+            border-bottom: 1px solid #E5E7EB;
+            color: #374151;
+        }
+
+        .conversacion-text li:last-child {
+            border-bottom: none;
+        }
+
+        .ejemplo-chat {
+            background: #F9FAFB;
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .ejemplo-chat h4 {
+            font-size: 1.2rem;
             margin-bottom: 20px;
             color: var(--dark);
         }
 
-        .demo-features ul {
-            list-style: none;
+        .chat-ejemplo {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .demo-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid #E5E7EB;
+        .msg-niño, .msg-plaud {
+            padding: 15px 20px;
+            border-radius: 12px;
+            max-width: 90%;
+            line-height: 1.5;
         }
 
-        .demo-features li:last-child {
-            border-bottom: none;
+        .msg-niño {
+            background: #E5E7EB;
+            align-self: flex-start;
+            margin-left: 0;
+        }
+
+        .msg-plaud {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            margin-right: 0;
+        }
+
+        .msg-niño strong, .msg-plaud strong {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .msg-plaud strong {
+            color: white;
         }
 
         /* Footer */
@@ -519,7 +481,7 @@
                 <p>Transforma cualquier Android en un amigo digital educativo, seguro y adaptado a tu familia. Código abierto, control total, sin costes ocultos.</p>
                 <div class="cta-buttons">
                     <a href="https://github.com/erbolamm/plaud-assistant" class="btn-primary">🚀 Descargar Gratis</a>
-                    <a href="#demo" class="btn-secondary">📱 Ver Demo</a>
+                    <a href="#conversacion" class="btn-secondary">📱 Ver Conversación</a>
                 </div>
                 <div class="stats">
                     <div class="stat">
@@ -611,47 +573,32 @@
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section id="demo" class="demo">
+    <!-- Conversación Section -->
+    <section id="conversacion" class="conversacion">
         <div class="container">
-            <h2>📱 Prueba la Experiencia</h2>
-            <div class="demo-container">
-                <div class="phone-mockup">
-                    <div class="phone-screen">
-                        <div class="chat-interface">
-                            <div class="message bot">
-                                <div class="avatar">🤖</div>
-                                <div class="bubble">
-                                    <p>¡Hola! Soy Plaud ✨ ¿Cómo te llamas?</p>
-                                </div>
+            <h2>� Conversación Natural y Segura</h2>
+            <div class="conversacion-content">
+                <div class="conversacion-text">
+                    <h3>🤖 Asistente IA que habla como persona</h3>
+                    <p>Plaud Assistant mantiene conversaciones naturales adaptadas a cada niño/a, pero siempre queda claro que es un asistente digital:</p>
+                    <ul>
+                        <li>🎭 <strong>Respuestas emocionales:</strong> Detecta frustración y ofrece apoyo</li>
+                        <li>🧠 <strong>Contenido educativo:</strong> Adaptado según la edad (configurable)</li>
+                        <li>🌟 <strong>Datos curiosos:</strong> Aprendizaje divertido y espontáneo</li>
+                        <li>💬 <strong>Lenguaje natural:</strong> Como un amigo digital, no como una máquina</li>
+                        <li>🔒 <strong>100% seguro:</strong> Sin datos personales ni tracking</li>
+                    </ul>
+                    <div class="ejemplo-chat">
+                        <h4>Ejemplo de conversación real:</h4>
+                        <div class="chat-ejemplo">
+                            <div class="msg-niño">
+                                <strong>Niño:</strong> "No entiendo esta matemática, es muy difícil 😤"
                             </div>
-                            <div class="message user">
-                                <div class="bubble">
-                                    <p>Soy Sofía, tengo 8 años</p>
-                                </div>
+                            <div class="msg-plaud">
+                                <strong>Plaud:</strong> "Uf, entiendo tu frustración 😤 A veces las matemáticas parecen un rompecabezas gigante. ¿Y si lo vemos como un juego? Eres una exploradora que busca el tesoro del número correcto. ¡Tú puedes! 🌟 ¿Qué parte te parece más complicada?"
                             </div>
-                            <div class="message bot">
-                                <div class="avatar">🤖</div>
-                                <div class="bubble">
-                                    <p>¡Qué ilusión conocerte, Sofía! 🌟 ¿Sabías que las mariposas saborean con los pies? 🦋</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-area">
-                            <input type="text" placeholder="Escribe tu mensaje...">
-                            <button class="send-btn">🎤</button>
                         </div>
                     </div>
-                </div>
-                <div class="demo-features">
-                    <h3>✨ Características en Acción</h3>
-                    <ul>
-                        <li>🎭 <strong>Detección emocional:</strong> Responde al estado de ánimo</li>
-                        <li>🧠 <strong>Contenido adaptado:</strong> Según edad (8 años)</li>
-                        <li>🌟 <strong>Datos curiosos:</strong> Aprendizaje divertido</li>
-                        <li>💬 <strong>Conversación natural:</strong> Como un amigo real</li>
-                        <li>🔒 <strong>100% seguro:</strong> Sin datos personales</li>
-                    </ul>
                 </div>
             </div>
         </div>
