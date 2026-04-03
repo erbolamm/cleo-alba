@@ -201,11 +201,11 @@ Herramienta gratuita y open source. Si te ahorra tiempo, un café ayuda a manten
 
 | Plataforma | Enlace |
 |-----------|--------|
-| PayPal | paypal.me/erbolamm |
-| Ko-fi | ko-fi.com/C0C11TWR1K |
-| Twitch Tip | streamelements.com/apliarte/tip |
+| PayPal | [paypal.me/erbolamm](https://paypal.me/erbolamm) |
+| Ko-fi | [ko-fi.com/C0C11TWR1K](https://ko-fi.com/C0C11TWR1K) |
+| Twitch Tip | [streamelements.com/apliarte/tip](https://streamelements.com/apliarte/tip) |
 
-🌐 Sitio Oficial · 📦 GitHub
+🌐 [Sitio Oficial](https://erbolamm.github.io/cleo-alba/) · 📦 [GitHub](https://github.com/erbolamm/cleo-alba)
 
 ## Licencia
 MIT — © 2026 ApliArte
