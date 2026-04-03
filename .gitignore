@@ -44,7 +44,6 @@ recursos_termux/
 termux_scripts/
 scripts/
 demo/
-docs/
 promt.json
 PLAN_*.md
 # Archivos compilados y cache

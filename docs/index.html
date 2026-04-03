@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plaud Assistant 🌟 - Asistente IA Personalizable para Niños</title>
+    <meta name="description" content="Asistente IA educativo y seguro para niños. 100% open source, modo kiosco, compatible con OpenClaw y Groq. Personalizable para tu familia.">
+    <meta name="keywords" content="asistente ia, niños, educación, flutter, open source, android, kiosco, seguridad, familiar">
+    <meta name="author" content="Javier Mateo (ApliArte)">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://erbolamm.github.io/plaud-assistant/">
+    <meta property="og:title" content="Plaud Assistant - Asistente IA para Niños">
+    <meta property="og:description" content="Crea un asistente IA personalizado y seguro para tus hijos. 100% open source y gratis.">
+    <meta property="og:image" content="https://erbolamm.github.io/plaud-assistant/assets/og-image.png">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:site_name" content="Plaud Assistant by ApliArte">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@erbolamm">
+    <meta name="twitter:creator" content="@erbolamm">
+    <meta name="twitter:title" content="Plaud Assistant - IA para Niños">
+    <meta name="twitter:description" content="Asistente IA educativo y seguro. Open source y personalizable.">
+    <meta name="twitter:image" content="https://erbolamm.github.io/plaud-assistant/assets/twitter-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://erbolamm.github.io/plaud-assistant/">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Plaud Assistant",
+      "description": "Asistente IA personalizable para niños con modo kiosco seguro",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Android",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Javier Mateo"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --primary: #7C3AED;
+            --primary-dark: #6D28D9;
+            --secondary: #E05A7A;
+            --accent: #F59E0B;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.8;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat .number {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        /* Installation Section */
+        .installation {
+            padding: 80px 0;
+            background: var(--light);
+        }
+
+        .installation h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--dark);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step code {
+            background: #F3F4F6;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            display: block;
+            margin: 15px 0;
+        }
+
+        .step p {
+            color: #6B7280;
+        }
+
+        .cta-section {
+            text-align: center;
+        }
+
+        /* Demo Section */
+        .demo {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .demo h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--dark);
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .phone-mockup {
+            background: var(--dark);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .phone-screen {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .chat-interface {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .message.bot .avatar {
+            background: var(--primary);
+            color: white;
+        }
+
+        .message.user .avatar {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .bubble {
+            background: #F3F4F6;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 200px;
+        }
+
+        .message.user .bubble {
+            background: var(--primary);
+            color: white;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .demo-features h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .demo-features ul {
+            list-style: none;
+        }
+
+        .demo-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .demo-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero h2 {
+                font-size: 1.2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .demo-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Plaud Assistant 🌟</h1>
+                <h2>Asistente IA Personalizable para Niños</h2>
+                <p>Transforma cualquier Android en un amigo digital educativo, seguro y adaptado a tu familia. Código abierto, control total, sin costes ocultos.</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/erbolamm/plaud-assistant" class="btn-primary">🚀 Descargar Gratis</a>
+                    <a href="#demo" class="btn-secondary">📱 Ver Demo</a>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="number">100%</span>
+                        <span class="label">Open Source</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">0€</span>
+                        <span class="label">Coste</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">🔒</span>
+                        <span class="label">Seguro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>🚀 Características que Encantan</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>IA Educativa Adaptativa</h3>
+                    <p>Respuestas ajustadas a la edad de tu hijo/a con detección emocional integrada y apoyo personalizado.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Modo Kiosco Seguro</h3>
+                    <p>Bloqueo parental completo. Solo tu hijo/a puede usarlo, sin salidas accidentales ni compras no deseadas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>100% Personalizable</h3>
+                    <p>Nombres, familia, edad, intereses... Todo se adapta a vuestra realidad para una experiencia única.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗣️</div>
+                    <h3>Voz y Texto</h3>
+                    <p>Chat por voz con reconocimiento natural y respuestas habladas con TTS nativo en español.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Compatible con Todo</h3>
+                    <p>Funciona con OpenClaw (servidor propio) o Groq API. Tú eliges el nivel de control.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💝</div>
+                    <h3>Totalmente Gratis</h3>
+                    <p>Código abierto con licencia MIT. Sin anuncios, sin compras, sin costes ocultos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="installation">
+        <div class="container">
+            <h2>🚀 Instalación en 3 Pasos</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Clona el Proyecto</h3>
+                    <code>git clone https://github.com/erbolamm/plaud-assistant.git</code>
+                    <p>Descarga el código fuente completo y listo para compilar.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Personaliza la Configuración</h3>
+                    <code>edita lib/config/app_config.dart</code>
+                    <p>Añade nombres, familia, edad y configura tu API preferida.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Compila e Instala</h3>
+                    <code>flutter build apk --release</code>
+                    <p>Genera el APK e instálalo en cualquier Android 6.0+.</p>
+                </div>
+            </div>
+            <div class="cta-section">
+                <a href="https://github.com/erbolamm/plaud-assistant" class="btn-primary btn-large">
+                    📦 Ver en GitHub
+                </a>
+                <p>📖 Guía completa en el README del proyecto</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <h2>📱 Prueba la Experiencia</h2>
+            <div class="demo-container">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="chat-interface">
+                            <div class="message bot">
+                                <div class="avatar">🤖</div>
+                                <div class="bubble">
+                                    <p>¡Hola! Soy Plaud ✨ ¿Cómo te llamas?</p>
+                                </div>
+                            </div>
+                            <div class="message user">
+                                <div class="bubble">
+                                    <p>Soy Sofía, tengo 8 años</p>
+                                </div>
+                            </div>
+                            <div class="message bot">
+                                <div class="avatar">🤖</div>
+                                <div class="bubble">
+                                    <p>¡Qué ilusión conocerte, Sofía! 🌟 ¿Sabías que las mariposas saborean con los pies? 🦋</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-area">
+                            <input type="text" placeholder="Escribe tu mensaje...">
+                            <button class="send-btn">🎤</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-features">
+                    <h3>✨ Características en Acción</h3>
+                    <ul>
+                        <li>🎭 <strong>Detección emocional:</strong> Responde al estado de ánimo</li>
+                        <li>🧠 <strong>Contenido adaptado:</strong> Según edad (8 años)</li>
+                        <li>🌟 <strong>Datos curiosos:</strong> Aprendizaje divertido</li>
+                        <li>💬 <strong>Conversación natural:</strong> Como un amigo real</li>
+                        <li>🔒 <strong>100% seguro:</strong> Sin datos personales</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>🚀 ¿Listo para Crear tu Asistente Personal?</h3>
+            <p>Únete a cientos de familias que ya disfrutan de una IA segura, educativa y 100% personalizada.</p>
+            <div class="trust-badges">
+                <div class="badge">
+                    <span class="badge-icon">🔓</span>
+                    <span class="badge-text">Open Source</span>
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">🛡️</span>
+                    <span class="badge-text">100% Seguro</span>
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">💝</span>
+                    <span class="badge-text">Gratis Siempre</span>
+                </div>
+            </div>
+            <p style="margin-top: 30px; opacity: 0.7;">
+                © 2026 ApliArte — Creado con ❤️ para las familias del mundo
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step').forEach(el => {
+            animationObserver.observe(el);
+        });
+    </script>
+</body>
+</html>
