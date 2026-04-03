@@ -227,41 +227,82 @@ Este proyecto funciona como un **self-service**: tú descargas el código, perso
 
 ---
 
-## 🚀 Instalación (3 pasos)
+## � Descarga e Instalación
 
-### 1. Clona el proyecto
+### Opción 1: Descarga Directa (Recomendado)
+1. Ve a [Releases](https://github.com/erbolamm/cleo-alba/releases)
+2. Descarga el APK más reciente (`plaud-assistant-vX.X.X.apk`)
+3. Instala en tu Android 6.0+
+
+### Opción 2: Compilar desde Código
 ```bash
+# 1. Clona el proyecto
 git clone https://github.com/erbolamm/cleo-alba.git
 cd cleo-alba
+
+# 2. Personaliza la configuración
+edita lib/config/app_config.dart
+
+# 3. Compila e instala
+flutter pub get
+flutter build apk --release
+# Instala el APK generado
 ```
 
-### 2. Personaliza la configuración
+### Opción 3: GitHub Actions (Automático)
+- Las releases se generan automáticamente con cada tag `v*`
+- Incluyen APK y App Bundle optimizados
+- Listos para instalar o subir a Play Store
+
+---
+
+## ⚙️ Configuración Personalizada
+
+### Paso 1: Personalizar Datos Familiares
 Edita `lib/config/app_config.dart`:
+
 ```dart
 class AppConfig {
-  // Datos personales
+  // 🏠 Datos personales
   static const String childName = 'Nombre del niño';
-  static const List<String> familyMembers = ['Mamá', 'Papá'];
+  static const List<String> familyMembers = ['Mamá', 'Papá', 'Abuela'];
   static const int childAge = 7;
+  static const String assistantName = 'Plaud';
   
-  // Configuración API
+  // 🔗 Configuración API (elige una)
+  
+  // OpenClaw (servidor propio)
   static const String apiUrl = 'https://tu-servidor.com/agent/ask';
   static const String apiToken = 'token_seguro';
-  static const String agentName = 'plaud';
-  static const String groqApiKey = 'gsk_tu_api_key'; // Opcional
+  
+  // Groq API (alternativa)
+  static const String groqApiKey = 'gsk_tu_api_key';
 }
 ```
 
-### 3. Compila e instala
+### Paso 2: Elegir Proveedor API
+
+#### OpenClaw (Recomendado)
+- ✅ Control total y privacidad
+- ✅ Sin costes por uso
+- ✅ Respuestas ultra rápidas
+- ⚠️ Requiere servidor propio
+
+#### Groq API
+- ✅ Setup en 2 minutos
+- ✅ LLMs de alta calidad
+- ⚠️ Coste por token
+- ⚠️ Datos en servidores Groq
+
+### Paso 3: Probar y Compilar
 ```bash
 flutter pub get
 flutter build apk --release
-# Instala el APK en tu Android 6.0+
 ```
 
 ---
 
-## � Requisitos
+## 📱 Requisitos
 
 - **Android**: 6.0+ (API 23)
 - **Flutter**: SDK reciente
