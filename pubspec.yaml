@@ -1,0 +1,52 @@
+name: aplibot_system
+description: "A new Flutter project for ApliBot System."
+publish_to: 'none'
+version: 1.1.0+1002
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  http: ^1.2.0
+  shared_preferences: ^2.2.2
+  audioplayers: ^6.5.1
+  flutter_tts: ^3.8.5
+  speech_to_text: ^7.3.0
+  permission_handler: ^11.3.0
+  path_provider: ^2.1.2
+  webview_flutter: ^4.13.1
+  url_launcher: ^6.2.5
+  file_picker: ^8.0.0
+  android_intent_plus: ^5.0.0
+  wakelock_plus: ^1.4.0
+  screen_brightness: ^2.1.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/web/smart_display.html
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 23
+
+flutter_native_splash:
+  color: "#0B1019"
+  image: "assets/logo.png"
+  android: true
+  ios: true
+  fullscreen: true

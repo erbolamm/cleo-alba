@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClawMobilApp — La app que convierte tu móvil viejo en tu IA privada</title>
+    <meta name="description"
+        content="🦀 Descarga, instala, y ya tienes un asistente de IA en tu móvil viejo. Sin internet, sin nube, sin suscripciones. Gratis.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://erbolamm.github.io/ClawMobil/empezar.html">
+    <meta property="og:title" content="🦀 ClawMobilApp — Tu móvil viejo, tu IA privada.">
+    <meta property="og:description"
+        content="Convierte ese Android del cajón en una IA que funciona SIN internet. Gratis. Sin big tech. Hecho en España.">
+    <meta property="og:image" content="https://erbolamm.github.io/ClawMobil/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@erbolamm">
+    <meta name="twitter:title" content="🦀 ClawMobilApp — Tu móvil viejo ahora es tu IA">
+    <meta name="twitter:description"
+        content="Un español está creando una app que convierte móviles viejos en IAs privadas. Sin internet. Gratis.">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="canonical" href="https://erbolamm.github.io/ClawMobil/empezar.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brand: #005fa9;
+            --brand-dark: #003d6b;
+            --brand-light: #8fd5fa;
+            --accent: #FF6B35;
+            --accent-glow: rgba(255, 107, 53, 0.4);
+            --bg: #0a0e1a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text: #e8ecf4;
+            --text-dim: #8892a4;
+            --text-bright: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(0, 95, 169, 0.5);
+            --radius: 16px;
+            --glow-brand: 0 0 60px rgba(0, 95, 169, 0.15);
+            --glow-accent: 0 0 40px rgba(255, 107, 53, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── ANIMATED BG ─── */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-glow::before {
+            content: '';
+            position: absolute;
+            top: -300px;
+            left: -200px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 95, 169, 0.12) 0%, transparent 70%);
+            animation: floatGlow 20s ease-in-out infinite;
+        }
+
+        .bg-glow::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
+            animation: floatGlow 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatGlow {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(80px, 60px);
+            }
+        }
+
+        /* ─── LAYOUT ─── */
+        .wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 24px 60px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 720px;
+        }
+
+        .hero-emoji {
+            font-size: 5rem;
+            margin-bottom: 16px;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 6px 18px;
+            border: 1px solid var(--accent);
+            border-radius: 100px;
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            animation: pulseTag 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseTag {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 var(--accent-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px transparent;
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--text-bright);
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--brand-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 580px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-subtitle strong {
+            color: var(--text-bright);
+        }
+
+        /* ─── CTA BUTTONS ─── */
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 18px 40px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #e85d2c);
+            color: white;
+            box-shadow: 0 8px 32px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-bright);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--brand-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-paypal {
+            background: linear-gradient(135deg, #0070ba, #003087);
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 112, 186, 0.3);
+        }
+
+        .btn-paypal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 48px rgba(0, 112, 186, 0.4);
+        }
+
+        .scroll-hint {
+            margin-top: 48px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(8px);
+            }
+        }
+
+        /* ─── SECTIONS ─── */
+        .section {
+            padding: 100px 24px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--brand-light);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .section h2 {
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: var(--text-bright);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* ─── FEATURE CARDS ─── */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .f-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .f-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .f-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-active);
+            transform: translateY(-4px);
+        }
+
+        .f-card:hover::before {
+            opacity: 1;
+        }
+
+        .f-card .icon {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+        }
+
+        .f-card h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 8px;
+        }
+
+        .f-card p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* ─── PROBLEM / SOLUTION ─── */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .p-card {
+            padding: 28px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .p-card.problem {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .p-card.solution {
+            background: rgba(34, 197, 94, 0.06);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .p-card h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-bright);
+        }
+
+        .p-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .p-card li {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            padding: 6px 0;
+            line-height: 1.5;
+        }
+
+        .p-card.problem li::before {
+            content: '✗ ';
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .p-card.solution li::before {
+            content: '✓ ';
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        /* ─── NUMBERS ─── */
+        .numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            margin: 60px 0;
+        }
+
+        .num-card {
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .num-card .val {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--brand-light);
+            line-height: 1;
+        }
+
+        .num-card .label {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+        }
+
+        /* ─── SUPPORT SECTION ─── */
+        .support-section {
+            background: linear-gradient(180deg, transparent, rgba(255, 107, 53, 0.04), transparent);
+            padding: 100px 24px;
+            text-align: center;
+        }
+
+        .support-story {
+            max-width: 640px;
+            margin: 0 auto 48px;
+            font-size: 1.1rem;
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .support-story strong {
+            color: var(--text-bright);
+        }
+
+        .support-story .em {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto 48px;
+        }
+
+        .tier {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tier:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--glow-accent);
+        }
+
+        .tier.featured {
+            border-color: var(--accent);
+            background: rgba(255, 107, 53, 0.06);
+        }
+
+        .tier.featured::after {
+            content: '⭐ MÁS POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 16px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            border-radius: 100px;
+        }
+
+        .tier .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .tier h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-bright);
+            margin-bottom: 8px;
+        }
+
+        .tier .price {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .tier p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tier .benefit {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #22c55e;
+            margin-bottom: 16px;
+        }
+
+        /* ─── SHARE SECTION ─── */
+        .share-section {
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .share-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 32px 0;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 22px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-card);
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+
+        .share-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--brand-light);
+            transform: translateY(-2px);
+        }
+
+        /* ─── FOLLOW ─── */
+        .follow-section {
+            padding: 60px 24px 40px;
+            text-align: center;
+        }
+
+        .follow-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .follow-link {
+            padding: 14px 28px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-bright);
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .follow-link:hover {
+            border-color: var(--brand-light);
+            background: rgba(0, 95, 169, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.82rem;
+        }
+
+        footer a {
+            color: var(--brand-light);
+            text-decoration: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: var(--text-bright);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 600px) {
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 60px 16px 40px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .btn-cta {
+                padding: 14px 28px;
+                font-size: 0.95rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cta-group {
+                flex-direction: column;
+            }
+
+            .tier {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-emoji">🦀📱</div>
+            <div class="hero-tag">🔥 Próximamente — Early Access</div>
+            <h1>Tu móvil viejo.<br>Tu <span class="highlight">IA privada.</span></h1>
+            <p class="hero-subtitle">
+                <strong>ClawMobilApp</strong> convierte cualquier Android que tengas olvidado en un asistente de
+                inteligencia artificial que funciona <strong>sin internet</strong>, <strong>sin nube</strong>, y
+                <strong>sin pagar un céntimo al mes</strong>. Descárgalo. Instálalo. Habla con él.
+            </p>
+            <div class="cta-group">
+                <a class="btn-cta btn-primary" href="#apoyar">☕ Apoyar el proyecto</a>
+                <a class="btn-cta btn-secondary" href="#que-es">↓ Ver qué es esto</a>
+            </div>
+            <div class="scroll-hint">↓ Baja para descubrir todo</div>
+        </div>
+    </section>
+
+    <!-- ═══ QUÉ ES ═══ -->
+    <section class="section" id="que-es">
+        <div class="wrap">
+            <span class="section-tag">El problema</span>
+            <h2>Pagas por hablar con una IA.<br>¿No te parece absurdo?</h2>
+            <p class="section-desc">ChatGPT: 20€/mes. Gemini: 20€/mes. Copilot: 22€/mes. Suscripciones sin fin para
+                algo que tu viejo Samsung del cajón podría hacer <strong>gratis</strong>.</p>
+
+            <div class="problem-grid">
+                <div class="p-card problem">
+                    <h3>❌ Lo que hay ahora</h3>
+                    <ul>
+                        <li>Suscripciones mensuales de 20€+</li>
+                        <li>Tus conversaciones en servidores ajenos</li>
+                        <li>Necesitas internet siempre</li>
+                        <li>Tu privacidad no existe</li>
+                        <li>Tus datos entrenan modelos de otros</li>
+                    </ul>
+                </div>
+                <div class="p-card solution">
+                    <h3>✅ ClawMobilApp</h3>
+                    <ul>
+                        <li>Gratis para siempre (con anuncios)</li>
+                        <li>Todo funciona en TU móvil viejo</li>
+                        <li>Funciona sin WiFi, sin datos</li>
+                        <li>Privacidad total: 0 datos enviados</li>
+                        <li>Tu IA es TUYA, no de una empresa</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="numbers">
+                <div class="num-card">
+                    <div class="val">0€</div>
+                    <div class="label">para siempre</div>
+                </div>
+                <div class="num-card">
+                    <div class="val">0</div>
+                    <div class="label">datos enviados</div>
+                </div>
+                <div class="num-card">
+                    <div class="val">0</div>
+                    <div class="label">internet necesario</div>
+                </div>
+                <div class="num-card">
+                    <div class="val">∞</div>
+                    <div class="label">conversaciones</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FEATURES ═══ -->
+    <section class="section" style="padding-top: 40px;">
+        <div class="wrap">
+            <span class="section-tag">Características</span>
+            <h2>Una app. Un móvil viejo. <span class="highlight"
+                    style="background: linear-gradient(135deg, var(--brand-light), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Tu
+                    IA.</span></h2>
+            <p class="section-desc">Sin configuración, sin terminales, sin conocimientos técnicos. Solo descarga,
+                instala, y ya tienes un compañero de IA.</p>
+
+            <div class="feature-grid">
+                <div class="f-card">
+                    <div class="icon">🔒</div>
+                    <h3>100% Privado</h3>
+                    <p>Tu IA funciona en tu dispositivo. Ni una sola palabra sale de tu casa. Ni Google, ni OpenAI, ni
+                        nadie escucha tus conversaciones.</p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">📡</div>
+                    <h3>Sin Internet</h3>
+                    <p>Funciona offline. En el pueblo, en el campo, en una isla. Donde haya un enchufe, tu IA funciona.
+                    </p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">💬</div>
+                    <h3>Compañero Real</h3>
+                    <p>Habla contigo, recuerda lo que le dices, te hace compañía. Ideal para personas mayores que viven
+                        solas.</p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">📥</div>
+                    <h3>Instala y Listo</h3>
+                    <p>Descargas el APK, lo instalas, y funciona. Sin terminales, sin comandos, sin configurar nada.</p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">♻️</div>
+                    <h3>Reciclaje Real</h3>
+                    <p>Ese móvil que iba a la basura ahora es tu asistente personal. Ecología y tecnología de la mano.
+                    </p>
+                </div>
+                <div class="f-card">
+                    <div class="icon">💚</div>
+                    <h3>Gratis para Siempre</h3>
+                    <p>Con anuncios para sostener el desarrollo. Sin suscripciones, sin costes ocultos, sin sorpresas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ APOYAR ═══ -->
+    <section class="support-section" id="apoyar">
+        <div class="wrap">
+            <span class="section-tag">Apoya el proyecto</span>
+            <h2>Esto no lo hace una empresa.<br>Lo hace <span style="color: var(--accent);">una persona.</span></h2>
+
+            <div class="support-story">
+                <p>Me llamo <strong>Francisco</strong>. Soy de España. No tengo equipo, no tengo inversores, no tengo
+                    departamento de marketing. Solo tengo una idea: que la inteligencia artificial sea accesible para
+                    <span class="em">todo el mundo</span>, no solo para quien puede pagar 20€ al mes.
+                </p>
+                <br>
+                <p>He invertido <strong>miles de horas</strong> en hacer esto realidad. Cada café que me invitas, cada
+                    euro que donas, es gasolina para que esto siga adelante. Y te prometo algo: <span class="em">los que
+                        apoyen ahora serán los primeros en tener ventajas cuando la app se lance.</span></p>
+            </div>
+
+            <div class="tiers">
+                <div class="tier">
+                    <div class="emoji">☕</div>
+                    <h3>Un Café</h3>
+                    <div class="price">3€</div>
+                    <p>Un gesto que vale mucho. Me das energía para seguir una noche más programando.</p>
+                    <span class="benefit">✓ Aparecerás en los créditos</span>
+                    <br><br>
+                    <a class="btn-cta btn-primary" style="font-size:0.9rem; padding: 12px 28px;"
+                        href="https://ko-fi.com/C0C11TWR1K" target="_blank">☕ Invitar café</a>
+                </div>
+                <div class="tier featured">
+                    <div class="emoji">🚀</div>
+                    <h3>Impulsor</h3>
+                    <div class="price">10€+</div>
+                    <p>Tu apoyo acelera semanas de desarrollo. Eres parte activa del proyecto.</p>
+                    <span class="benefit">✓ Early access + sin anuncios 1 mes</span>
+                    <br><br>
+                    <a class="btn-cta btn-primary" style="font-size:0.9rem; padding: 12px 28px;"
+                        href="https://www.paypal.com/paypalme/erbolamm" target="_blank">🚀 Impulsar</a>
+                </div>
+                <div class="tier">
+                    <div class="emoji">🌟</div>
+                    <h3>Founding Member</h3>
+                    <div class="price">25€+</div>
+                    <p>Eres co-creador. Tu nombre queda grabado para siempre en la historia de ClawMobilApp.</p>
+                    <span class="benefit">✓ Early access + sin anuncios 6 meses + badge exclusivo</span>
+                    <br><br>
+                    <a class="btn-cta btn-paypal" style="font-size:0.9rem; padding: 12px 28px;"
+                        href="https://www.paypal.com/paypalme/erbolamm" target="_blank">🌟 Ser Founder</a>
+                </div>
+            </div>
+
+            <p style="color: var(--text-dim); font-size: 0.9rem; max-width: 500px; margin: 0 auto;">
+                💡 <strong style="color: var(--text);">Cada donación cuenta.</strong> No importa la cantidad. Lo que
+                importa es que creas en esto tanto como yo.
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══ COMPARTIR ═══ -->
+    <section class="share-section" id="compartir">
+        <div class="wrap">
+            <span class="section-tag">Haz que esto explote</span>
+            <h2>💥 Comparte. Que se entere el mundo.</h2>
+            <p class="section-desc" style="margin: 0 auto 32px;">Un tweet, un story, un mensaje a un amigo. Cada share
+                acerca ClawMobilApp a quienes más lo necesitan.</p>
+
+            <div class="share-grid">
+                <a class="share-btn"
+                    href="https://twitter.com/intent/tweet?text=%F0%9F%A6%9E%20Un%20espa%C3%B1ol%20est%C3%A1%20creando%20una%20app%20que%20convierte%20m%C3%B3viles%20viejos%20en%20IAs%20privadas.%20Sin%20internet.%20GRATIS.%20%F0%9F%94%A5%0A%0AEsto%20SÍ%20es%20tecnología%20para%20la%20gente.%0A%0A%23ClawMobilApp%20%23IA%20%40erbolamm%0A%0Ahttps%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">𝕏 Twitter</a>
+                <a class="share-btn"
+                    href="https://wa.me/?text=%F0%9F%A6%9E%20Mira%20esto%3A%20una%20app%20que%20convierte%20cualquier%20m%C3%B3vil%20viejo%20en%20una%20IA%20que%20funciona%20SIN%20internet.%20Gratis.%20Perfecto%20para%20personas%20mayores.%0A%0Ahttps%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">💬 WhatsApp</a>
+                <a class="share-btn"
+                    href="https://t.me/share/url?url=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html&text=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20M%C3%B3vil%20viejo%20%2B%20esta%20app%20%3D%20tu%20IA%20privada%20SIN%20internet.%20Gratis."
+                    target="_blank">✈️ Telegram</a>
+                <a class="share-btn"
+                    href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">💼 LinkedIn</a>
+                <a class="share-btn"
+                    href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">🔵 Facebook</a>
+                <a class="share-btn"
+                    href="https://www.reddit.com/submit?url=https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html&title=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20Free%20app%20turns%20old%20Android%20phones%20into%20private%20offline%20AI%20assistants"
+                    target="_blank">🟠 Reddit</a>
+                <a class="share-btn"
+                    href="https://www.threads.net/intent/post?text=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20convierte%20m%C3%B3viles%20viejos%20en%20IAs%20privadas.%20Sin%20internet.%20Gratis.%20Hecho%20en%20Espa%C3%B1a%20%F0%9F%87%AA%F0%9F%87%B8%20https%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html"
+                    target="_blank">🧵 Threads</a>
+                <a class="share-btn"
+                    href="mailto:?subject=%F0%9F%A6%9E%20ClawMobilApp%20%E2%80%94%20IA%20gratis%20en%20tu%20m%C3%B3vil%20viejo&body=Mira%20esto%3A%20una%20app%20que%20convierte%20cualquier%20Android%20viejo%20en%20una%20IA%20privada%20que%20funciona%20SIN%20internet.%20Gratis.%0A%0Ahttps%3A%2F%2Ferbolamm.github.io%2FClawMobil%2Fempezar.html">📧
+                    Email</a>
+            </div>
+
+            <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 12px;">
+                #ClawMobilApp #IA #Android #Reciclaje #Privacidad #HechoEnEspaña @erbolamm
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══ FOLLOW ═══ -->
+    <section class="follow-section">
+        <div class="wrap">
+            <h2 style="font-size: 1.5rem;">Sígueme para estar al día</h2>
+            <p style="color: var(--text-dim); margin-top: 8px;">Primero en enterarte cuando se lance la app.</p>
+            <div class="follow-links">
+                <a class="follow-link" href="https://twitter.com/erbolamm" target="_blank">𝕏 @erbolamm</a>
+                <a class="follow-link" href="https://github.com/erbolamm" target="_blank">👤 GitHub</a>
+                <a class="follow-link" href="https://apliarte.com" target="_blank">🌐 ApliArte.com</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ BACK TO INDEX ═══ -->
+    <footer>
+        <a class="back-link" href="index.html">← Volver a ClawMobilApp</a>
+        <p>🦀 ClawMobilApp — Creado con ❤️ por <a href="https://apliarte.com" target="_blank">Francisco de
+                ApliArte.com</a> · España · 2026</p>
+        <p style="margin-top: 8px; font-style: italic;">"La gente que dice que no se puede hacer no debería interrumpir
+            a los que lo están haciendo."</p>
+    </footer>
+
+</body>
+
+</html>

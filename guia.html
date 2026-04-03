@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClawMobilApp — Guía Técnica: Convierte tu Móvil Viejo en una IA</title>
+    <meta name="description"
+        content="Guía interactiva paso a paso para convertir tu teléfono Android antiguo en un asistente de IA privado. Evalúa compatibilidad y sigue los pasos. De ClawMobilApp.">
+    <meta property="og:title" content="🦀 ClawMobilApp — Guía Técnica">
+    <meta property="og:description" content="Guía paso a paso para montar tu propia IA local en un móvil viejo.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@erbolamm">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ============================================
+           RESET & BASE — Retro-Tech Theme
+           ============================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0e1a;
+            --bg-warm: #0f1525;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(0, 95, 169, 0.5);
+            --text: #c8cdd8;
+            --text-dim: #6b7890;
+            --text-bright: #e8ecf4;
+            --gold: #8fd5fa;
+            --gold-dim: rgba(143, 213, 250, 0.3);
+            --green: #22c55e;
+            --green-bg: rgba(34, 197, 94, 0.1);
+            --red: #ef4444;
+            --red-bg: rgba(239, 68, 68, 0.1);
+            --amber: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.1);
+            --mono: 'IBM Plex Mono', 'Courier New', monospace;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            padding: 40px 0 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border: 1px solid var(--gold-dim);
+            border-radius: 4px;
+            color: var(--gold);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 800;
+            color: var(--text-bright);
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, #8fd5fa, #FF6B35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           PROGRESS BAR
+           ============================================ */
+        .progress-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dim);
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--mono);
+        }
+
+        .progress-step:hover {
+            color: var(--text);
+        }
+
+        .progress-step.active {
+            color: var(--gold);
+            border-color: var(--gold-dim);
+            background: rgba(212, 175, 55, 0.06);
+        }
+
+        .progress-step.done {
+            color: var(--green);
+        }
+
+        .progress-step .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            transition: all 0.2s;
+        }
+
+        .progress-step.done .step-dot {
+            background: var(--green);
+        }
+
+        .progress-step.active .step-dot {
+            background: var(--gold);
+        }
+
+        /* ============================================
+           WIZARD SECTIONS
+           ============================================ */
+        .wizard-section {
+            margin-bottom: 50px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .wizard-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .section-number {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--gold);
+        }
+
+        .section-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+
+        .section-desc {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        /* ============================================
+           SPEC SELECTOR (Step 1)
+           ============================================ */
+        .spec-group {
+            margin-bottom: 20px;
+        }
+
+        .spec-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .spec-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .spec-btn {
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-card);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .spec-btn:hover {
+            border-color: rgba(180, 160, 120, 0.35);
+            background: var(--bg-card-hover);
+        }
+
+        .spec-btn.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            box-shadow: 0 0 0 1px var(--gold-dim);
+        }
+
+        /* ============================================
+           EVALUATION TABLE (Step 2)
+           ============================================ */
+        .eval-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .eval-card.recommended {
+            border-color: var(--gold);
+        }
+
+        .eval-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .eval-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+
+        .eval-badge {
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .badge-ok {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .badge-warn {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        .badge-no {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .badge-rec {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+        }
+
+        .eval-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .eval-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .eval-icon {
+            font-size: 14px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .eval-summary {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .eval-summary-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .eval-summary p {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           RISK CARDS
+           ============================================ */
+        .risk-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .risk-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .risk-card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .risk-card p {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           CHECKLIST (Step 3)
+           ============================================ */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .check-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .check-item.checked {
+            border-color: var(--green);
+            background: var(--green-bg);
+        }
+
+        .check-box {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 13px;
+            color: transparent;
+        }
+
+        .check-item.checked .check-box {
+            border-color: var(--green);
+            background: var(--green);
+            color: #fff;
+        }
+
+        .check-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .check-text strong {
+            color: var(--text-bright);
+        }
+
+        .check-text small {
+            display: block;
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .check-counter {
+            text-align: center;
+            margin-top: 16px;
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .check-counter span {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           CODE BLOCKS (Step 4)
+           ============================================ */
+        .cmd-block {
+            position: relative;
+            background: #0f0f0f;
+            border: 1px solid rgba(100, 90, 70, 0.2);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .cmd-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(100, 90, 70, 0.15);
+        }
+
+        .cmd-title {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cmd-copy {
+            padding: 4px 12px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cmd-copy:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .cmd-copy.copied {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .cmd-body {
+            padding: 16px;
+        }
+
+        .cmd-body code {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: #22c55e;
+            line-height: 1.8;
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .cmd-body code .comment {
+            color: var(--text-dim);
+        }
+
+        /* ============================================
+           INSTALL STEPS
+           ============================================ */
+        .install-step {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .install-num {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .install-step.done .install-num {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-bg);
+        }
+
+        .install-content {
+            flex: 1;
+        }
+
+        .install-content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-bright);
+        }
+
+        .install-content p {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        /* ============================================
+           WARNING BOX
+           ============================================ */
+        .warning-box {
+            background: var(--red-bg);
+            border: 1px solid rgba(196, 92, 92, 0.3);
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+
+        .warning-box h3 {
+            color: var(--red);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning-box p {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           TIP BOX
+           ============================================ */
+        .tip-box {
+            background: var(--green-bg);
+            border: 1px solid rgba(107, 158, 107, 0.25);
+            border-radius: 6px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+
+        .tip-box h3 {
+            color: var(--green);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .tip-box p,
+        .tip-box li {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .tip-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tip-box li::before {
+            content: '→ ';
+            color: var(--green);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-dim);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--text-bright);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .top-nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .top-nav a:hover {
+            color: var(--gold);
+        }
+
+        .top-nav .brand {
+            color: var(--text-bright);
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 600px) {
+            .eval-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .spec-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .progress-step {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+        }
+
+        /* Hidden sections */
+        .wizard-section[data-step] {
+            display: none;
+        }
+
+        .wizard-section[data-step].visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Show all by default for scroll */
+        .show-all .wizard-section[data-step] {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="show-all">
+
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <a href="index.html" class="brand">🦀 ClawMobilApp</a>
+        <div style="display: flex; gap: 16px;">
+            <a href="index.html">← Inicio</a>
+            <a href="empezar.html">🚀 Empezar</a>
+            <a href="https://ko-fi.com/C0C11TWR1K" target="_blank">☕ Apoyar</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-badge">Guía Técnica</div>
+            <h1>Convierte tu Móvil Viejo en una <span>IA Privada</span></h1>
+            <p>Evalúa tu teléfono, prepáralo y sigue los pasos. Esta guía comparte todo el conocimiento técnico detrás
+                de ClawMobilApp.</p>
+        </header>
+
+        <!-- PROGRESS BAR -->
+        <nav class="progress-bar">
+            <div class="progress-steps">
+                <a class="progress-step active" href="#step1" data-target="1">
+                    <span class="step-dot"></span> Evaluar
+                </a>
+                <a class="progress-step" href="#step2" data-target="2">
+                    <span class="step-dot"></span> Resultado
+                </a>
+                <a class="progress-step" href="#step3" data-target="3">
+                    <span class="step-dot"></span> Preparar
+                </a>
+                <a class="progress-step" href="#step4" data-target="4">
+                    <span class="step-dot"></span> Instalar
+                </a>
+                <a class="progress-step" href="#step5" data-target="5">
+                    <span class="step-dot"></span> Verificar
+                </a>
+            </div>
+        </nav>
+
+        <!-- ============================================
+             STEP 1: ELIGE TU TELÉFONO
+             ============================================ -->
+        <section class="wizard-section visible" data-step="1" id="step1">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>¿Qué teléfono tienes?</h2>
+            </div>
+            <p class="section-desc">
+                Selecciona las especificaciones de tu dispositivo. Si no estás seguro, ve a
+                <strong>Ajustes → Acerca del teléfono</strong>.
+            </p>
+
+            <div class="spec-group">
+                <label class="spec-label">Memoria RAM</label>
+                <div class="spec-options" id="ram-selector">
+                    <button class="spec-btn" data-value="1">1 GB</button>
+                    <button class="spec-btn" data-value="1.5">1.5 GB</button>
+                    <button class="spec-btn" data-value="2">2 GB</button>
+                    <button class="spec-btn" data-value="3">3 GB</button>
+                    <button class="spec-btn" data-value="4">4+ GB</button>
+                </div>
+            </div>
+
+            <div class="spec-group">
+                <label class="spec-label">Almacenamiento</label>
+                <div class="spec-options" id="storage-selector">
+                    <button class="spec-btn" data-value="8">8 GB</button>
+                    <button class="spec-btn" data-value="16">16 GB</button>
+                    <button class="spec-btn" data-value="32">32 GB</button>
+                    <button class="spec-btn" data-value="64">64+ GB</button>
+                </div>
+            </div>
+
+            <div class="spec-group">
+                <label class="spec-label">Versión de Android</label>
+                <div class="spec-options" id="android-selector">
+                    <button class="spec-btn" data-value="5">5.x</button>
+                    <button class="spec-btn" data-value="6">6.x</button>
+                    <button class="spec-btn" data-value="7">7.x</button>
+                    <button class="spec-btn" data-value="8">8.x</button>
+                    <button class="spec-btn" data-value="9">9+</button>
+                </div>
+            </div>
+
+            <div class="tip-box" id="example-phones" style="margin-top: 20px;">
+                <h3>📱 Ejemplos de teléfonos comunes</h3>
+                <ul>
+                    <li><strong>Samsung Galaxy A3 (2015)</strong> — 1.5 GB RAM, 16 GB, Android 6 → Básico</li>
+                    <li><strong>Huawei P8 Lite</strong> — 2 GB RAM, 16 GB, Android 6 → Medio</li>
+                    <li><strong>Samsung Galaxy S7</strong> — 4 GB RAM, 32 GB, Android 8 → Completo</li>
+                    <li><strong>Huawei P10</strong> — 4 GB RAM, 64 GB, Android 9 → Completo+</li>
+                    <li><strong>iPhone 8 Plus</strong> — 3 GB RAM, 64 GB, iOS → Completo (requiere iSH o Jailbreak)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ============================================
+             STEP 2: EVALUACIÓN
+             ============================================ -->
+        <section class="wizard-section visible" data-step="2" id="step2">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Evaluación de tu dispositivo</h2>
+            </div>
+            <p class="section-desc" id="eval-intro">
+                Selecciona tus especificaciones arriba para ver qué puede hacer tu teléfono.
+            </p>
+
+            <div id="eval-results">
+                <!-- Dynamic content -->
+            </div>
+
+            <!-- RISK COMPARISON -->
+            <div style="margin-top: 24px;">
+                <div class="eval-summary-title" style="margin-bottom: 12px;">⚖️ Termux vs Root — Pros y riesgos</div>
+                <div class="risk-cards">
+                    <div class="risk-card">
+                        <h4 style="color: var(--green);">✅ Termux (sin root)</h4>
+                        <p>
+                            <strong>Seguro</strong> — no modifica el sistema<br>
+                            <strong>Reversible</strong> — desinstalar y listo<br>
+                            <strong>Fácil</strong> — instalar desde F-Droid<br>
+                            ⚠️ Algo más lento por la capa proot
+                        </p>
+                    </div>
+                    <div class="risk-card">
+                        <h4 style="color: var(--amber);">⚠️ Root</h4>
+                        <p>
+                            <strong>Más rápido</strong> — acceso directo al hardware<br>
+                            <strong>Más control</strong> — puedes quitar bloatware<br>
+                            ⚠️ Puede dejar el teléfono inservible (brick)<br>
+                            ⚠️ Anula la garantía (si queda alguna)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             STEP 3: PREPARACIÓN
+             ============================================ -->
+        <section class="wizard-section visible" data-step="3" id="step3">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Prepara tu teléfono</h2>
+            </div>
+            <p class="section-desc">
+                Marca cada paso cuando lo completes. Todos son importantes para una instalación limpia.
+            </p>
+
+            <div class="warning-box">
+                <h3>⚠️ No uses tu teléfono personal</h3>
+                <p>Usa un teléfono viejo que ya no necesites. Vamos a hacer un reset de fábrica
+                    y no querrás perder tus datos personales.</p>
+            </div>
+
+            <div class="checklist" id="prep-checklist">
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Haz un reset de fábrica</strong>
+                        <small>Ajustes → Sistema → Restablecer → Borrar todo</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>NO inicies sesión con tu cuenta personal de Google</strong>
+                        <small>Crea una cuenta nueva solo para este teléfono, o sáltate el paso</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Conecta a WiFi</strong>
+                        <small>El teléfono necesita internet para comunicarse con la IA</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Conecta al cargador</strong>
+                        <small>Va a estar encendido 24/7, no queremos que se apague</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Activa Opciones de Desarrollador</strong>
+                        <small>Ajustes → Acerca del teléfono → Pulsa 7 veces en "Número de compilación"</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Activa Depuración USB</strong>
+                        <small>Ajustes → Opciones de desarrollador → Depuración USB → ON</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Desactiva apagado de pantalla automático</strong>
+                        <small>Opciones de desarrollador → "Pantalla activa al cargar" → ON</small>
+                    </div>
+                </div>
+            </div>
+            <div class="check-counter">
+                Completado: <span id="check-count">0</span> / <span id="check-total">7</span>
+            </div>
+        </section>
+
+        <!-- ============================================
+             STEP 4: INSTALACIÓN
+             ============================================ -->
+        <section class="wizard-section visible" data-step="4" id="step4">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Instalación</h2>
+            </div>
+            <p class="section-desc">
+                Sigue estos pasos en orden. Los comandos se pueden copiar tocando el botón.
+            </p>
+
+            <div class="tip-box">
+                <h3>💡 ¿Tienes un IDE con IA? (VSCode, Cursor...)</h3>
+                <p>Si tienes este proyecto abierto en tu editor con IA, puedes copiar el prompt del
+                    <a href="empezar.html" style="color: var(--gold);">Panel de Despliegue</a> y dejar que tu IA haga
+                    todo esto por ti automáticamente.
+                </p>
+            </div>
+
+            <!-- Step 4.1 -->
+            <div class="install-step">
+                <div class="install-num">1</div>
+                <div class="install-content">
+                    <h4>Instala Termux desde F-Droid</h4>
+                    <p>No uses la versión de Google Play — está desactualizada. Descarga desde F-Droid:</p>
+                    <div class="cmd-block">
+                        <div class="cmd-header">
+                            <span class="cmd-title">Enlace</span>
+                        </div>
+                        <div class="cmd-body">
+                            <code>https://f-droid.org/es/packages/com.termux/</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4.2 -->
+            <div class="install-step">
+                <div class="install-num">2</div>
+                <div class="install-content">
+                    <h4>Actualiza Termux y paquetes base</h4>
+                    <p>Abre Termux y ejecuta estos comandos uno por uno:</p>
+                    <div class="cmd-block">
+                        <div class="cmd-header">
+                            <span class="cmd-title">Termux</span>
+                            <button class="cmd-copy"
+                                onclick="copyCode(this, 'pkg update -y && pkg upgrade -y\npkg install openssh nodejs-lts git -y\nsshd')">Copiar</button>
+                        </div>
+                        <div class="cmd-body">
+                            <code><span class="comment"># Actualizar paquetes</span>
+pkg update -y && pkg upgrade -y
+
+<span class="comment"># Instalar lo esencial</span>
+pkg install openssh nodejs-lts git -y
+
+<span class="comment"># Iniciar SSH (para controlar desde PC)</span>
+sshd</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4.3 -->
+            <div class="install-step">
+                <div class="install-num">3</div>
+                <div class="install-content">
+                    <h4>Configura SSH para control remoto</h4>
+                    <p>Esto te permite escribir los comandos desde tu PC en vez del teléfono:</p>
+                    <div class="cmd-block">
+                        <div class="cmd-header">
+                            <span class="cmd-title">Termux</span>
+                            <button class="cmd-copy" onclick="copyCode(this, 'passwd')">Copiar</button>
+                        </div>
+                        <div class="cmd-body">
+                            <code><span class="comment"># Pon una contraseña para SSH</span>
+passwd
+
+<span class="comment"># Tu IP del teléfono (anótala)</span>
+ifconfig wlan0 | grep inet</code>
+                        </div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-header">
+                            <span class="cmd-title">Desde tu PC</span>
+                            <button class="cmd-copy"
+                                onclick="copyCode(this, 'ssh -p 8022 IP_DEL_TELEFONO')">Copiar</button>
+                        </div>
+                        <div class="cmd-body">
+                            <code><span class="comment"># Conectar por SSH (cambia la IP)</span>
+ssh -p 8022 IP_DEL_TELEFONO</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4.4 -->
+            <div class="install-step" id="install-proot" style="display: none;">
+                <div class="install-num">4</div>
+                <div class="install-content">
+                    <h4>Instala Debian (proot-distro)</h4>
+                    <p>Esto crea un Linux completo dentro de Termux. Necesario para OpenClaw:</p>
+                    <div class="cmd-block">
+                        <div class="cmd-header">
+                            <span class="cmd-title">Termux</span>
+                            <button class="cmd-copy"
+                                onclick="copyCode(this, 'pkg install proot-distro -y\nproot-distro install debian\nproot-distro login debian')">Copiar</button>
+                        </div>
+                        <div class="cmd-body">
+                            <code><span class="comment"># Instalar proot-distro</span>
+pkg install proot-distro -y
+
+<span class="comment"># Instalar Debian</span>
+proot-distro install debian
+
+<span class="comment"># Entrar en Debian</span>
+proot-distro login debian</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4.5 -->
+            <div class="install-step" id="install-openclaw" style="display: none;">
+                <div class="install-num">5</div>
+                <div class="install-content">
+                    <h4>Instala OpenClaw</h4>
+                    <p>Dentro de Debian, instala OpenClaw:</p>
+                    <div class="cmd-block">
+                        <div class="cmd-header">
+                            <span class="cmd-title">Debian (dentro de Termux)</span>
+                            <button class="cmd-copy"
+                                onclick="copyCode(this, 'apt update && apt install -y curl\ncurl -fsSL https://get.openclaw.dev | bash\nopenclaw wizard')">Copiar</button>
+                        </div>
+                        <div class="cmd-body">
+                            <code><span class="comment"># Instalar dependencias</span>
+apt update && apt install -y curl
+
+<span class="comment"># Instalar OpenClaw</span>
+curl -fsSL https://get.openclaw.dev | bash
+
+<span class="comment"># Configurar (sigue el wizard)</span>
+openclaw wizard</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             STEP 5: VERIFICACIÓN
+             ============================================ -->
+        <section class="wizard-section visible" data-step="5" id="step5">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Verificación</h2>
+            </div>
+            <p class="section-desc">
+                Comprueba que todo funciona correctamente.
+            </p>
+
+            <div class="checklist" id="verify-checklist">
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>SSH funciona desde el PC</strong>
+                        <small>¿Puedes conectar por SSH sin errores?</small>
+                    </div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>Termux se ejecuta correctamente</strong>
+                        <small>¿Los comandos se ejecutan sin errores?</small>
+                    </div>
+                </div>
+                <div class="check-item" id="verify-openclaw" style="display: none;" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>OpenClaw responde</strong>
+                        <small>curl http://127.0.0.1:18789/health → Debe devolver 200</small>
+                    </div>
+                </div>
+                <div class="check-item" id="verify-telegram" style="display: none;" onclick="toggleCheck(this)">
+                    <div class="check-box">✓</div>
+                    <div class="check-text">
+                        <strong>El bot de Telegram responde</strong>
+                        <small>Mándale un mensaje y espera respuesta</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box" style="margin-top: 24px;">
+                <h3>🎉 ¡Listo!</h3>
+                <p>Si todos los checks están en verde, tu teléfono viejo ahora es un servidor IA.
+                    Déjalo conectado al cargador y al WiFi, y disfruta de tu asistente personal.</p>
+            </div>
+
+            <div id="prompt-generator" style="display: none; margin-top: 24px;">
+                <div class="eval-summary-title">🛠️ Prompt para tu IDE con IA</div>
+                <p class="section-desc">Si quieres que tu IA configure todo automáticamente, copia este prompt y pégalo
+                    en el chat de tu editor:</p>
+                <div class="cmd-block">
+                    <div class="cmd-header">
+                        <span class="cmd-title">Prompt para Copilot / Gemini / Antigravity</span>
+                        <button class="cmd-copy" onclick="copyPrompt(this)">Copiar</button>
+                    </div>
+                    <div class="cmd-body">
+                        <code id="generated-prompt"></code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA -->
+        <section class="section" style="padding: 60px 0; text-align: center;">
+            <h2 style="font-size: 1.8rem; margin-bottom: 24px;">¿Prefieres algo más sencillo?</h2>
+            <p class="section-desc" style="margin: 0 auto 32px;">Si no quieres configurar nada manualmente, descarga la
+                app oficial y empieza a hablar con tu IA en segundos.</p>
+            <a href="empezar.html" class="spec-btn selected"
+                style="padding: 18px 40px; font-size: 1.1rem; text-decoration: none; display: inline-block;">🚀 Ir a
+                ClawMobilApp</a>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>
+                ClawMobilApp — Un proyecto de <a href="https://apliarte.com" target="_blank">ApliArte</a><br>
+                Hecho en España con ❤️
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // State
+        const state = {
+            ram: null,
+            storage: null,
+            android: null
+        };
+
+        // Selectors
+        document.querySelectorAll('.spec-options').forEach(group => {
+            group.querySelectorAll('.spec-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Deselect others in group
+                    group.querySelectorAll('.spec-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+
+                    // Update state
+                    const groupId = group.id;
+                    const value = parseFloat(btn.dataset.value);
+                    if (groupId === 'ram-selector') state.ram = value;
+                    if (groupId === 'storage-selector') state.storage = value;
+                    if (groupId === 'android-selector') state.android = value;
+
+                    // Update evaluation if all selected
+                    if (state.ram && state.storage && state.android) {
+                        updateEvaluation();
+                    }
+                });
+            });
+        });
+
+        function updateEvaluation() {
+            const r = state.ram;
+            const s = state.storage;
+            const a = state.android;
+
+            // Capabilities
+            const canTermux = a >= 5;
+            const canProot = r >= 2 && s >= 16;
+            const canOpenClaw = r >= 2 && s >= 16 && canProot;
+            const canMemory = r >= 3;
+            const canSearch = canTermux;
+            const canTelegram = canOpenClaw;
+            const canWhisper = canOpenClaw;
+            const canVision = r >= 3 && canOpenClaw;
+            const fullMode = r >= 4 && s >= 32;
+
+            // Determine recommended mode
+            let mode = 'minimal';
+            let modeLabel = 'Bot Básico de Texto';
+            let modeDesc = 'Tu teléfono puede ejecutar Termux y un bot simple de texto. Es limitado pero funcional para tareas sencillas.';
+
+            if (fullMode) {
+                mode = 'full';
+                modeLabel = 'Servidor Completo';
+                modeDesc = 'Tu teléfono tiene potencia suficiente para el ecosistema completo: OpenClaw con memoria, búsqueda, transcripción de audio, y visión de imágenes.';
+            } else if (canOpenClaw) {
+                mode = 'standard';
+                modeLabel = 'Servidor Estándar';
+                modeDesc = 'Puedes instalar OpenClaw con funciones básicas. Memoria limitada pero funcional. Busqueda web activa.';
+            } else if (canProot) {
+                mode = 'basic';
+                modeLabel = 'Modo Básico';
+                modeDesc = 'Puedes instalar Debian pero con limitaciones de RAM. OpenClaw básico sin memoria IA.';
+            }
+
+            // Build HTML
+            let html = `
+                <div class="eval-card recommended">
+                    <div class="eval-header">
+                        <span class="eval-title">📊 Tu dispositivo: ${r} GB RAM · ${s} GB · Android ${a}</span>
+                        <span class="eval-badge badge-rec">${modeLabel}</span>
+                    </div>
+                    <div class="eval-grid">
+                        ${evalItem(canTermux, 'Termux')}
+                        ${evalItem(canProot, 'Debian (proot)')}
+                        ${evalItem(canOpenClaw, 'OpenClaw')}
+                        ${evalItem(canSearch, 'Búsqueda Web')}
+                        ${evalItem(canMemory, 'Memoria IA')}
+                        ${evalItem(canTelegram, 'Bot Telegram')}
+                        ${evalItem(canWhisper, 'Audio → Texto')}
+                        ${evalItem(canVision, 'Visión (imágenes)')}
+                    </div>
+                    <div class="eval-summary">
+                        <div class="eval-summary-title">Recomendación</div>
+                        <p>${modeDesc}</p>
+                    </div>
+                </div>
+            `;
+
+            // RAM warning
+            if (r <= 1.5) {
+                html += `
+                    <div class="warning-box">
+                        <h3>⚠️ RAM muy limitada (${r} GB)</h3>
+                        <p>Con ${r} GB de RAM el teléfono puede servir como terminal SSH básica o bot de texto simple.
+                        Para el ecosistema completo de OpenClaw recomendamos mínimo 3 GB.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('eval-results').innerHTML = html;
+            document.getElementById('eval-intro').textContent =
+                `Resultado para: ${r} GB RAM, ${s} GB almacenamiento, Android ${a}`;
+
+            // Show/hide install steps based on mode
+            const prootStep = document.getElementById('install-proot');
+            const openclawStep = document.getElementById('install-openclaw');
+            const verifyOC = document.getElementById('verify-openclaw');
+            const verifyTG = document.getElementById('verify-telegram');
+            const promptGen = document.getElementById('prompt-generator');
+
+            if (canProot) {
+                prootStep.style.display = 'flex';
+                if (canOpenClaw) {
+                    openclawStep.style.display = 'flex';
+                    verifyOC.style.display = 'flex';
+                    verifyTG.style.display = 'flex';
+                    promptGen.style.display = 'block';
+                    generatePrompt();
+                }
+            } else {
+                prootStep.style.display = 'none';
+                openclawStep.style.display = 'none';
+                verifyOC.style.display = 'none';
+                verifyTG.style.display = 'none';
+                promptGen.style.display = 'none';
+            }
+        }
+
+        function evalItem(ok, label) {
+            if (ok) {
+                return `<div class="eval-item"><span class="eval-icon">✅</span> ${label}</div>`;
+            }
+            return `<div class="eval-item"><span class="eval-icon">❌</span> <span style="color:var(--text-dim)">${label}</span></div>`;
+        }
+
+        // Checklist
+        function toggleCheck(el) {
+            el.classList.toggle('checked');
+            updateCheckCount();
+        }
+
+        function updateCheckCount() {
+            const total = document.querySelectorAll('#prep-checklist .check-item').length;
+            const checked = document.querySelectorAll('#prep-checklist .check-item.checked').length;
+            document.getElementById('check-count').textContent = checked;
+            document.getElementById('check-total').textContent = total;
+        }
+
+        // Copy
+        function copyCode(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✓ Copiado';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copiar';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function copyPrompt(btn) {
+            const text = document.getElementById('generated-prompt').textContent;
+            copyCode(btn, text);
+        }
+
+        function generatePrompt() {
+            const r = state.ram;
+            const s = state.storage;
+            const a = state.android;
+
+            const prompt = `Tengo un teléfono Android con ${r} GB de RAM, ${s} GB de almacenamiento, y Android ${a}.
+Quiero convertirlo en un servidor IA personal usando OpenClaw.
+El proyecto ClawMobil está abierto en este editor.
+
+Por favor:
+1. Conecta al teléfono por ADB/SSH
+2. Instala Termux, proot-distro con Debian, y OpenClaw
+3. Configura el bot de Telegram
+4. Configura la memoria y búsqueda web
+5. Haz que arranque automáticamente al encender el teléfono
+6. Usa los scripts de la carpeta /scripts/ y /termux_scripts/ del proyecto
+
+El teléfono tiene ${r} GB RAM así que ${r >= 3 ? 'puede con el ecosistema completo' : 'optimiza para consumo mínimo'}.`;
+
+            document.getElementById('generated-prompt').textContent = prompt;
+        }
+
+        // Progress dots - intersection observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const step = entry.target.dataset.step;
+                    document.querySelectorAll('.progress-step').forEach(s => {
+                        s.classList.remove('active');
+                        if (parseInt(s.dataset.target) < parseInt(step)) {
+                            s.classList.add('done');
+                        }
+                    });
+                    document.querySelector(`.progress-step[data-target="${step}"]`).classList.add('active');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.wizard-section').forEach(s => observer.observe(s));
+    </script>
+
+</body>
+
+</html>

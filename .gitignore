@@ -1,0 +1,64 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.iml
+
+# Android
+android/.gradle/
+android/app/release/
+android/key.properties
+*.jks
+*.keystore
+
+# iOS
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Secrets — NUNCA subir
+lib/firebase_options.dart
+google-services.json
+GoogleService-Info.plist
+
+# Configuraciones locales privadas (no van al repo público)
+Mis_configuraciones_locales/
+MemoClaw/
+Informacion_de_funcionalidades/
+LEEME
+.agents/
+.github/prompts/
+*.zip
+*.sh
+recursos_termux/
+termux_scripts/
+scripts/
+demo/
+docs/
+promt.json
+PLAN_*.md
+# Archivos compilados y cache
+__pycache__/
+*.pyc
+.idea/
+
+# Keep common media if they are in the root
+!/*.png
+!/*.jpg
+!/*.gif
+
+# Ensure git itself is ignored (though usually implied)
+.git/
+node_modules/
+.DS_Store
+*.log
