@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 import 'screens/control_panel_screen.dart';
-import 'screens/alba_chat_screen.dart';
+import 'screens/plaud_chat_screen.dart';
 import 'screens/smart_display_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ClawMobilApp());
+  runApp(const PlaudAssistantApp());
 }
 
-class ClawMobilApp extends StatelessWidget {
-  const ClawMobilApp({super.key});
+class PlaudAssistantApp extends StatelessWidget {
+  const PlaudAssistantApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ClawMobil',
+      title: 'Plaud Assistant',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF030712),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF005FA9),
-          secondary: Color(0xFF5ECEF5),
-          surface: Color(0xFF1F2937),
-        ),
+        primaryColor: const Color(0xFF7C3AED),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF0A1120),
+          backgroundColor: Color(0xFF1A0E2E),
           elevation: 0,
         ),
       ),
-      initialRoute: '/alba',
+      initialRoute: '/plaud',
       routes: {
         '/': (context) => const ControlPanelScreen(),
-        '/alba': (context) => const AlbaChatScreen(),
+        '/plaud': (context) => const PlaudChatScreen(),
         '/display': (context) => const SmartDisplayScreen(),
       },
     );

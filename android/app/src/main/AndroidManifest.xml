@@ -10,7 +10,7 @@
     <uses-permission android:name="com.termux.permission.RUN_COMMAND"/>
 
     <application
-        android:label="ApliBot"
+        android:label="Plaud Assistant"
         android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

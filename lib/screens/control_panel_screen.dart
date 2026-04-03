@@ -126,7 +126,7 @@ class _ControlPanelScreenState extends State<ControlPanelScreen> {
     });
 
     try {
-      const platform = MethodChannel('com.aplibot/termux');
+      const platform = MethodChannel('com.plaude.assistant');
       await platform.invokeMethod('runCommand', {
         'path': '/data/data/com.termux/files/usr/bin/bash',
         'args': ['start.sh'],

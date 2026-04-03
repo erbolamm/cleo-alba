@@ -12,7 +12,7 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 
 import '../config/app_config.dart';
 import '../services/api_service.dart';
-import 'alba_admin_screen.dart';
+import 'plaud_admin_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────
 // Configuración — Desde archivo central
@@ -440,7 +440,7 @@ class _PlaudChatScreenState extends State<PlaudChatScreen>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const AlbaAdminScreen()),
+      MaterialPageRoute(builder: (_) => const PlaudAdminScreen()),
     ).then((_) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       _loadTtsSettings(); // recargar ajustes al volver de admin

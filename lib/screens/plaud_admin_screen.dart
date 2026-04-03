@@ -11,14 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Accesible manteniendo pulsado el engranaje 8 segundos
 // ─────────────────────────────────────────────────────────────────
 
-class AlbaAdminScreen extends StatefulWidget {
-  const AlbaAdminScreen({super.key});
+class PlaudAdminScreen extends StatefulWidget {
+  const PlaudAdminScreen({super.key});
 
   @override
-  State<AlbaAdminScreen> createState() => _AlbaAdminScreenState();
+  State<PlaudAdminScreen> createState() => _PlaudAdminScreenState();
 }
 
-class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
+class _PlaudAdminScreenState extends State<PlaudAdminScreen> {
   bool _serverRunning = false;
   bool _checking = false;
   bool _groqOk = false;
@@ -27,8 +27,8 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
 
   // ── TTS ──────────────────────────────────────────────────────
   final FlutterTts _tts = FlutterTts();
-  double _speedAlba = 0.48;
-  double _speedFran = 0.38;
+  double _speedChild = 0.48;
+  double _speedAdmin = 0.38;
   List<Map<String, String>> _voices = [];
   String _selectedVoice = ''; // nombre de voz seleccionada
   bool _loadingVoices = true;
@@ -61,8 +61,8 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
     voices.sort((a, b) => a['name']!.compareTo(b['name']!));
 
     setState(() {
-      _speedAlba = prefs.getDouble('tts_speed_alba') ?? 0.48;
-      _speedFran = prefs.getDouble('tts_speed_fran') ?? 0.38;
+      _speedChild = prefs.getDouble('tts_speed_child') ?? 0.48;
+      _speedAdmin = prefs.getDouble('tts_speed_admin') ?? 0.38;
       _selectedVoice = prefs.getString('tts_voice') ?? '';
       _voices = voices;
       _loadingVoices = false;
@@ -71,15 +71,15 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
 
   Future<void> _saveTtsSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('tts_speed_alba', _speedAlba);
-    await prefs.setDouble('tts_speed_fran', _speedFran);
+    await prefs.setDouble('tts_speed_child', _speedChild);
+    await prefs.setDouble('tts_speed_admin', _speedAdmin);
     await prefs.setString('tts_voice', _selectedVoice);
     _showSnack('✅ Ajustes de voz guardados');
   }
 
   Future<void> _testVoice() async {
     await _tts.setLanguage('es-ES');
-    await _tts.setSpeechRate(_speedAlba);
+    await _tts.setSpeechRate(_speedChild);
     await _tts.setPitch(1.15);
     if (_selectedVoice.isNotEmpty) {
       final v = _voices.firstWhere(
@@ -460,24 +460,24 @@ class _AlbaAdminScreenState extends State<AlbaAdminScreen> {
 
             const SizedBox(height: 20),
 
-            // Velocidad Alba
+            // Velocidad Niño/a
             _buildSpeedSlider(
-              label: '👧 Velocidad Alba',
+              label: '👧 Velocidad Niño/a',
               emoji: '👧',
-              value: _speedAlba,
+              value: _speedChild,
               color: const Color(0xFF7C3AED),
-              onChanged: (v) => setState(() => _speedAlba = v),
+              onChanged: (v) => setState(() => _speedChild = v),
             ),
 
             const SizedBox(height: 16),
 
-            // Velocidad Fran
+            // Velocidad Admin
             _buildSpeedSlider(
-              label: '👦 Velocidad Fran',
-              emoji: '👦',
-              value: _speedFran,
+              label: '�‍💼 Velocidad Admin',
+              emoji: '�‍💼',
+              value: _speedAdmin,
               color: const Color(0xFFE05A7A),
-              onChanged: (v) => setState(() => _speedFran = v),
+              onChanged: (v) => setState(() => _speedAdmin = v),
             ),
 
             const SizedBox(height: 20),

@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "aplibot_system" "\0"
+            VALUE "CompanyName", "com.apliarte" "\0"
+            VALUE "FileDescription", "plaud_assistant" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "aplibot_system" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "aplibot_system.exe" "\0"
-            VALUE "ProductName", "aplibot_system" "\0"
+            VALUE "InternalName", "plaud_assistant" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.apliarte. All rights reserved." "\0"
+            VALUE "OriginalFilename", "plaud_assistant.exe" "\0"
+            VALUE "ProductName", "plaud_assistant" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

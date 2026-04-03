@@ -9,7 +9,7 @@ plugins {
 val appMinSdk = 23
 
 android {
-    namespace = "com.apliarte.cleo_samsung_a3"
+    namespace = "com.apliarte.plaud_assistant"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.apliarte.cleo_samsung_a3"
+        applicationId = "com.apliarte.plaud_assistant"
         minSdk = appMinSdk
         targetSdk = flutter.targetSdkVersion
         versionCode = 1002

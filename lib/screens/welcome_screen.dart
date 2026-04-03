@@ -56,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // 1. Verificar Internet
     _hasInternet = await _checkInternetConnection();
 
-    // 2. Verificar Servidor Local (ApliBot Master / OpenClaw)
+    // 2. Verificar Servidor Local (Plaud Assistant / OpenClaw)
     _serverOnline = await _checkServerOnline();
 
     if (_serverOnline) {
@@ -113,7 +113,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future<void> _triggerAutoStart() async {
     // 1. Intentar arrancar mediante intent a Termux (funciona sin servidor)
     try {
-      const platform = MethodChannel('com.aplibot/termux');
+      const platform = MethodChannel('com.plaude.assistant');
       await platform.invokeMethod('runCommand', {
         'path': '/data/data/com.termux/files/usr/bin/bash',
         'args': ['/sdcard/clawmobil/start.sh'],
@@ -163,7 +163,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'No se ha podido establecer conexión con los servicios del ApliBot tras 3 intentos.',
+              'No se ha podido establecer conexión con los servicios del Plaud Assistant tras 3 intentos.',
               style: TextStyle(color: Colors.white70),
             ),
             SizedBox(height: 15),
